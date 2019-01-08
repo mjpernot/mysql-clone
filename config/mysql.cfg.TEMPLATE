@@ -1,0 +1,7 @@
+# Classification (U)
+# Unclassified until filled in.
+[client]
+password='{ROOT_PASSWORD}'
+# Location of the MYSQL socket file.
+# Example:  socket=/opt/lamp/mysql/tmp/mysql.sock
+socket={BASE_DIR}/mysql/tmp/mysql.sock
