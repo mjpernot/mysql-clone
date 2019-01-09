@@ -51,7 +51,7 @@ pipeline {
                             },
                             {
                                 "pattern": "./config/*.TEMPLATE",
-                                "recursive": false,
+                                "recursive": true,
                                 "excludePatterns": [],
                                 "target": "generic-local/highpoint/mysql-clone/config"
                             }
