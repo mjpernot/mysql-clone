@@ -32,10 +32,28 @@ pipeline {
                     uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "./*.py, ./config/*.TEMPLATE",
+                                "pattern": "./*.py",
                                 "recursive": false,
                                 "excludePatterns": [],
                                 "target": "generic-local/highpoint/mysql-clone/"
+                            },
+                            {
+                                "pattern": "./*.txt",
+                                "recursive": false,
+                                "excludePatterns": [],
+                                "target": "generic-local/highpoint/mysql-clone/"
+                            },
+                            {
+                                "pattern": "./*.md",
+                                "recursive": false,
+                                "excludePatterns": [],
+                                "target": "generic-local/highpoint/mysql-clone/"
+                            },
+                            {
+                                "pattern": "*.TEMPLATE",
+                                "recursive": true,
+                                "excludePatterns": [],
+                                "target": "generic-local/highpoint/mysql-clone/config/"
                             }
                         ]
                     }"""
