@@ -32,7 +32,7 @@ pipeline {
                     uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "./*.py, ./config/*.TEMPLATE",
+                                "pattern": ["./*.py", "./config/*.TEMPLATE"],
                                 "recursive": false,
                                 "excludePatterns": [],
                                 "target": "generic-local/highpoint/mysql-clone/"
