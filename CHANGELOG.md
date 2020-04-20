@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.0] - 2020-04-20
+### Changed
+- Documentation updates.
+
+
 ## [2.0.1] - 2018-11-30
 ### Changed
 - Added **kwargs to a number of function declarations to allow passing of keyword arguments.
