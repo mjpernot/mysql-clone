@@ -26,15 +26,16 @@
             NOTE:  -v or -h overrides the other options.
 
     Notes:
-        Source/Master and Clone/Slave config file format (mysql_cfg.py):
-            # Configuration file for {Database Name/Server}
+        Master and Slave config file format (config/mysql_cfg.py.TEMPLATE):
+            # Configuration file for database server:
             user = "root"
             passwd = "ROOT_PASSWORD"
-            # DO NOT USE 127.0.0.1 for the master/source, use actual IP.
+            # DO NOT USE 127.0.0.1 for the master, use actual IP.
             host = "IP_ADDRESS"
             serv_os = "Linux" or "Solaris"
             name = "HOSTNAME"
-            port = PORT_NUMBER (default of mysql is 3306)
+            # Default port for Mysql is 3306.
+            port = PORT_NUMBER
             cfg_file = "DIRECTORY_PATH/my.cnf"
             sid = "SERVER_ID"
             extra_def_file = "DIRECTORY_PATH/mysql.cfg"
@@ -50,7 +51,7 @@
         configuration modules -> name is runtime dependent as it can be
             used to connect to different databases with different names.
 
-        Defaults Extra File format (filename.cfg):
+        Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
             password="ROOT_PASSWORD"
             socket="DIRECTORY_PATH/mysql.sock"
@@ -78,7 +79,6 @@ import mysql_lib.mysql_libs as mysql_libs
 import mysql_lib.mysql_class as mysql_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -105,8 +105,6 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
     Arguments:
         (input) func_call -> Method call to return config settings.
         (input) cfg_dict -> Dictionary of configuration items to check.
-        (input) **kwargs:
-            None
         (output) cfg_flag -> True or False - Configuration passes.
 
     """
@@ -148,8 +146,6 @@ def crt_dump_cmd(SERVER, args_array, opt_arg_list, opt_dump_list, **kwargs):
         (input) opt_arg_list -> List of commands to add to cmd line.
         (input) opt_dump_list -> Dictionary of additional options.
         (output) -> Database dump command line.
-        (input) **kwargs:
-            None
 
     """
 
@@ -214,8 +210,6 @@ def stop_clr_rep(CLONE, args_array, **kwargs):
     Arguments:
         (input) CLONE -> Server instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
@@ -240,8 +234,6 @@ def chk_rep_cfg(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
         (input) args_array -> Array of command line options and values.
         (input) req_rep_cfg -> Required replication config settings.
         (input) opt_arg_list -> List of options to add to dump cmd line.
-        (input) **kwargs:
-            None
 
     """
 
@@ -280,8 +272,6 @@ def chk_slv_err(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -319,8 +309,6 @@ def chk_slv_thr(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -360,8 +348,6 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
     Arguments:
         (input) MASTER -> Master class instance.
         (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
 
     """
 
@@ -408,8 +394,6 @@ def chk_rep(CLONE, args_array, **kwargs):
     Arguments:
         (input) CLONE -> Destination server instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
