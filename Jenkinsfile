@@ -9,7 +9,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh """
-                pip2 install mock --user
+                pip2 install mock==2.0.0 --user
                 """
             }
         }
