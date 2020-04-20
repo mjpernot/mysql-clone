@@ -11,7 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.1] - 2018-11-30
 ### Changed
-- Added **kwargs to a number of function declarations to allow passing of keyword arguments.
+- Added \*\*kwargs to a number of function declarations to allow passing of keyword arguments.
 - chk_rep_cfg:  Removed passing replication instances to cfg_chk call.
 - cfg_chk:  Removed non-used SERVER variable.
 
@@ -55,7 +55,7 @@ Breaking Change
 
 ## [1.7.0] - 2017-08-18
 ### Changed
-- Help_Message:  Replace docstring with printing the programs __doc__.
+- Help_Message:  Replace docstring with printing the programs \_\_doc\_\_.
 - Change single quotes to double quotes.
 - Convert program to use local libraries from ./lib directory.
 
