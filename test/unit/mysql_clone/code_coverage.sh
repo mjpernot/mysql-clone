@@ -11,6 +11,7 @@ echo "Running unit test modules in conjunction with coverage"
 coverage run -a --source=mysql_clone test/unit/mysql_clone/cfg_chk.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/chk_rep_cfg.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/chk_slv_err.py
+coverage run -a --source=mysql_clone test/unit/mysql_clone/chk_slv_thr.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/crt_dump_cmd.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/dump_load_dbs.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/help_message.py
