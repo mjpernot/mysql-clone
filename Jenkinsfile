@@ -23,6 +23,7 @@ pipeline {
                 pip2 install mock==2.0.0 --user
                 pip2 install mysql-connector-python==8.0.16 --user
                 ./test/unit/mysql_clone/chk_cfg.py
+                ./test/unit/mysql_clone/chk_rep_cfg.py
                 ./test/unit/mysql_clone/crt_dump_cmd.py
                 ./test/unit/mysql_clone/dump_load_dbs.py
                 ./test/unit/mysql_clone/help_message.py
