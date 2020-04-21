@@ -15,4 +15,5 @@ test/unit/mysql_clone/chk_slv_thr.py
 test/unit/mysql_clone/crt_dump_cmd.py
 test/unit/mysql_clone/dump_load_dbs.py
 test/unit/mysql_clone/help_message.py
+test/unit/mysql_clone/run_program.py
 test/unit/mysql_clone/stop_clr_rep.py
