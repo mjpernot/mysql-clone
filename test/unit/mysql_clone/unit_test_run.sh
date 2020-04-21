@@ -8,4 +8,5 @@ echo ""
 echo "Unit testing..."
 test/unit/mysql_clone/cfg_chk.py
 test/unit/mysql_clone/crt_dump_cmd.py
+test/unit/mysql_clone/dump_load_dbs.py
 test/unit/mysql_clone/help_message.py
