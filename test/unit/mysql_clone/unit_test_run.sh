@@ -7,3 +7,4 @@
 echo ""
 echo "Unit testing..."
 test/unit/mysql_clone/help_message.py
+test/unit/mysql_clone/cfg_chk.py
