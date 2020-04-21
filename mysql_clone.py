@@ -369,7 +369,10 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
                 print("\tSlave Log: {0}".format(mst_file))
                 print("\t\tSlave Pos: {0}".format(read_pos))
 
-            Chk_Slv(slv, **kwargs)
+            # 21-04-2020
+            # Code is commented out as there is no Chk_Slv to call.
+            #  Checking past versions to find out what this did.
+            # Chk_Slv(slv, **kwargs)
 
     elif SLAVE:
         print("\nchk_mst_log:  Warning:  Missing Master instance.")
@@ -378,7 +381,10 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
-            Chk_Slv(slv, **kwargs)
+            # 21-04-2020
+            # Code is commented out as there is no Chk_Slv to call.
+            #  Checking past versions to find out what this did.
+            # Chk_Slv(slv, **kwargs)
 
     else:
         print("\nchk_mst_log:  Warning:  Missing Master and Slave instances.")
