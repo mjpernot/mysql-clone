@@ -17,6 +17,7 @@ coverage run -a --source=mysql_clone test/unit/mysql_clone/chk_slv_thr.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/crt_dump_cmd.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/dump_load_dbs.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/help_message.py
+coverage run -a --source=mysql_clone test/unit/mysql_clone/main.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/run_program.py
 coverage run -a --source=mysql_clone test/unit/mysql_clone/stop_clr_rep.py
 
