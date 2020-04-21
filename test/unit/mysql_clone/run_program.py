@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  chk_rep.py
+"""Program:  run_program.py
 
-    Description:  Unit testing of chk_rep in mysql_clone.py.
+    Description:  Unit testing of run_program in mysql_clone.py.
 
     Usage:
-        test/unit/mysql_clone/chk_rep.py
+        test/unit/mysql_clone/run_program.py
 
     Arguments:
 
@@ -159,6 +159,7 @@ class UnitTest(unittest.TestCase):
 
         self.master = Master()
         self.slave = Slave()
+
         self.args_array = {"-c": "mysql_cfg", "-d": "config",
                            "-t": "mysql_cfg2"}
         self.opt_arg_list = ["--single-transaction", "--all-databases",
@@ -199,8 +200,9 @@ class UnitTest(unittest.TestCase):
         mock_chk.return_value = True
         mock_disc.return_value = True
 
-        self.assertFalse(mysql_clone.chk_rep(self.args_array, self.req_rep_cfg,
-                                             self.opt_arg_list))
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
 
 if __name__ == "__main__":
