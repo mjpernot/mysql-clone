@@ -8,7 +8,8 @@ coverage erase
 
 echo ""
 echo "Running unit test modules in conjunction with coverage"
-coverage run -a --source=mysql_clone test/unit/clone/help_message.py
+coverage run -a --source=mysql_clone test/unit/mysql_clone/cfg_chk.py
+coverage run -a --source=mysql_clone test/unit/mysql_clone/help_message.py
 
 echo ""
 echo "Producing code coverage report"
