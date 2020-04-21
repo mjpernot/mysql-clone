@@ -43,8 +43,8 @@ class Slave(object):
 
     Methods:
         __init__ -> Class initialization.
-        start_slave -> start_slave function.
-        upd_slv_status -> upd_slv_status function.
+        connect -> connect function.
+        set_srv_gtid -> set_srv_gtid function.
 
     """
 
@@ -58,13 +58,13 @@ class Slave(object):
 
         """
 
-        pass
+        self.gtid_mode = True
 
-    def start_slave(self):
+    def connect(self):
 
-        """Method:  start_slave
+        """Method:  connect
 
-        Description:  start_slave function.
+        Description:  connect function.
 
         Arguments:
 
@@ -72,11 +72,11 @@ class Slave(object):
 
         return True
 
-    def upd_slv_status(self):
+    def set_srv_gtid(self):
 
-        """Method:  upd_slv_status
+        """Method:  set_srv_gtid
 
-        Description:  upd_slv_status function.
+        Description:  set_srv_gtid function.
 
         Arguments:
 
@@ -93,7 +93,8 @@ class Master(object):
 
     Methods:
         __init__ -> Class initialization.
-        upd_mst_status -> upd_mst_status function.
+        connect -> connect function.
+        set_srv_gtid -> set_srv_gtid function.
 
     """
 
@@ -107,13 +108,25 @@ class Master(object):
 
         """
 
-        pass
+        self.gtid_mode = True
 
-    def upd_mst_status(self):
+    def connect(self):
 
-        """Method:  upd_mst_status
+        """Method:  connect
 
-        Description:  upd_mst_status function.
+        Description:  connect function.
+
+        Arguments:
+
+        """
+
+        return True
+
+    def set_srv_gtid(self):
+
+        """Method:  set_srv_gtid
+
+        Description:  set_srv_gtid function.
 
         Arguments:
 
@@ -131,7 +144,6 @@ class UnitTest(unittest.TestCase):
     Methods:
         setUp -> Initialize testing environment.
         test_with_replication -> Test with replication.
-        test_no_replication -> Test with no replication.
 
     """
 
@@ -147,19 +159,29 @@ class UnitTest(unittest.TestCase):
 
         self.master = Master()
         self.slave = Slave()
-        self.clone = Slave()
         self.args_array = {"-c": "mysql_cfg", "-d": "config",
                            "-t": "mysql_cfg2"}
-        self.args_array2 = {"-n": True}
+        self.opt_arg_list = ["--single-transaction", "--all-databases",
+                             "--triggers", "--routines", "--events",
+                             "--ignore-table=mysql.event"]
+        self.req_rep_cfg = {"master": {"log_bin": "ON", "sync_binlog": "1",
+                                       "innodb_flush_log_at_trx_commit": "1",
+                                       "innodb_support_xa": "ON",
+                                       "binlog_format": "ROW"},
+                            "slave": {"log_bin": "ON", "read_only": "ON",
+                                      "log_slave_updates": "ON",
+                                      "sync_master_info": "1",
+                                      "sync_relay_log": "1",
+                                      "sync_relay_log_info": "1"}}
 
     @mock.patch("mysql_clone.cmds_gen.disconnect")
-    @mock.patch("mysql_clone.chk_mst_log")
-    @mock.patch("mysql_clone.chk_slv_thr")
-    @mock.patch("mysql_clone.chk_slv_err")
-    @mock.patch("mysql_clone.mysql_libs.change_master_to")
-    @mock.patch("mysql_clone.mysql_libs.create_instance")
-    def test_with_replication(self, mock_inst, mock_chg, mock_err, mock_thr,
-                              mock_log, mock_disc):
+    @mock.patch("mysql_clone.chk_rep")
+    @mock.patch("mysql_clone.dump_load_dbs")
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.stop_clr_rep")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_status_true(self, mock_lib, mock_clr, mock_cfg, mock_load,
+                         mock_chk, mock_disc):
 
         """Function:  test_with_replication
 
@@ -169,26 +191,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_inst.side_effect = [self.master, self.slave]
-        mock_chg.return_value = True
-        mock_err.return_value = True
-        mock_thr.return_value = True
-        mock_log.return_value = True
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, None)
+        mock_clr.return_value = True
+        mock_cfg.return_value = self.opt_arg_list
+        mock_load.return_value = True
+        mock_chk.return_value = True
         mock_disc.return_value = True
 
-        self.assertFalse(mysql_clone.chk_rep(self.clone, self.args_array))
-
-    def test_no_replication(self):
-
-        """Function:  test_no_replication
-
-        Description:  Test with no replication.
-
-        Arguments:
-
-        """
-
-        self.assertFalse(mysql_clone.chk_rep(self.clone, self.args_array2))
+        self.assertFalse(mysql_clone.chk_rep(self.args_array, self.req_rep_cfg,
+                                             self.opt_arg_list))
 
 
 if __name__ == "__main__":
