@@ -113,7 +113,7 @@ class UnitTest(unittest.TestCase):
         test_no_readonly -> Test with no read_only configuration setting.
         test_slave -> Test with slave configuration.
         test_missing_config -> Test with missing configuration options.
-        test_all_dbs -> Test with processing all databases.
+        test_master -> Test with master configuration.
 
     """
 
@@ -138,7 +138,6 @@ class UnitTest(unittest.TestCase):
                                       "sync_master_info": "1",
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
-
 
     def test_no_readonly(self):
 
