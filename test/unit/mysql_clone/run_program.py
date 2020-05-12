@@ -143,7 +143,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_with_replication -> Test with replication.
+        test_gtid_no_match -> Test with GTID Modes not matching.
+        test_status_false -> Test with status set to False.
+        test_status_true -> Test with status set to True.
 
     """
 
@@ -175,18 +177,71 @@ class UnitTest(unittest.TestCase):
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect")
-    @mock.patch("mysql_clone.chk_rep")
-    @mock.patch("mysql_clone.dump_load_dbs")
+    @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep_cfg")
-    @mock.patch("mysql_clone.stop_clr_rep")
     @mock.patch("mysql_clone.mysql_libs")
-    def test_status_true(self, mock_lib, mock_clr, mock_cfg, mock_load,
-                         mock_chk, mock_disc):
+    def test_gtid_no_match(self, mock_lib, mock_cfg):
 
-        """Function:  test_with_replication
+        """Function:  test_gtid_no_match
 
-        Description:  Test with replication.
+        Description:  Test with GTID Modes not matching.
+
+        Arguments:
+
+        """
+
+        self.slave.gtid_mode = False
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, None)
+        mock_cfg.return_value = self.opt_arg_list
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+
+    @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_status_false(self, mock_lib, mock_cfg):
+
+        """Function:  test_status_false
+
+        Description:  Test with status set to False.
+
+        Arguments:
+
+        """
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (False, "Error Message")
+        mock_cfg.return_value = self.opt_arg_list
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_status_true(self, mock_lib, mock_cfg):
+
+        """Function:  test_status_true
+
+        Description:  Test with status set to True.
 
         Arguments:
 
@@ -194,11 +249,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, None)
-        mock_clr.return_value = True
         mock_cfg.return_value = self.opt_arg_list
-        mock_load.return_value = True
-        mock_chk.return_value = True
-        mock_disc.return_value = True
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_clone.run_program(
