@@ -95,7 +95,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_gtid_false -> Test with gtid_mode set to False.
+        test_config_fail -> Test with configuration checks fails.
+        test_clone_gtid_off -> Test with Clone GTID Mode off.
         test_config_pass -> Test with configuration checks pass.
         test_no_rep -> Test with no replication configured.
 
@@ -135,22 +136,42 @@ class UnitTest(unittest.TestCase):
         self.results2.append("--master-data=1")
 
 
+    @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_clone.cfg_chk")
-    def test_gtid_false(self, mock_cfg):
+    def test_config_fail(self, mock_cfg):
 
-        """Function:  test_gtid_false
+        """Function:  test_config_fail
 
-        Description:  Test with gtid_mode set to False.
+        Description:  Test with configuration checks fails.
 
         Arguments:
 
         """
 
-        self.clone.gtid_mode = False
-        mock_cfg.return_value = True
+        mock_cfg.return_value = False
 
         self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array2, self.req_rep_cfg,
+            self.source, self.clone, self.args_array, self.req_rep_cfg,
+            self.opt_arg_list), self.results2)
+
+    @mock.patch("mysql_clone.cfg_chk")
+    def test_clone_gtid_off(self, mock_cfg):
+
+        """Function:  test_clone_gtid_off
+
+        Description:  Test with Clone GTID Mode off.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = True
+        self.clone.gtid_mode = False
+
+        self.assertEqual(mysql_clone.chk_rep_cfg(
+            self.source, self.clone, self.args_array, self.req_rep_cfg,
             self.opt_arg_list), self.results2)
 
     @mock.patch("mysql_clone.cfg_chk")
@@ -167,7 +188,7 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
 
         self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array2, self.req_rep_cfg,
+            self.source, self.clone, self.args_array, self.req_rep_cfg,
             self.opt_arg_list), self.results)
 
     def test_no_rep(self):
