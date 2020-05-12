@@ -10,6 +10,7 @@ test/unit/mysql_clone/cfg_chk.py
 test/unit/mysql_clone/chk_mst_log.py
 test/unit/mysql_clone/chk_rep.py
 test/unit/mysql_clone/chk_rep_cfg.py
+test/unit/mysql_clone/chk_slv.py
 test/unit/mysql_clone/chk_slv_err.py
 test/unit/mysql_clone/chk_slv_thr.py
 test/unit/mysql_clone/crt_dump_cmd.py
