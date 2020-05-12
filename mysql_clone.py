@@ -372,6 +372,9 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
             # 21-04-2020
             # Code is commented out as there is no Chk_Slv to call.
             #  Checking past versions to find out what this did.
+            # 11-05-2020
+            # Check in mysql_rep_admin.chk_slv.  Will need to bring this
+            #   across to this program.
             # Chk_Slv(slv, **kwargs)
 
     elif SLAVE:
@@ -384,6 +387,9 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
             # 21-04-2020
             # Code is commented out as there is no Chk_Slv to call.
             #  Checking past versions to find out what this did.
+            # 11-05-2020
+            # Check in mysql_rep_admin.chk_slv.  Will need to bring this
+            #   across to this program.
             # Chk_Slv(slv, **kwargs)
 
     else:
