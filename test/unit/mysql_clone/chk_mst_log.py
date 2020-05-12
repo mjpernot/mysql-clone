@@ -157,6 +157,7 @@ class UnitTest(unittest.TestCase):
         self.slave = Slave()
         self.slaves = [self.slave]
 
+    @mock.patch("mysql_clone.chk_slv", mock.Mock(return_value=True))
     def test_matching(self):
 
         """Function:  test_matching
@@ -172,6 +173,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_clone.chk_mst_log(self.master, self.slaves))
 
+    @mock.patch("mysql_clone.chk_slv", mock.Mock(return_value=True))
     def test_not_matching(self):
 
         """Function:  test_not_matching
@@ -185,6 +187,7 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(mysql_clone.chk_mst_log(self.master, self.slaves))
 
+    @mock.patch("mysql_clone.chk_slv", mock.Mock(return_value=True))
     def test_slave_only(self):
 
         """Function:  test_slave_only
