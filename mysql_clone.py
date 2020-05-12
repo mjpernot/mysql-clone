@@ -337,6 +337,39 @@ def chk_slv_thr(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_thr:  Warning:  No Slave instance detected.")
 
 
+def chk_slv(slave, **kwargs):
+
+    """Function:  chk_slv
+
+    Description:  Compares the Slave's read file and postition with the
+        executed file and position.  Will also print GTID info, in pre-MySQL
+        5.6 this will be NULL.
+
+    Arguments:
+        (input) slave -> Slave instance.
+
+    """
+
+    mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
+    name = slave.get_name()
+
+    # Slave's master info doesn't match slave's relay info.
+    if mst_file != relay_file or read_pos != exec_pos:
+        print("\nSlave: {0}".format(name))
+        print("Warning:  Slave might be lagging in execution of log.")
+        print("\tRead Log:\t{0}".format(mst_file))
+        print("\tRead Pos:\t{0}".format(read_pos))
+
+        if slave.gtid_mode:
+            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
+
+        print("\tExec Log:\t{0}".format(relay_file))
+        print("\tExec Pos:\t{0}".format(exec_pos))
+
+        if slave.gtid_mode:
+            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
+
+
 def chk_mst_log(MASTER, SLAVE, **kwargs):
 
     """Function:  chk_mst_log
@@ -369,13 +402,7 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
                 print("\tSlave Log: {0}".format(mst_file))
                 print("\t\tSlave Pos: {0}".format(read_pos))
 
-            # 21-04-2020
-            # Code is commented out as there is no Chk_Slv to call.
-            #  Checking past versions to find out what this did.
-            # 11-05-2020
-            # Check in mysql_rep_admin.chk_slv.  Will need to bring this
-            #   across to this program.
-            # Chk_Slv(slv, **kwargs)
+            chk_slv(slv, **kwargs)
 
     elif SLAVE:
         print("\nchk_mst_log:  Warning:  Missing Master instance.")
@@ -384,13 +411,7 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
             mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
             name = slv.get_name()
 
-            # 21-04-2020
-            # Code is commented out as there is no Chk_Slv to call.
-            #  Checking past versions to find out what this did.
-            # 11-05-2020
-            # Check in mysql_rep_admin.chk_slv.  Will need to bring this
-            #   across to this program.
-            # Chk_Slv(slv, **kwargs)
+            chk_slv(slv, **kwargs)
 
     else:
         print("\nchk_mst_log:  Warning:  Missing Master and Slave instances.")

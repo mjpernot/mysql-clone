@@ -5,7 +5,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.0.2] - 2020-04-20
+### Added
+- chk_slv:  Compares the slave's read file and postition with the executed file and position.
+
 ### Changed
+- chk_mst_log:  Added call to chk_slv function.
 - Documentation updates.
 
 
