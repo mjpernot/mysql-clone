@@ -34,6 +34,23 @@ import version
 __version__ = version.__version__
 
 
+def fetch_slv_rep_cfg3(**kwargs):
+
+    """Method:  fetch_slv_rep_cfg3
+
+    Description:  Function stub holder for fetch_slv_rep_cfg function.
+
+    Arguments:
+
+    """
+
+    cls_cfg_dict = {"log_bin": "OFF", "read_only": "ON",
+                    "log_slave_updates": "ON", "sync_master_info": "1",
+                    "sync_relay_log": "1", "sync_relay_log_info": "1"}
+
+    return cls_cfg_dict
+
+
 def fetch_slv_rep_cfg2(**kwargs):
 
     """Method:  fetch_slv_rep_cfg2
@@ -138,6 +155,22 @@ class UnitTest(unittest.TestCase):
                                       "sync_master_info": "1",
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
+
+    def test_other_error(self):
+
+        """Function:  test_other_error
+
+        Description:  Test with other error then read-only.
+
+        Arguments:
+
+        """
+
+        func_call = fetch_slv_rep_cfg3
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.cfg_chk(func_call,
+                                                 self.req_rep_cfg["slave"]))
 
     def test_no_readonly(self):
 
