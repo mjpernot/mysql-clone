@@ -241,7 +241,7 @@ def chk_rep_cfg(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
         SOURCE.upd_mst_rep_stat()
         CLONE.upd_slv_rep_stat()
 
-        # Both servers meet rep config requirements.
+        # Both servers must meet rep requirements.
         if not cfg_chk(SOURCE.fetch_mst_rep_cfg, req_rep_cfg["master"]) \
            or not cfg_chk(CLONE.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
 
