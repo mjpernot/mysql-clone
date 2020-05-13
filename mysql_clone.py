@@ -56,8 +56,11 @@
             password="ROOT_PASSWORD"
             socket="DIRECTORY_PATH/mysql.sock"
 
-        NOTE:  The socket information can be obtained from the my.cnf
+        NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
+        NOTE 2:  If running on a MySQL 5.7 database, turn on the
+            "show_compatibility_56" option to simulate a MySQL 5.6 server for
+            the Global Variable status.
 
     Example:
         mysql_clone.py -c source -t target -d config -n
@@ -433,11 +436,13 @@ def chk_rep(CLONE, args_array, **kwargs):
     if "-n" not in args_array:
         MASTER = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
                                             mysql_class.MasterRep)
+        MASTER.connect()
 
         mysql_libs.change_master_to(MASTER, CLONE)
 
         SLAVE = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
                                            mysql_class.SlaveRep)
+        SLAVE.connect()
         SLAVE.start_slave()
 
         # Waiting for slave to start.

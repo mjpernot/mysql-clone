@@ -5,6 +5,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.0.2] - 2020-04-20
+### Fixed
+- chk_rep:  Added connect calls for master and slave instances.
+
 ### Added
 - chk_slv:  Compares the slave's read file and postition with the executed file and position.
 
