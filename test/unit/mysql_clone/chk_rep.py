@@ -45,6 +45,7 @@ class Slave(object):
         __init__ -> Class initialization.
         start_slave -> start_slave function.
         upd_slv_status -> upd_slv_status function.
+        connect -> connection function.
 
     """
 
@@ -84,6 +85,18 @@ class Slave(object):
 
         return True
 
+    def connect(self):
+
+        """Method:  connect
+
+        Description:  connect function.
+
+        Arguments:
+
+        """
+
+        return True
+
 
 class Master(object):
 
@@ -94,6 +107,7 @@ class Master(object):
     Methods:
         __init__ -> Class initialization.
         upd_mst_status -> upd_mst_status function.
+        connect -> connection function.
 
     """
 
@@ -114,6 +128,18 @@ class Master(object):
         """Method:  upd_mst_status
 
         Description:  upd_mst_status function.
+
+        Arguments:
+
+        """
+
+        return True
+
+    def connect(self):
+
+        """Method:  connect
+
+        Description:  connect function.
 
         Arguments:
 
