@@ -103,6 +103,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_no_gtid -> Test with -r option in args_array.
         test_add_opt_dump -> Test with adding optional dump list commands.
         test_create_cmd -> Test with creating command.
 
@@ -122,12 +123,42 @@ class UnitTest(unittest.TestCase):
         self.clone = Server()
         self.args_array = {}
         self.args_array2 = {"-n": True}
+        self.args_array3 = {"-n": True, "-r": True}
         self.req_rep_cfg = ["--single-transaction", "--all-databases",
                             "--triggers", "--routines", "--events",
                             "--ignore-table=mysql.event"]
         self.opt_arg_list = ["--single-transaction", "--all-databases",
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
+
+    @mock.patch("mysql_clone.subprocess.PIPE")
+    @mock.patch("mysql_clone.subprocess.Popen")
+    @mock.patch("mysql_clone.mysql_libs.reset_master")
+    @mock.patch("mysql_clone.mysql_libs.crt_cmd")
+    @mock.patch("mysql_clone.arg_parser.arg_set_path")
+    @mock.patch("mysql_clone.crt_dump_cmd")
+    def test_no_gtid(self, mock_cmd, mock_path, mock_crtcmd, mock_reset,
+                     mock_popen, mock_pipe):
+
+        """Function:  test_no_gtid
+
+        Description:  Test with -r option in args_array.
+
+        Arguments:
+
+        """
+
+        self.clone.gtid_mode = False
+        mock_cmd.return_value = ["command", "arg1", "arg2"]
+        mock_path.return_value = "./"
+        mock_crtcmd.return_value = ["command", "arg1"]
+        mock_reset.return_value = True
+        mock_popen.side_effect = [Popen(), Popen()]
+        mock_pipe.return_value = True
+
+        self.assertFalse(mysql_clone.dump_load_dbs(
+            self.source, self.clone, self.args_array2, self.req_rep_cfg,
+            self.opt_arg_list))
 
     @mock.patch("mysql_clone.subprocess.PIPE")
     @mock.patch("mysql_clone.subprocess.Popen")
