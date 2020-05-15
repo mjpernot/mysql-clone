@@ -34,7 +34,7 @@ import version
 __version__ = version.__version__
 
 
-def fetch_slv_rep_cfg3(**kwargs):
+def fetch_slv_rep_cfg3():
 
     """Method:  fetch_slv_rep_cfg3
 
@@ -51,7 +51,7 @@ def fetch_slv_rep_cfg3(**kwargs):
     return cls_cfg_dict
 
 
-def fetch_slv_rep_cfg2(**kwargs):
+def fetch_slv_rep_cfg2():
 
     """Method:  fetch_slv_rep_cfg2
 
@@ -68,7 +68,7 @@ def fetch_slv_rep_cfg2(**kwargs):
     return cls_cfg_dict
 
 
-def fetch_slv_rep_cfg(**kwargs):
+def fetch_slv_rep_cfg():
 
     """Method:  fetch_slv_rep_cfg
 
@@ -85,7 +85,7 @@ def fetch_slv_rep_cfg(**kwargs):
     return cls_cfg_dict
 
 
-def fetch_mst_rep_cfg2(**kwargs):
+def fetch_mst_rep_cfg2():
 
     """Method:  fetch_mst_rep_cfg2
 
@@ -102,7 +102,7 @@ def fetch_mst_rep_cfg2(**kwargs):
     return cls_cfg_dict
 
 
-def fetch_mst_rep_cfg(**kwargs):
+def fetch_mst_rep_cfg():
 
     """Method:  fetch_mst_rep_cfg
 
