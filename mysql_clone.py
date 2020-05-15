@@ -444,8 +444,8 @@ def chk_rep(clone, args_array, **kwargs):
         master.upd_mst_status()
         slave.upd_slv_status()
 
-        chk_slv_err(master, [slave])
-        chk_slv_thr(master, [slave])
+        chk_slv_err([slave])
+        chk_slv_thr([slave])
         chk_mst_log(master, [slave])
 
         cmds_gen.disconnect(master, slave)
