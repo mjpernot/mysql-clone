@@ -14,6 +14,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - chk_slv:  Compares the slave's read file and postition with the executed file and position.
 
 ### Changed
+- cfg_chk:  Changed variables to standard naming convention.
 - chk_mst_log: Removed get_log_info and get_name calls - no longer required.
 - main:  Refactor "if" statements to streamline the checking process.
 - chk_slv_err:  Changed variables to standard naming convention.

@@ -115,20 +115,20 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
     cfg_flag = True
     cls_cfg_dict = func_call()
 
-    for x in cfg_dict:
+    for item in cfg_dict:
 
-        if x in cls_cfg_dict:
+        if item in cls_cfg_dict:
 
             # Does server config not match class config.
-            if cfg_dict[x] != cls_cfg_dict[x]:
+            if cfg_dict[item] != cls_cfg_dict[item]:
 
                 # Read_only will produce a warning, everything else an error.
-                if x == "read_only":
-                    print("Warning: {0} variable not set for slave.".format(x))
+                if item == "read_only":
+                    print("Warning: {0} not set for slave.".format(item))
 
                 else:
                     cfg_flag = False
-                    print("Error:  {0} variable not set correctly.".format(x))
+                    print("Error:  {0} not set correctly.".format(item))
 
         else:
             cfg_flag = False
