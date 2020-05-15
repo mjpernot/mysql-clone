@@ -280,13 +280,13 @@ def chk_slv_err(master, slave, **kwargs):
 
         for slv in slave:
 
-            io, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
+            ioerr, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
             name = slv.get_name()
 
             # Is there a IO error
-            if io:
+            if ioerr:
                 print("\nSlave:\t{0}".format(name))
-                print("IO Error Detected:\t{0}".format(io))
+                print("IO Error Detected:\t{0}".format(ioerr))
                 print("\tIO Message:\t{0}".format(io_msg))
                 print("\tIO Timestamp:\t{0}".format(io_time))
 
