@@ -94,7 +94,7 @@ class Server(object):
         """
 
         self.gtid_mode = True
-        
+
 
 class UnitTest(unittest.TestCase):
 
@@ -124,8 +124,8 @@ class UnitTest(unittest.TestCase):
         self.args_array = {}
         self.args_array2 = {"-n": True}
         self.req_rep_cfg = ["--single-transaction", "--all-databases",
-                             "--triggers", "--routines", "--events",
-                             "--ignore-table=mysql.event"]
+                            "--triggers", "--routines", "--events",
+                            "--ignore-table=mysql.event"]
         self.opt_arg_list = ["--single-transaction", "--all-databases",
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
