@@ -97,8 +97,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_sql_false -> Test Test with SQL False.
-        test_io_false -> Test Test with IO False.
+        test_all_good -> Test with all tests successful.
+        test_sql_false -> Test with SQL False.
+        test_io_false -> Test with IO False.
         test_run_false -> Test with run False.
         test_thr_down -> Test with thr down.
         test_no_slave -> Test with no slave present.
@@ -118,6 +119,21 @@ class UnitTest(unittest.TestCase):
         self.master = Server()
         self.slave = Server()
         self.slaves = [self.slave]
+
+    @mock.patch("mysql_clone.gen_libs.is_true")
+    def test_all_good(self, mock_is):
+
+        """Function:  test_all_good
+
+        Description:  Test with all tests successful.
+
+        Arguments:
+
+        """
+
+        mock_is.return_value = True
+
+        self.assertFalse(mysql_clone.chk_slv_thr(self.master, self.slaves))
 
     @mock.patch("mysql_clone.gen_libs.is_true")
     def test_sql_false(self, mock_is):
