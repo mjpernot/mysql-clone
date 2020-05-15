@@ -409,9 +409,6 @@ def chk_mst_log(master, slave, **kwargs):
         print("\nchk_mst_log:  Warning:  Missing Master instance.")
 
         for slv in slave:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
-            name = slv.get_name()
-
             chk_slv(slv, **kwargs)
 
     else:
