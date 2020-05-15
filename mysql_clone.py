@@ -531,6 +531,7 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d", "-p"]
     opt_arg_list = ["--single-transaction", "--all-databases", "--triggers",
                     "--routines", "--events", "--ignore-table=mysql.event"]
@@ -547,7 +548,7 @@ def main():
                              "sync_relay_log_info": "1"}}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list)
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
