@@ -77,7 +77,7 @@ class Server(object):
         """
 
         return self.io, self.sql, self.io_msg, self.sql_msg, self.io_time, \
-               self.sql_time
+            self.sql_time
 
     def get_name(self):
 
@@ -121,7 +121,6 @@ class UnitTest(unittest.TestCase):
         self.master = Server()
         self.slave = Server()
         self.slaves = [self.slave]
-
 
     def test_no_error(self):
 
