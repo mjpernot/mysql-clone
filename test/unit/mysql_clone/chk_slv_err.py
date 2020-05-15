@@ -117,7 +117,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.master = Server()
         self.slave = Server()
         self.slaves = [self.slave]
 
@@ -134,7 +133,7 @@ class UnitTest(unittest.TestCase):
         self.slave.io_err = None
         self.slave.sql = None
 
-        self.assertFalse(mysql_clone.chk_slv_err(self.master, self.slaves))
+        self.assertFalse(mysql_clone.chk_slv_err(self.slaves))
 
     def test_sql_error(self):
 
@@ -149,7 +148,7 @@ class UnitTest(unittest.TestCase):
         self.slave.io_err = None
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_err(self.master, self.slaves))
+            self.assertFalse(mysql_clone.chk_slv_err(self.slaves))
 
     def test_io_error(self):
 
@@ -164,7 +163,7 @@ class UnitTest(unittest.TestCase):
         self.slave.sql = None
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_err(self.master, self.slaves))
+            self.assertFalse(mysql_clone.chk_slv_err(self.slaves))
 
     def test_io_sql_errors(self):
 
@@ -177,7 +176,7 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_err(self.master, self.slaves))
+            self.assertFalse(mysql_clone.chk_slv_err(self.slaves))
 
     def test_no_slave(self):
 
@@ -190,7 +189,7 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_err(self.master, []))
+            self.assertFalse(mysql_clone.chk_slv_err([]))
 
 
 if __name__ == "__main__":
