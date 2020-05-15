@@ -100,7 +100,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
-        test_chk_slv -> Test chk_slv method.
+        test_no_delay -> Test with no delays detected.
+        test_no_gtid_mode -> Test with Gtid Mode off.
+        test_gtid_mode -> Test with Gtid Mode on.
 
     """
 
@@ -116,11 +118,41 @@ class UnitTest(unittest.TestCase):
 
         self.slave = SlaveRep()
 
-    def test_chk_slv(self):
+    def test_no_delay(self):
 
-        """Function:  test_chk_slv
+        """Function:  test_no_delay
 
-        Description:  Test chk_slv method.
+        Description:  Test with no delays detected.
+
+        Arguments:
+
+        """
+
+        self.slave.mst_file = "Slave_Relay"
+        self.slave.read_pos = 4567
+
+        self.assertFalse(mysql_clone.chk_slv(self.slave))
+
+    def test_no_gtid_mode(self):
+
+        """Function:  test_no_gtid_mode
+
+        Description:  Test with Gtid Mode off.
+
+        Arguments:
+
+        """
+
+        self.slave.gtid_mode = False
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.chk_slv(self.slave))
+
+    def test_gtid_mode(self):
+
+        """Function:  test_gtid_mode
+
+        Description:  Test with Gtid Mode on.
 
         Arguments:
 
