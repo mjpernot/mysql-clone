@@ -12,6 +12,15 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - chk_slv:  Compares the slave's read file and postition with the executed file and position.
 
 ### Changed
+- chk_slv_err:  Changed variables to standard naming convention.
+- chk_slv_thr:  Changed variables to standard naming convention.
+- chk_mst_log:  Changed variables to standard naming convention.
+- chk_rep:  Changed variables to standard naming convention.
+- stop_clr_rep:  Changed variables to standard naming convention.
+- run_program:  Changed variables to standard naming convention.
+- chk_rep_cfg:  Changed variables to standard naming convention.
+- dump_load_dbs:  Changed variables to standard naming convention.
+- crt_dump_cmd:  Changed variables to standard naming convention.
 - chk_mst_log:  Added call to chk_slv function.
 - Documentation updates.
 
