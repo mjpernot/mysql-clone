@@ -264,14 +264,13 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
     return opt_arg_list
 
 
-def chk_slv_err(master, slave, **kwargs):
+def chk_slv_err(slave, **kwargs):
 
     """Function:  chk_slv_err
 
     Description:  Check the Slave's IO and SQL threads for errors.
 
     Arguments:
-        (input) master -> Master class instance.
         (input) slave -> Slave class instance(s).
 
     """
