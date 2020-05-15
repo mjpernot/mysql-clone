@@ -300,14 +300,13 @@ def chk_slv_err(slave, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def chk_slv_thr(master, slave, **kwargs):
+def chk_slv_thr(slave, **kwargs):
 
     """Function:  chk_slv_thr
 
     Description:  Checks the status of the Slave(s) IO and SQL threads.
 
     Arguments:
-        (input) master -> Master class instance.
         (input) slave -> Slave class instance(s).
 
     """
