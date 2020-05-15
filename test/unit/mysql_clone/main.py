@@ -46,6 +46,9 @@ class UnitTest(unittest.TestCase):
         test_help_false -> Test help if returns false.
         test_arg_req_true -> Test arg_require if returns true.
         test_arg_req_false -> Test arg_require if returns false.
+        test_arg_dir_chk_crt_true -> Test arg_dir_chk_crt if returns True.
+        test_arg_dir_chk_crt_false -> Test arg_dir_chk_crt if returns False.
+        test_run_program -> Test run_program function.
 
     """
 
@@ -114,10 +117,9 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_clone.main())
 
-    @mock.patch("mysql_clone.run_program")
     @mock.patch("mysql_clone.gen_libs.help_func")
     @mock.patch("mysql_clone.arg_parser")
-    def test_arg_req_false(self, mock_arg, mock_help, mock_run):
+    def test_arg_req_false(self, mock_arg, mock_help):
 
         """Function:  test_arg_req_false
 
@@ -130,7 +132,67 @@ class UnitTest(unittest.TestCase):
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
         mock_arg.arg_require.return_value = False
-        mock_arg.arg_xor_dict.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = True
+
+        self.assertFalse(mysql_clone.main())
+
+    @mock.patch("mysql_clone.gen_libs.help_func")
+    @mock.patch("mysql_clone.arg_parser")
+    def test_arg_dir_chk_crt_true(self, mock_arg, mock_help):
+
+        """Function:  test_arg_dir_chk_crt_true
+
+        Description:  Test arg_dir_chk_crt if returns True.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = True
+
+        self.assertFalse(mysql_clone.main())
+
+    @mock.patch("mysql_clone.run_program")
+    @mock.patch("mysql_clone.gen_libs.help_func")
+    @mock.patch("mysql_clone.arg_parser")
+    def test_arg_dir_chk_crt_false(self, mock_arg, mock_help, mock_run):
+
+        """Function:  test_arg_dir_chk_crt_false
+
+        Description:  Test arg_dir_chk_crt if returns False.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = True
+        mock_run.return_value = True
+
+        self.assertFalse(mysql_clone.main())
+
+    @mock.patch("mysql_clone.run_program")
+    @mock.patch("mysql_clone.gen_libs.help_func")
+    @mock.patch("mysql_clone.arg_parser")
+    def test_run_program(self, mock_arg, mock_help, mock_run):
+
+        """Function:  test_run_program
+
+        Description:  Test run_program function.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_require.return_value = False
+        mock_arg.arg_dir_chk_crt.return_value = True
         mock_run.return_value = True
 
         self.assertFalse(mysql_clone.main())

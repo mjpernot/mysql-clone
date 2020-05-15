@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.2] - 2020-04-20
 ### Fixed
+- main:  Added arg_parser.arg_dir_chk_crt call to check directory arguments.
 - chk_rep:  Added connect calls for master and slave instances.
 
 ### Added
