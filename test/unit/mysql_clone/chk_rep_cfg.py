@@ -135,7 +135,6 @@ class UnitTest(unittest.TestCase):
         self.results2 = self.opt_arg_list
         self.results2.append("--master-data=1")
 
-
     @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.cmds_gen.disconnect",
                 mock.Mock(return_value=True))
