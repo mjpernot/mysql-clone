@@ -116,7 +116,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.master = Server()
         self.slave = Server()
         self.slaves = [self.slave]
 
@@ -133,7 +132,7 @@ class UnitTest(unittest.TestCase):
 
         mock_is.return_value = True
 
-        self.assertFalse(mysql_clone.chk_slv_thr(self.master, self.slaves))
+        self.assertFalse(mysql_clone.chk_slv_thr(self.slaves))
 
     @mock.patch("mysql_clone.gen_libs.is_true")
     def test_sql_false(self, mock_is):
@@ -149,7 +148,7 @@ class UnitTest(unittest.TestCase):
         mock_is.side_effect = [True, True, False]
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_thr(self.master, self.slaves))
+            self.assertFalse(mysql_clone.chk_slv_thr(self.slaves))
 
     @mock.patch("mysql_clone.gen_libs.is_true")
     def test_io_false(self, mock_is):
@@ -165,7 +164,7 @@ class UnitTest(unittest.TestCase):
         mock_is.side_effect = [True, False]
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_thr(self.master, self.slaves))
+            self.assertFalse(mysql_clone.chk_slv_thr(self.slaves))
 
     @mock.patch("mysql_clone.gen_libs.is_true")
     def test_run_false(self, mock_is):
@@ -181,7 +180,7 @@ class UnitTest(unittest.TestCase):
         mock_is.return_value = False
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_thr(self.master, self.slaves))
+            self.assertFalse(mysql_clone.chk_slv_thr(self.slaves))
 
     @mock.patch("mysql_clone.gen_libs.is_true")
     def test_thr_down(self, mock_is):
@@ -198,7 +197,7 @@ class UnitTest(unittest.TestCase):
         mock_is.return_value = True
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_thr(self.master, self.slaves))
+            self.assertFalse(mysql_clone.chk_slv_thr(self.slaves))
 
     def test_no_slave(self):
 
@@ -211,7 +210,7 @@ class UnitTest(unittest.TestCase):
         """
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.chk_slv_thr(self.master, []))
+            self.assertFalse(mysql_clone.chk_slv_thr([]))
 
 
 if __name__ == "__main__":
