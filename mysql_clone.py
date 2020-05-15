@@ -196,9 +196,9 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
         mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed.
-    P1 = subprocess.Popen(dump_cmd, stdout=subprocess.PIPE)
-    P2 = subprocess.Popen(load_cmd, stdin=P1.stdout)
-    P2.wait()
+    proc1 = subprocess.Popen(dump_cmd, stdout=subprocess.PIPE)
+    proc2 = subprocess.Popen(load_cmd, stdin=proc1.stdout)
+    proc2.wait()
 
 
 def stop_clr_rep(clone, args_array, **kwargs):
