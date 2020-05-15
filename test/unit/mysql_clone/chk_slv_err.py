@@ -57,7 +57,7 @@ class Server(object):
 
         """
 
-        self.io = "IO"
+        self.io_err = "IO"
         self.sql = "SQL"
         self.io_msg = "IO_Messages"
         self.sql_msg = "SQL_Messages"
@@ -75,8 +75,8 @@ class Server(object):
 
         """
 
-        return self.io, self.sql, self.io_msg, self.sql_msg, self.io_time, \
-            self.sql_time
+        return self.io_err, self.sql, self.io_msg, self.sql_msg, \
+            self.io_time, self.sql_time
 
     def get_name(self):
 
@@ -131,7 +131,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave.io = None
+        self.slave.io_err = None
         self.slave.sql = None
 
         self.assertFalse(mysql_clone.chk_slv_err(self.master, self.slaves))
@@ -146,7 +146,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave.io = None
+        self.slave.io_err = None
 
         with gen_libs.no_std_out():
             self.assertFalse(mysql_clone.chk_slv_err(self.master, self.slaves))
