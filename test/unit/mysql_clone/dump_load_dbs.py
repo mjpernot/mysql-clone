@@ -131,14 +131,14 @@ class UnitTest(unittest.TestCase):
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
 
-    @mock.patch("mysql_clone.subprocess.PIPE")
+    @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
     def test_no_gtid(self, mock_cmd, mock_path, mock_crtcmd, mock_reset,
-                     mock_popen, mock_pipe):
+                     mock_popen):
 
         """Function:  test_no_gtid
 
@@ -154,13 +154,12 @@ class UnitTest(unittest.TestCase):
         mock_crtcmd.return_value = ["command", "arg1"]
         mock_reset.return_value = True
         mock_popen.side_effect = [Popen(), Popen()]
-        mock_pipe.return_value = True
 
         self.assertFalse(mysql_clone.dump_load_dbs(
             self.source, self.clone, self.args_array2, self.req_rep_cfg,
             self.opt_arg_list))
 
-    @mock.patch("mysql_clone.subprocess.PIPE")
+    @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.cmds_gen.is_add_cmd")
@@ -168,7 +167,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
     def test_add_opt_dump(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                          mock_reset, mock_popen, mock_pipe):
+                          mock_reset, mock_popen):
 
         """Function:  test_add_opt_dump
 
@@ -185,13 +184,12 @@ class UnitTest(unittest.TestCase):
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True
         mock_popen.side_effect = [Popen(), Popen()]
-        mock_pipe.return_value = True
 
         self.assertFalse(mysql_clone.dump_load_dbs(
             self.source, self.clone, self.args_array2, self.req_rep_cfg,
             self.opt_arg_list))
 
-    @mock.patch("mysql_clone.subprocess.PIPE")
+    @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.cmds_gen.is_add_cmd")
@@ -199,7 +197,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
     def test_create_cmd(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                        mock_reset, mock_popen, mock_pipe):
+                        mock_reset, mock_popen):
 
         """Function:  test_create_cmd
 
@@ -215,7 +213,6 @@ class UnitTest(unittest.TestCase):
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True
         mock_popen.side_effect = [Popen(), Popen()]
-        mock_pipe.return_value = True
 
         self.assertFalse(mysql_clone.dump_load_dbs(
             self.source, self.clone, self.args_array, self.req_rep_cfg,
