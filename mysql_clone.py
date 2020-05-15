@@ -181,6 +181,7 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
 
     """
 
+    subp = gen_libs.get_inst(subprocess)
     dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
                             kwargs.get("opt_dump_list", []))
 
@@ -196,8 +197,8 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
         mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed.
-    proc1 = subprocess.Popen(dump_cmd, stdout=subprocess.PIPE)
-    proc2 = subprocess.Popen(load_cmd, stdin=proc1.stdout)
+    proc1 = subp.Popen(dump_cmd, stdout=subp.PIPE)
+    proc2 = subp.Popen(load_cmd, stdin=proc1.stdout)
     proc2.wait()
 
 

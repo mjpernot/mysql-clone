@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.2] - 2020-04-20
 ### Fixed
+- dump_load_dbs:  Fixed handling subprocess line from SonarQube scan finding.
 - main:  Fixed handling command line arguments from SonarQube scan finding.
 - main:  Added arg_parser.arg_dir_chk_crt call to check directory arguments.
 - chk_rep:  Added connect calls for master and slave instances.
