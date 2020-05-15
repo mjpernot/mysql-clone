@@ -61,6 +61,10 @@
         NOTE 2:  If running on a MySQL 5.7 database, turn on the
             "show_compatibility_56" option to simulate a MySQL 5.6 server for
             the Global Variable status.
+        NOTE 3:  The --defaults-extra-file option will be overridden if there
+            is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
+            of the user running this program.  The extras file will in effect
+            be ignored.
 
     Example:
         mysql_clone.py -c source -t target -d config -n
