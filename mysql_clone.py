@@ -116,6 +116,7 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
 
     """
 
+    cfg_dict = dict(cfg_dict)
     cfg_flag = True
     cls_cfg_dict = func_call()
 
