@@ -243,6 +243,10 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
 
     """
 
+    args_array = dict(args_array)
+    req_rep_cfg = dict(req_rep_cfg)
+    opt_arg_list = list(opt_arg_list)
+
     if "-n" not in args_array:
         source.upd_mst_rep_stat()
         clone.upd_slv_rep_stat()

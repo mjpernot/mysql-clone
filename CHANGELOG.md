@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.2] - 2020-04-20
 ### Fixed
+- chk_rep_cfg:  Fixed problem with mutable default arguments issue.
 - chk_slv_err:  Fixed problem with mutable default arguments issue.
 - chk_slv_thr:  Fixed problem with mutable default arguments issue.
 - chk_mst_log:  Fixed problem with mutable default arguments issue.
