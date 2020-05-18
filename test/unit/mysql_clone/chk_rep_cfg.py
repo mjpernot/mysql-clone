@@ -129,9 +129,9 @@ class UnitTest(unittest.TestCase):
         self.opt_arg_list = ["--single-transaction", "--all-databases",
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
-        self.results = self.opt_arg_list
+        self.results = list(self.opt_arg_list)
         self.results.append("--master-data=2")
-        self.results2 = self.opt_arg_list
+        self.results2 = list(self.opt_arg_list)
         self.results2.append("--master-data=1")
 
     @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
@@ -152,7 +152,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(mysql_clone.chk_rep_cfg(
             self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results2)
+            self.opt_arg_list), self.results)
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_clone_gtid_off(self, mock_cfg):
