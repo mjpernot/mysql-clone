@@ -185,6 +185,9 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
 
     """
 
+    args_array = dict(args_array)
+    req_rep_cfg = dict(req_rep_cfg)
+    opt_arg_list = list(opt_arg_list)
     subp = gen_libs.get_inst(subprocess)
     dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
                             kwargs.get("opt_dump_list", []))
