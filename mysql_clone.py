@@ -156,6 +156,9 @@ def crt_dump_cmd(server, args_array, opt_arg_list, opt_dump_list, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    opt_arg_list = list(opt_arg_list)
+    opt_dump_list = dict(opt_dump_list)
     dump_args = mysql_libs.crt_cmd(
         server, arg_parser.arg_set_path(args_array, "-p") + "mysqldump")
 
