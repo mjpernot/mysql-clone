@@ -316,6 +316,7 @@ def chk_slv_thr(slave, **kwargs):
 
     """
 
+    slave = list(slave)
     plc_hld = "Slave"
 
     if slave:
