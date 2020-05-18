@@ -390,6 +390,8 @@ def chk_mst_log(master, slave, **kwargs):
 
     """
 
+    slave = list(slave)
+
     if master and slave:
         fname, log_pos = master.get_log_info()
 

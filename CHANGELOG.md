@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.2] - 2020-04-20
 ### Fixed
+- chk_mst_log:  Fixed problem with mutable default arguments issue.
 - chk_rep:  Fixed problem with mutable default arguments issue.
 - run_program:  Fixed problem with mutable default arguments issue.
 - chk_slv_thr:  Fixed multiple strings from SonarQube scan finding.
