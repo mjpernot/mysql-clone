@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.0.2] - 2020-04-20
 ### Fixed
+- run_program:  Fixed problem with mutable default arguments issue.
 - chk_slv_thr:  Fixed multiple strings from SonarQube scan finding.
 - dump_load_dbs:  Fixed handling subprocess line from SonarQube scan finding.
 - main:  Fixed handling command line arguments from SonarQube scan finding.

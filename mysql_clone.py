@@ -474,11 +474,13 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    req_rep_cfg = dict(req_rep_cfg)
+    opt_arg_list = list(opt_arg_list)
     source = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
                                         mysql_class.Server)
     clone = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
                                        mysql_class.Server)
-
     source.connect()
     source.set_srv_gtid()
     clone.connect()
