@@ -124,9 +124,17 @@ class UnitTest(unittest.TestCase):
         self.args_array = {}
         self.args_array2 = {"-n": True}
         self.args_array3 = {"-n": True, "-r": True}
-        self.req_rep_cfg = ["--single-transaction", "--all-databases",
-                            "--triggers", "--routines", "--events",
-                            "--ignore-table=mysql.event"]
+        self.req_rep_cfg = {"master": {"log_bin": "ON",
+                                       "sync_binlog": "1",
+                                       "innodb_flush_log_at_trx_commit": "1",
+                                       "innodb_support_xa": "ON",
+                                       "binlog_format": "ROW"},
+                            "slave": {"log_bin": "ON",
+                                      "read_only": "ON",
+                                      "log_slave_updates": "ON",
+                                      "sync_master_info": "1",
+                                      "sync_relay_log": "1",
+                                      "sync_relay_log_info": "1"}}
         self.opt_arg_list = ["--single-transaction", "--all-databases",
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
