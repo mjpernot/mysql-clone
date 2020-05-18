@@ -332,7 +332,7 @@ def chk_slv_thr(slave, **kwargs):
     """
 
     slave = list(slave)
-    plc_hld = "Slave"
+    prt_template = "\nSlave:  {0}"
 
     if slave:
 
@@ -342,17 +342,17 @@ def chk_slv_thr(slave, **kwargs):
 
             # Check slave IO state and slave running attributes.
             if not thr or not gen_libs.is_true(run):
-                print("\n{0}:  {1}".format(plc_hld, name))
+                print(prt_template.format(name))
                 print("Error:  Slave IO/SQL Threads are down.")
 
             # Check slave IO running attribute.
             elif not gen_libs.is_true(io_thr):
-                print("\n{0}:  {1}".format(plc_hld, name))
+                print(prt_template.format(name))
                 print("Error:  Slave IO Thread is down.")
 
             # Check slave SQL running attribute.
             elif not gen_libs.is_true(sql_thr):
-                print("\n{0}:  {1}".format(plc_hld, name))
+                print(prt_template.format(name))
                 print("Error:  Slave SQL Thread is down.")
 
     else:
