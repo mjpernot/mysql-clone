@@ -280,6 +280,8 @@ def chk_slv_err(slave, **kwargs):
 
     """
 
+    slave = list(slave)
+
     if slave:
 
         for slv in slave:
