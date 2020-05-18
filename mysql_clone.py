@@ -219,6 +219,8 @@ def stop_clr_rep(clone, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+
     if mysql_class.show_slave_stat(clone):
         mysql_class.slave_stop(clone)
 
