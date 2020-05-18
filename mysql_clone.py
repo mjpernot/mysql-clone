@@ -433,6 +433,8 @@ def chk_rep(clone, args_array, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+
     if "-n" not in args_array:
         master = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
                                             mysql_class.MasterRep)
