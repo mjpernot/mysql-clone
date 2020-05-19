@@ -27,6 +27,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - chk_rep:  Added connect calls for master and slave instances.
 
 ### Changed
+- main: Added ProgramLock class to implement program locking.
 - config/mysql.cfg.TEMPLATE:  Changed format of template.
 - config/mysql_cfg.py.TEMPLATE:  Changed format of template.
 - chk_slv_thr: Removed master argument - no longer required.

@@ -84,6 +84,7 @@ import time
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.cmds_gen as cmds_gen
+import lib.gen_class as gen_class
 import mysql_lib.mysql_libs as mysql_libs
 import mysql_lib.mysql_class as mysql_class
 import version
@@ -566,7 +567,7 @@ def main():
                     "--routines", "--events", "--ignore-table=mysql.event"]
     opt_dump_list = {"-r": "--set-gtid-purged=OFF"}
     opt_req_list = ["-c", "-t", "-d"]
-    opt_val_list = ["-c", "-t", "-d", "-p"]
+    opt_val_list = ["-c", "-t", "-d", "-p", "-y"]
     req_rep_cfg = {"master": {"log_bin": "ON", "sync_binlog": "1",
                               "innodb_flush_log_at_trx_commit": "1",
                               "innodb_support_xa": "ON",
@@ -582,8 +583,17 @@ def main():
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
-        run_program(args_array, req_rep_cfg, opt_arg_list,
-                    opt_dump_list=opt_dump_list)
+
+        try:
+            proglock = gen_class.ProgramLock(sys.argv,
+                                             args_array.get("-y", ""))
+            run_program(args_array, req_rep_cfg, opt_arg_list,
+                        opt_dump_list=opt_dump_list)
+            del proglock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  lock in place for mysql_clone with id of: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":
