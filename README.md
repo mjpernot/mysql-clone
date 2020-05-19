@@ -2,7 +2,7 @@
 # Classification (U)
 
 # Description:
-  This program is used to clone a MySQL database either in a replication set or as a standalone database server.
+  Used to clone a MySQL database to a standalone database server or make part of a replica set.
 
 
 ###  This README file is broken down into the following sections:
@@ -17,7 +17,7 @@
 
 # Features:
   * Clone a MySQL database from another MySQL database.
-  * Integrate the clone database into a replication set.
+  * Integrate the clone database into a replica set.
   * Include or remove GTID from the transfer.
 
 
@@ -30,6 +30,7 @@
     - lib/cmds_gen
     - lib/arg_parser
     - lib/gen_libs
+    - lib/gen_class
     - mysql_lib/mysql_class
     - mysql_lib/mysql_libs
 
@@ -65,42 +66,53 @@ pip install -r requirements-python-lib.txt --target mysql_lib/lib --trusted-host
 
 # Configuration:
 
-Create MySQL configuration file.
+Create MySQL configuration file for the Source/Master and Clone/Slave databases.
   * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
 cd config
-cp mysql_cfg.py.TEMPLATE mysql_cfg.py
+cp mysql_cfg.py.TEMPLATE mysql_cfg_master.py
+cp mysql_cfg.py.TEMPLATE mysql_cfg_slave.py
 ```
 
 Make the appropriate change to the MySQL environment.
   * Change these entries in the MySQL setup:
-    - passwd = 'ROOT_PASSWORD'
+    - user = 'USER'
+    - passwd = 'PASSWORD'
     - host = 'SERVER_IP'
     - name = 'HOST_NAME'
     - sid = SERVER_ID
-    - extra_def_file = 'Python_Project/config/mysql.cfg'
-  * NOTE:  SERVER_ID is the MySQL Server ID.  Run the `select @@server_id;` on the MySQL command line to obtain this value.
+    - extra_def_file = 'Python_Project/config/mysql_XXXX.cfg'
+    - cfg_file = 'DIRECTORY_PATH/my.cnf'
+      -> NOTE 1:  SERVER_ID is the MySQL Server ID.  Run the `select @@server_id;` on the MySQL command line to obtain this value.
+      -> NOTE 2:  host:  Do not use 127.0.0.1 for the master IP, use actual IP.
+      -> NOTE 3:  Change mysql_XXXX.cfg to 'mysql_master.cfg' or 'mysql_slave.cfg' for Master and Slave respectively.
+  * These additional entries in the configuration file should not be modified unless necessary.
+    - serv_os = 'Linux'
+    - port = 3306
 
 ```
-vim mysql_cfg.py
-chmod 600 mysql_cfg.py
+vim mysql_cfg_master.py
+vim mysql_cfg_slave.py
+chmod 600 mysql_cfg_master.py mysql_cfg_slave.py
 ```
 
-Create MySQL definition file.
+Create MySQL definition file for the Source/Master and Clone/Slave databases.
 
 ```
-cp mysql.cfg.TEMPLATE mysql.cfg
+cp mysql.cfg.TEMPLATE mysql_master.cfg
+cp mysql.cfg.TEMPLATE mysql_slave.cfg
 ```
 
 Make the appropriate change to the MySQL definition setup.
   * Change these entries in the MySQL configuration file:
-    - password='ROOT_PASSWORD'
-    - socket=BASE_DIR/mysql/tmp/mysql.sock
+    - password='PASSWORD'
+    - socket=DIRECTORY_PATH/mysql.sock
 
 ```
-vim mysql.cfg
-chmod 600 mysql.cfg
+vim mysql_master.cfg
+vim mysql_slave.cfg
+chmod 600 mysql_master.cfg mysql_slave.cfg
 ```
 
 
