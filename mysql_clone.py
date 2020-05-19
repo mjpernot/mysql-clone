@@ -3,14 +3,15 @@
 
 """Program:  mysql_clone.py
 
-    Description:  The program can clone a database.  The new database can
-        either be a standalone copy of the original database or the program
-        can integrate the new database into replication with the
+    Description:  To clone a database to another database server.  The new
+        database can either be a standalone copy of the original database or
+        the program can integrate the new database into replication with the
         original database creating a master-slave replication setup.
 
     Usage:
-        mysql_clone.py -c source_file -t clone_file -d path
-            [-n | -p path | -r] [-v | -h]
+        mysql_clone.py -c source_file -t clone_file -d path [-n | -p path | -r]
+            [-y flavor_id]
+            [-v | -h]
 
     Arguments:
         -c file => Source/Master configuration file.  Required arg.
@@ -21,23 +22,25 @@
         -p dir path => Directory path to mysql programs.  Only required if the
             mysql binary programs do not run properly.  (i.e. not in the $PATH
             variable.)
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
             NOTE:  -v or -h overrides the other options.
 
     Notes:
-        Source/Master and Clone/Slave config file format (mysql_cfg.py):
-            # Configuration file for {Database Name/Server}
-            user = "root"
-            passwd = "ROOT_PASSWORD"
-            # DO NOT USE 127.0.0.1 for the master/source, use actual IP.
+        Master and Slave config file format (config/mysql_cfg.py.TEMPLATE):
+            # Configuration file for database server:
+            user = "USER"
+            passwd = "PASSWORD"
+            # DO NOT USE 127.0.0.1 for the master, use actual IP.
             host = "IP_ADDRESS"
-            serv_os = "Linux" or "Solaris"
             name = "HOSTNAME"
-            port = PORT_NUMBER (default of mysql is 3306)
-            cfg_file = "DIRECTORY_PATH/my.cnf"
             sid = "SERVER_ID"
             extra_def_file = "DIRECTORY_PATH/mysql.cfg"
+            serv_os = "Linux"
+            # Default port for Mysql is 3306.
+            port = 3306
+            cfg_file = "DIRECTORY_PATH/my.cnf"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -50,13 +53,20 @@
         configuration modules -> name is runtime dependent as it can be
             used to connect to different databases with different names.
 
-        Defaults Extra File format (filename.cfg):
+        Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="ROOT_PASSWORD"
+            password="PASSWORD"
             socket="DIRECTORY_PATH/mysql.sock"
 
-        NOTE:  The socket information can be obtained from the my.cnf
+        NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
+        NOTE 2:  If running on a MySQL 5.7 database, turn on the
+            "show_compatibility_56" option to simulate a MySQL 5.6 server for
+            the Global Variable status.
+        NOTE 3:  The --defaults-extra-file option will be overridden if there
+            is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
+            of the user running this program.  The extras file will in effect
+            be ignored.
 
     Example:
         mysql_clone.py -c source -t target -d config -n
@@ -74,11 +84,11 @@ import time
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.cmds_gen as cmds_gen
+import lib.gen_class as gen_class
 import mysql_lib.mysql_libs as mysql_libs
 import mysql_lib.mysql_class as mysql_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -105,29 +115,28 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
     Arguments:
         (input) func_call -> Method call to return config settings.
         (input) cfg_dict -> Dictionary of configuration items to check.
-        (input) **kwargs:
-            None
         (output) cfg_flag -> True or False - Configuration passes.
 
     """
 
+    cfg_dict = dict(cfg_dict)
     cfg_flag = True
     cls_cfg_dict = func_call()
 
-    for x in cfg_dict:
+    for item in cfg_dict:
 
-        if x in cls_cfg_dict:
+        if item in cls_cfg_dict:
 
             # Does server config not match class config.
-            if cfg_dict[x] != cls_cfg_dict[x]:
+            if cfg_dict[item] != cls_cfg_dict[item]:
 
                 # Read_only will produce a warning, everything else an error.
-                if x == "read_only":
-                    print("Warning: {0} variable not set for slave.".format(x))
+                if item == "read_only":
+                    print("Warning: {0} not set for slave.".format(item))
 
                 else:
                     cfg_flag = False
-                    print("Error:  {0} variable not set correctly.".format(x))
+                    print("Error:  {0} not set correctly.".format(item))
 
         else:
             cfg_flag = False
@@ -136,26 +145,26 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
     return cfg_flag
 
 
-def crt_dump_cmd(SERVER, args_array, opt_arg_list, opt_dump_list, **kwargs):
+def crt_dump_cmd(server, args_array, opt_arg_list, opt_dump_list, **kwargs):
 
     """Function:  crt_dump_cmd
 
     Description:  Create the database dump command line.
 
     Arguments:
-        (input) SERVER -> Database server instance.
+        (input) server -> Database server instance.
         (input) args_array -> Array of command line options and values.
         (input) opt_arg_list -> List of commands to add to cmd line.
         (input) opt_dump_list -> Dictionary of additional options.
         (output) -> Database dump command line.
-        (input) **kwargs:
-            None
 
     """
 
-    dump_args = mysql_libs.crt_cmd(SERVER,
-                                   arg_parser.arg_set_path(args_array, "-p") +
-                                   "mysqldump")
+    args_array = dict(args_array)
+    opt_arg_list = list(opt_arg_list)
+    opt_dump_list = dict(opt_dump_list)
+    dump_args = mysql_libs.crt_cmd(
+        server, arg_parser.arg_set_path(args_array, "-p") + "mysqldump")
 
     # Add arguments to dump command.
     for arg in opt_arg_list:
@@ -165,7 +174,7 @@ def crt_dump_cmd(SERVER, args_array, opt_arg_list, opt_dump_list, **kwargs):
     return cmds_gen.is_add_cmd(args_array, dump_args, opt_dump_list)
 
 
-def dump_load_dbs(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
+def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
                   **kwargs):
 
     """Function:  dump_load_dbs
@@ -173,8 +182,8 @@ def dump_load_dbs(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
     Description:  Dumps and loads all databases in a single transaction.
 
     Arguments:
-        (input) SOURCE -> Source server instance.
-        (input) CLONE -> Destination server instance.
+        (input) source -> Source server instance.
+        (input) clone -> Destination server instance.
         (input) args_array -> Array of command line options and values.
         (input) req_rep_cfg -> Required replication config settings.
         (input) opt_arg_list -> List of options to add to dump cmd line.
@@ -183,28 +192,31 @@ def dump_load_dbs(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
 
     """
 
-    dump_cmd = crt_dump_cmd(SOURCE, args_array, opt_arg_list,
+    args_array = dict(args_array)
+    req_rep_cfg = dict(req_rep_cfg)
+    opt_arg_list = list(opt_arg_list)
+    subp = gen_libs.get_inst(subprocess)
+    dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
                             kwargs.get("opt_dump_list", []))
 
-    if SOURCE.gtid_mode != CLONE.gtid_mode and not CLONE.gtid_mode \
+    if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and "-n" in args_array and "-r" not in args_array:
         dump_cmd = cmds_gen.is_add_cmd({"-r": "True"}, dump_cmd,
                                        kwargs.get("opt_dump_list", []))
 
-    load_cmd = mysql_libs.crt_cmd(CLONE,
-                                  arg_parser.arg_set_path(args_array, "-p") +
-                                  "mysql")
+    load_cmd = mysql_libs.crt_cmd(
+        clone, arg_parser.arg_set_path(args_array, "-p") + "mysql")
 
-    if CLONE.gtid_mode:
-        mysql_libs.reset_master(CLONE)
+    if clone.gtid_mode:
+        mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed.
-    P1 = subprocess.Popen(dump_cmd, stdout=subprocess.PIPE)
-    P2 = subprocess.Popen(load_cmd, stdin=P1.stdout)
-    P2.wait()
+    proc1 = subp.Popen(dump_cmd, stdout=subp.PIPE)
+    proc2 = subp.Popen(load_cmd, stdin=proc1.stdout)
+    proc2.wait()
 
 
-def stop_clr_rep(CLONE, args_array, **kwargs):
+def stop_clr_rep(clone, args_array, **kwargs):
 
     """Function:  stop_clr_rep
 
@@ -212,21 +224,21 @@ def stop_clr_rep(CLONE, args_array, **kwargs):
         configuration if this is for a clone only system.
 
     Arguments:
-        (input) CLONE -> Server instance.
+        (input) clone -> Server instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
-    if mysql_class.show_slave_stat(CLONE):
-        mysql_class.slave_stop(CLONE)
+    args_array = dict(args_array)
+
+    if mysql_class.show_slave_stat(clone):
+        mysql_class.slave_stop(clone)
 
         if "-n" in args_array:
-            CLONE.sql("reset slave all")
+            mysql_libs.reset_slave(clone)
 
 
-def chk_rep_cfg(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
+def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
                 **kwargs):
 
     """Function:  chk_rep_cfg
@@ -235,28 +247,30 @@ def chk_rep_cfg(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
         servers.
 
     Arguments:
-        (input) SOURCE -> Source server instance.
-        (input) CLONE -> Destination server instance.
+        (input) source -> Source server instance.
+        (input) clone -> Destination server instance.
         (input) args_array -> Array of command line options and values.
         (input) req_rep_cfg -> Required replication config settings.
         (input) opt_arg_list -> List of options to add to dump cmd line.
-        (input) **kwargs:
-            None
 
     """
 
+    args_array = dict(args_array)
+    req_rep_cfg = dict(req_rep_cfg)
+    opt_arg_list = list(opt_arg_list)
+
     if "-n" not in args_array:
-        SOURCE.upd_mst_rep_stat()
-        CLONE.upd_slv_rep_stat()
+        source.upd_mst_rep_stat()
+        clone.upd_slv_rep_stat()
 
-        # Both servers meet rep config requirements.
-        if not cfg_chk(SOURCE.fetch_mst_rep_cfg, req_rep_cfg["master"]) \
-           or not cfg_chk(CLONE.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
+        # Both servers must meet rep requirements.
+        if not cfg_chk(source.fetch_mst_rep_cfg, req_rep_cfg["master"]) \
+           or not cfg_chk(clone.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
 
-            cmds_gen.disconnect(SOURCE, CLONE)
+            cmds_gen.disconnect(source, clone)
             sys.exit("Error: Master and/or Slave rep config did not pass.")
 
-        if CLONE.gtid_mode:
+        if clone.gtid_mode:
             # Exclude "change master to"option from dump file.
             opt_arg_list.append("--master-data=2")
 
@@ -271,31 +285,30 @@ def chk_rep_cfg(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
     return opt_arg_list
 
 
-def chk_slv_err(MASTER, SLAVE, **kwargs):
+def chk_slv_err(slave, **kwargs):
 
     """Function:  chk_slv_err
 
     Description:  Check the Slave's IO and SQL threads for errors.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
+        (input) slave -> Slave class instance(s).
 
     """
 
-    if SLAVE:
+    slave = list(slave)
 
-        for slv in SLAVE:
+    if slave:
 
-            io, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
+        for slv in slave:
+
+            ioerr, sql, io_msg, sql_msg, io_time, sql_time = slv.get_err_stat()
             name = slv.get_name()
 
             # Is there a IO error
-            if io:
+            if ioerr:
                 print("\nSlave:\t{0}".format(name))
-                print("IO Error Detected:\t{0}".format(io))
+                print("IO Error Detected:\t{0}".format(ioerr))
                 print("\tIO Message:\t{0}".format(io_msg))
                 print("\tIO Timestamp:\t{0}".format(io_time))
 
@@ -310,46 +323,79 @@ def chk_slv_err(MASTER, SLAVE, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def chk_slv_thr(MASTER, SLAVE, **kwargs):
+def chk_slv_thr(slave, **kwargs):
 
     """Function:  chk_slv_thr
 
     Description:  Checks the status of the Slave(s) IO and SQL threads.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
+        (input) slave -> Slave class instance(s).
 
     """
 
-    if SLAVE:
+    slave = list(slave)
+    prt_template = "\nSlave:  {0}"
 
-        for slv in SLAVE:
+    if slave:
+
+        for slv in slave:
             thr, io_thr, sql_thr, run = slv.get_thr_stat()
             name = slv.get_name()
 
             # Check slave IO state and slave running attributes.
             if not thr or not gen_libs.is_true(run):
-                print("\nSlave: {0}".format(name))
+                print(prt_template.format(name))
                 print("Error:  Slave IO/SQL Threads are down.")
 
             # Check slave IO running attribute.
             elif not gen_libs.is_true(io_thr):
-                print("\nSlave: {0}".format(name))
+                print(prt_template.format(name))
                 print("Error:  Slave IO Thread is down.")
 
             # Check slave SQL running attribute.
             elif not gen_libs.is_true(sql_thr):
-                print("\nSlave: {0}".format(name))
+                print(prt_template.format(name))
                 print("Error:  Slave SQL Thread is down.")
 
     else:
         print("\nchk_slv_thr:  Warning:  No Slave instance detected.")
 
 
-def chk_mst_log(MASTER, SLAVE, **kwargs):
+def chk_slv(slave, **kwargs):
+
+    """Function:  chk_slv
+
+    Description:  Compares the Slave's read file and postition with the
+        executed file and position.  Will also print GTID info, in pre-MySQL
+        5.6 this will be NULL.
+
+    Arguments:
+        (input) slave -> Slave instance.
+
+    """
+
+    mst_file, relay_file, read_pos, exec_pos = slave.get_log_info()
+    name = slave.get_name()
+
+    # Slave's master info doesn't match slave's relay info.
+    if mst_file != relay_file or read_pos != exec_pos:
+        print("\nSlave: {0}".format(name))
+        print("Warning:  Slave might be lagging in execution of log.")
+        print("\tRead Log:\t{0}".format(mst_file))
+        print("\tRead Pos:\t{0}".format(read_pos))
+
+        if slave.gtid_mode:
+            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
+
+        print("\tExec Log:\t{0}".format(relay_file))
+        print("\tExec Pos:\t{0}".format(exec_pos))
+
+        if slave.gtid_mode:
+            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
+
+
+def chk_mst_log(master, slave, **kwargs):
 
     """Function:  chk_mst_log
 
@@ -358,47 +404,44 @@ def chk_mst_log(MASTER, SLAVE, **kwargs):
         the log on the slave itself.
 
     Arguments:
-        (input) MASTER -> Master class instance.
-        (input) SLAVE -> Slave class instance(s).
-        (input) **kwargs:
-            None
+        (input) master -> Master class instance.
+        (input) slave -> Slave class instance(s).
 
     """
 
-    if MASTER and SLAVE:
-        fname, log_pos = MASTER.get_log_info()
+    slave = list(slave)
 
-        for slv in SLAVE:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
+    if master and slave:
+        fname, log_pos = master.get_log_info()
+
+        for slv in slave:
+            mst_file, _, read_pos, _ = slv.get_log_info()
             name = slv.get_name()
 
             # If master's log file or position doesn't match slave's log info.
             if fname != mst_file or log_pos != read_pos:
 
                 print("\nWarning:  Slave lagging in reading master log.")
-                print("Master: {0}".format(MASTER.name))
+                print("Master: {0}".format(master.name))
                 print("\tMaster Log: {0}".format(fname))
                 print("\t\tMaster Pos: {0}".format(log_pos))
                 print("Slave: {0}".format(name))
                 print("\tSlave Log: {0}".format(mst_file))
                 print("\t\tSlave Pos: {0}".format(read_pos))
 
-            Chk_Slv(slv, **kwargs)
+            chk_slv(slv, **kwargs)
 
-    elif SLAVE:
+    elif slave:
         print("\nchk_mst_log:  Warning:  Missing Master instance.")
 
-        for slv in SLAVE:
-            mst_file, relay_file, read_pos, exec_pos = slv.get_log_info()
-            name = slv.get_name()
-
-            Chk_Slv(slv, **kwargs)
+        for slv in slave:
+            chk_slv(slv, **kwargs)
 
     else:
         print("\nchk_mst_log:  Warning:  Missing Master and Slave instances.")
 
 
-def chk_rep(CLONE, args_array, **kwargs):
+def chk_rep(clone, args_array, **kwargs):
 
     """Function:  chk_rep
 
@@ -406,33 +449,35 @@ def chk_rep(CLONE, args_array, **kwargs):
         replication system between the two servers.
 
     Arguments:
-        (input) CLONE -> Destination server instance.
+        (input) clone -> Destination server instance.
         (input) args_array -> Array of command line options and values.
-        (input) **kwargs:
-            None
 
     """
 
+    args_array = dict(args_array)
+
     if "-n" not in args_array:
-        MASTER = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
+        master = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
                                             mysql_class.MasterRep)
+        master.connect()
 
-        mysql_libs.change_master_to(MASTER, CLONE)
+        mysql_libs.change_master_to(master, clone)
 
-        SLAVE = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
+        slave = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
                                            mysql_class.SlaveRep)
-        SLAVE.start_slave()
+        slave.connect()
+        slave.start_slave()
 
         # Waiting for slave to start.
         time.sleep(5)
-        MASTER.upd_mst_status()
-        SLAVE.upd_slv_status()
+        master.upd_mst_status()
+        slave.upd_slv_status()
 
-        chk_slv_err(MASTER, [SLAVE])
-        chk_slv_thr(MASTER, [SLAVE])
-        chk_mst_log(MASTER, [SLAVE])
+        chk_slv_err([slave])
+        chk_slv_thr([slave])
+        chk_mst_log(master, [slave])
 
-        cmds_gen.disconnect(MASTER, SLAVE)
+        cmds_gen.disconnect(master, slave)
 
 
 def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
@@ -452,20 +497,22 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
 
     """
 
-    SOURCE = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
+    args_array = dict(args_array)
+    req_rep_cfg = dict(req_rep_cfg)
+    opt_arg_list = list(opt_arg_list)
+    source = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
                                         mysql_class.Server)
-    CLONE = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
+    clone = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
                                        mysql_class.Server)
+    source.connect()
+    source.set_srv_gtid()
+    clone.connect()
+    clone.set_srv_gtid()
 
-    SOURCE.connect()
-    SOURCE.set_srv_gtid()
-    CLONE.connect()
-    CLONE.set_srv_gtid()
-
-    status, status_msg = mysql_libs.is_cfg_valid([SOURCE, CLONE])
+    status, status_msg = mysql_libs.is_cfg_valid([source, clone])
 
     if not status:
-        cmds_gen.disconnect(SOURCE, CLONE)
+        cmds_gen.disconnect(source, clone)
 
         for msg in status_msg:
             print(msg)
@@ -473,25 +520,25 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
         sys.exit("Error:  Detected problem in the configuration file.")
 
     # Do not proceed if GTID modes don't match and rep is being configured.
-    if SOURCE.gtid_mode != CLONE.gtid_mode and "-n" not in args_array:
-        cmds_gen.disconnect(SOURCE, CLONE)
+    if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
+        cmds_gen.disconnect(source, clone)
         sys.exit("Error:  Source (%s) and Clone (%s) GTID modes do not match."
-                 % (SOURCE.gtid_mode, CLONE.gtid_mode))
+                 % (source.gtid_mode, clone.gtid_mode))
 
-    stop_clr_rep(CLONE, args_array)
+    stop_clr_rep(clone, args_array)
 
     # Add to argument list array based on rep config.
-    opt_arg_list = chk_rep_cfg(SOURCE, CLONE, args_array, req_rep_cfg,
+    opt_arg_list = chk_rep_cfg(source, clone, args_array, req_rep_cfg,
                                opt_arg_list)
 
     print("Starting dump-load process...")
-    dump_load_dbs(SOURCE, CLONE, args_array, req_rep_cfg, opt_arg_list,
+    dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
                   **kwargs)
     print("Finished dump-load process...")
 
-    chk_rep(CLONE, args_array)
+    chk_rep(clone, args_array)
 
-    cmds_gen.disconnect(SOURCE, CLONE)
+    cmds_gen.disconnect(source, clone)
 
 
 def main():
@@ -514,12 +561,13 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d", "-p"]
     opt_arg_list = ["--single-transaction", "--all-databases", "--triggers",
                     "--routines", "--events", "--ignore-table=mysql.event"]
     opt_dump_list = {"-r": "--set-gtid-purged=OFF"}
     opt_req_list = ["-c", "-t", "-d"]
-    opt_val_list = ["-c", "-t", "-d", "-p"]
+    opt_val_list = ["-c", "-t", "-d", "-p", "-y"]
     req_rep_cfg = {"master": {"log_bin": "ON", "sync_binlog": "1",
                               "innodb_flush_log_at_trx_commit": "1",
                               "innodb_support_xa": "ON",
@@ -530,12 +578,22 @@ def main():
                              "sync_relay_log_info": "1"}}
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list)
+    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
 
-    if not gen_libs.help_func(args_array, __version__, help_message):
-        if not arg_parser.arg_require(args_array, opt_req_list):
+    if not gen_libs.help_func(args_array, __version__, help_message) \
+       and not arg_parser.arg_require(args_array, opt_req_list) \
+       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
+
+        try:
+            proglock = gen_class.ProgramLock(cmdline.argv,
+                                             args_array.get("-y", ""))
             run_program(args_array, req_rep_cfg, opt_arg_list,
                         opt_dump_list=opt_dump_list)
+            del proglock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  lock in place for mysql_clone with id of: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":

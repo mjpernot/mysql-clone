@@ -4,9 +4,56 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.0.2] - 2020-04-20
+### Added
+- Added ProgramLock class to prevent multiple runs at the same time.
+- chk_slv:  Compares the slave's read file and postition with the executed file and position.
+
+### Fixed
+- cfg_chk:  Fixed problem with mutable default arguments issue.
+- crt_dump_cmd:  Fixed problem with mutable default arguments issue.
+- dump_load_dbs:  Fixed problem with mutable default arguments issue.
+- stop_clr_rep:  Fixed problem with mutable default arguments issue.
+- chk_rep_cfg:  Fixed problem with mutable default arguments issue.
+- chk_slv_err:  Fixed problem with mutable default arguments issue.
+- chk_slv_thr:  Fixed problem with mutable default arguments issue.
+- chk_mst_log:  Fixed problem with mutable default arguments issue.
+- chk_rep:  Fixed problem with mutable default arguments issue.
+- run_program:  Fixed problem with mutable default arguments issue.
+- chk_slv_thr:  Fixed multiple strings from SonarQube scan finding.
+- dump_load_dbs:  Fixed handling subprocess line from SonarQube scan finding.
+- main:  Fixed handling command line arguments from SonarQube scan finding.
+- main:  Added arg_parser.arg_dir_chk_crt call to check directory arguments.
+- chk_rep:  Added connect calls for master and slave instances.
+
+### Changed
+- chk_mst_log:  Replaced return variables with placeholders for non-used variables.
+- stop_clr_rep:  Replace clone.sql() with call to mysql_libs.reset_slave().
+- main: Added ProgramLock class to implement program locking.
+- config/mysql.cfg.TEMPLATE:  Changed format of template.
+- config/mysql_cfg.py.TEMPLATE:  Changed format of template.
+- chk_slv_thr: Removed master argument - no longer required.
+- chk_rep:  Removed master argument in chk_slv_err and chk_slv_thr calls - no longer required.
+- chk_slv_err: Removed master argument - no longer required.
+- cfg_chk:  Changed variables to standard naming convention.
+- chk_mst_log: Removed get_log_info and get_name calls - no longer required.
+- main:  Refactor "if" statements to streamline the checking process.
+- chk_slv_err:  Changed variables to standard naming convention.
+- chk_slv_thr:  Changed variables to standard naming convention.
+- chk_mst_log:  Changed variables to standard naming convention.
+- chk_rep:  Changed variables to standard naming convention.
+- stop_clr_rep:  Changed variables to standard naming convention.
+- run_program:  Changed variables to standard naming convention.
+- chk_rep_cfg:  Changed variables to standard naming convention.
+- dump_load_dbs:  Changed variables to standard naming convention.
+- crt_dump_cmd:  Changed variables to standard naming convention.
+- chk_mst_log:  Added call to chk_slv function.
+- Documentation updates.
+
+
 ## [2.0.1] - 2018-11-30
 ### Changed
-- Added **kwargs to a number of function declarations to allow passing of keyword arguments.
+- Added \*\*kwargs to a number of function declarations to allow passing of keyword arguments.
 - chk_rep_cfg:  Removed passing replication instances to cfg_chk call.
 - cfg_chk:  Removed non-used SERVER variable.
 
@@ -50,7 +97,7 @@ Breaking Change
 
 ## [1.7.0] - 2017-08-18
 ### Changed
-- Help_Message:  Replace docstring with printing the programs __doc__.
+- Help_Message:  Replace docstring with printing the programs \_\_doc\_\_.
 - Change single quotes to double quotes.
 - Convert program to use local libraries from ./lib directory.
 
