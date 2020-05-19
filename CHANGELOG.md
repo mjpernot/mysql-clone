@@ -27,6 +27,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - chk_rep:  Added connect calls for master and slave instances.
 
 ### Changed
+- chk_mst_log:  Replaced return variables with placeholders for non-used variables.
 - stop_clr_rep:  Replace clone.sql() with call to mysql_libs.reset_slave().
 - main: Added ProgramLock class to implement program locking.
 - config/mysql.cfg.TEMPLATE:  Changed format of template.
