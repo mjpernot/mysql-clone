@@ -10,7 +10,8 @@
 
     Usage:
         mysql_clone.py -c source_file -t clone_file -d path
-            [-n | -p path | -r] [-v | -h]
+            [-n | -p path | -r]
+            [-v | -h]
 
     Arguments:
         -c file => Source/Master configuration file.  Required arg.
@@ -28,17 +29,17 @@
     Notes:
         Master and Slave config file format (config/mysql_cfg.py.TEMPLATE):
             # Configuration file for database server:
-            user = "root"
-            passwd = "ROOT_PASSWORD"
+            user = "USER"
+            passwd = "PASSWORD"
             # DO NOT USE 127.0.0.1 for the master, use actual IP.
             host = "IP_ADDRESS"
-            serv_os = "Linux" or "Solaris"
             name = "HOSTNAME"
-            # Default port for Mysql is 3306.
-            port = PORT_NUMBER
-            cfg_file = "DIRECTORY_PATH/my.cnf"
             sid = "SERVER_ID"
             extra_def_file = "DIRECTORY_PATH/mysql.cfg"
+            serv_os = "Linux"
+            # Default port for Mysql is 3306.
+            port = 3306
+            cfg_file = "DIRECTORY_PATH/my.cnf"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -53,7 +54,7 @@
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="ROOT_PASSWORD"
+            password="PASSWORD"
             socket="DIRECTORY_PATH/mysql.sock"
 
         NOTE 1:  The socket information can be obtained from the my.cnf
