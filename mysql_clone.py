@@ -10,6 +10,7 @@
 
     Usage:
         mysql_clone.py -c source_file -t clone_file -d path [-n | -p path | -r]
+            [-y flavor_id]
             [-v | -h]
 
     Arguments:
@@ -21,6 +22,7 @@
         -p dir path => Directory path to mysql programs.  Only required if the
             mysql binary programs do not run properly.  (i.e. not in the $PATH
             variable.)
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
             NOTE:  -v or -h overrides the other options.

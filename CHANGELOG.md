@@ -5,6 +5,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.0.2] - 2020-04-20
+### Added
+- Added ProgramLock class to prevent multiple runs at the same time.
+- chk_slv:  Compares the slave's read file and postition with the executed file and position.
+
 ### Fixed
 - cfg_chk:  Fixed problem with mutable default arguments issue.
 - crt_dump_cmd:  Fixed problem with mutable default arguments issue.
@@ -21,9 +25,6 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - main:  Fixed handling command line arguments from SonarQube scan finding.
 - main:  Added arg_parser.arg_dir_chk_crt call to check directory arguments.
 - chk_rep:  Added connect calls for master and slave instances.
-
-### Added
-- chk_slv:  Compares the slave's read file and postition with the executed file and position.
 
 ### Changed
 - config/mysql.cfg.TEMPLATE:  Changed format of template.
