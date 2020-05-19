@@ -3,14 +3,13 @@
 
 """Program:  mysql_clone.py
 
-    Description:  The program can clone a database.  The new database can
-        either be a standalone copy of the original database or the program
-        can integrate the new database into replication with the
+    Description:  To clone a database to another database server.  The new
+        database can either be a standalone copy of the original database or
+        the program can integrate the new database into replication with the
         original database creating a master-slave replication setup.
 
     Usage:
-        mysql_clone.py -c source_file -t clone_file -d path
-            [-n | -p path | -r]
+        mysql_clone.py -c source_file -t clone_file -d path [-n | -p path | -r]
             [-v | -h]
 
     Arguments:
