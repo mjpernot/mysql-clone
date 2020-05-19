@@ -1,9 +1,10 @@
 # MySQL Configuration file
 # Classification (U)
 # Unclassified until filled in.
-user = 'root'
-passwd = 'ROOT_PASSWORD'
+user = 'USER'
+passwd = 'PASSWORD'
 # MySQL DB host information
+# DO NOT USE 127.0.0.1 for the master, use actual IP.
 host = 'SERVER_IP'
 name = 'HOST_NAME'
 # MySQL database server id - unique to each database
