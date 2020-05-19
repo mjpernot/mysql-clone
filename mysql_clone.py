@@ -235,7 +235,7 @@ def stop_clr_rep(clone, args_array, **kwargs):
         mysql_class.slave_stop(clone)
 
         if "-n" in args_array:
-            clone.sql("reset slave all")
+            mysql_libs.reset_slave(clone)
 
 
 def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
