@@ -585,7 +585,7 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
 
         try:
-            proglock = gen_class.ProgramLock(sys.argv,
+            proglock = gen_class.ProgramLock(cmdline.argv,
                                              args_array.get("-y", ""))
             run_program(args_array, req_rep_cfg, opt_arg_list,
                         opt_dump_list=opt_dump_list)
