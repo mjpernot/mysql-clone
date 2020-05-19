@@ -26,6 +26,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - chk_slv:  Compares the slave's read file and postition with the executed file and position.
 
 ### Changed
+- config/mysql.cfg.TEMPLATE:  Changed format of template.
+- config/mysql_cfg.py.TEMPLATE:  Changed format of template.
 - chk_slv_thr: Removed master argument - no longer required.
 - chk_rep:  Removed master argument in chk_slv_err and chk_slv_thr calls - no longer required.
 - chk_slv_err: Removed master argument - no longer required.
