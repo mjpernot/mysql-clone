@@ -42,7 +42,6 @@ class Server(object):
 
     Methods:
         __init__ -> Class initialization.
-        sql -> sql function.
 
     """
 
@@ -57,19 +56,6 @@ class Server(object):
         """
 
         pass
-
-    def sql(self, cmd):
-
-        """Method:  sql
-
-        Description:  sql function.
-
-        Arguments:
-            (input) cmd - Command to run.
-
-        """
-
-        return cmd
 
 
 class UnitTest(unittest.TestCase):
@@ -99,6 +85,8 @@ class UnitTest(unittest.TestCase):
         self.args_array = {}
         self.args_array2 = {"-n": True}
 
+    @mock.patch("mysql_clone.mysql_libs.reset_slave",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_class.slave_stop")
     @mock.patch("mysql_clone.mysql_class.show_slave_stat")
     def test_reset_slave(self, mock_stat, mock_stop):
