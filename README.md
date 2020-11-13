@@ -78,7 +78,9 @@ cp mysql_cfg.py.TEMPLATE mysql_cfg_slave.py
 Make the appropriate change to the MySQL environment.
   * Change these entries in the MySQL setup:
     - user = 'USER'
-    - passwd = 'PASSWORD'
+    - japd = 'PSWORD'
+    - rep_user = 'REP_USER'
+    - rep_japd = 'REP_PSWORD'
     - host = 'SERVER_IP'
     - name = 'HOST_NAME'
     - sid = SERVER_ID
@@ -129,8 +131,6 @@ chmod 600 mysql_master.cfg mysql_slave.cfg
 # Testing:
 
 # Unit Testing:
-
-### Description: Testing consists of unit testing for the functions in the mysql_clone.py program.
 
 ### Installation:
 
