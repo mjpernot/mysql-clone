@@ -9,7 +9,8 @@
         original database creating a master-slave replication setup.
 
     Usage:
-        mysql_clone.py -c source_file -t clone_file -d path [-n | -p path | -r]
+        mysql_clone.py -c master_file -t slave_file -d path
+            [-n [-r]] [-p path]
             [-y flavor_id]
             [-v | -h]
 
@@ -17,7 +18,7 @@
         -c file => Source/Master configuration file.  Required arg.
         -t file => Clone/Slave configuration file.  Required arg.
         -d dir path => Directory path to config files.  Required arg.
-        -n => No replication, create a clone of the source database.
+        -n => No replication, create a clone of the master database.
         -r => Remove GTID entries from dump file.
         -p dir path => Directory path to mysql programs.  Only required if the
             mysql binary programs do not run properly.  (i.e. not in the $PATH
@@ -31,16 +32,15 @@
         Master and Slave config file format (config/mysql_cfg.py.TEMPLATE):
             # Configuration file for database server:
             user = "USER"
-            passwd = "PASSWORD"
+            japd = "PSWORD"
             # DO NOT USE 127.0.0.1 for the master, use actual IP.
             host = "IP_ADDRESS"
             name = "HOSTNAME"
-            sid = "SERVER_ID"
-            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
+            sid = SERVER_ID
+            extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
             serv_os = "Linux"
-            # Default port for Mysql is 3306.
             port = 3306
-            cfg_file = "DIRECTORY_PATH/my.cnf"
+            cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -69,7 +69,7 @@
             be ignored.
 
     Example:
-        mysql_clone.py -c source -t target -d config -n
+        mysql_clone.py -c master_cfg -t slave_cfg -d config
 
 """
 
