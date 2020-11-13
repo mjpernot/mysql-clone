@@ -31,16 +31,18 @@
     Notes:
         Master and Slave config file format (config/mysql_cfg.py.TEMPLATE):
             # Configuration file for database server:
-            user = "USER"
-            japd = "PSWORD"
+            user = 'USER'
+            japd = 'PSWORD'
+            rep_user = 'REP_USER'
+            rep_japd = 'REP_PSWORD'
             # DO NOT USE 127.0.0.1 for the master, use actual IP.
-            host = "IP_ADDRESS"
-            name = "HOSTNAME"
+            host = 'IP_ADDRESS'
+            name = 'HOSTNAME'
             sid = SERVER_ID
-            extra_def_file = "PYTHON_PROJECT/config/mysql.cfg"
-            serv_os = "Linux"
+            extra_def_file = 'PYTHON_PROJECT/config/mysql.cfg'
+            serv_os = 'Linux'
             port = 3306
-            cfg_file = "MYSQL_DIRECTORY/mysqld.cnf"
+            cfg_file = 'MYSQL_DIRECTORY/mysqld.cnf'
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -55,8 +57,8 @@
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="PASSWORD"
-            socket="DIRECTORY_PATH/mysql.sock"
+            password='PASSWORD'
+            socket=DIRECTORY_PATH/mysql.sock
 
         NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
