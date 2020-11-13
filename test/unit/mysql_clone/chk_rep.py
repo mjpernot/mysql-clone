@@ -147,6 +147,40 @@ class Master(object):
         return True
 
 
+class Cfg(object):
+
+    """Class:  Cfg
+
+    Description:  Stub holder for configuration file.
+
+    Methods:
+        __init__ -> Class initialization.
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.name = "name"
+        self.sid = "sid"
+        self.user = "user"
+        self.japd = None
+        self.rep_user = "user"
+        self.rep_japd = None
+        self.serv_os = "Linux"
+        self.host = "hostname"
+        self.port = 3306
+        self.cfg_file = "cfg_file"
+        self.extra_def_file = "extra_def_file"
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -173,18 +207,25 @@ class UnitTest(unittest.TestCase):
         self.master = Master()
         self.slave = Slave()
         self.clone = Slave()
+        self.cfg = Cfg()
         self.args_array = {"-c": "mysql_cfg", "-d": "config",
                            "-t": "mysql_cfg2"}
         self.args_array2 = {"-n": True}
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect")
-    @mock.patch("mysql_clone.chk_mst_log")
-    @mock.patch("mysql_clone.chk_slv_thr")
-    @mock.patch("mysql_clone.chk_slv_err")
-    @mock.patch("mysql_clone.mysql_libs.change_master_to")
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_mst_log",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_slv_thr",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_slv_err",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_libs.change_master_to",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.gen_libs.load_module")
+    @mock.patch("mysql_clone.mysql_class.MasterRep")
     @mock.patch("mysql_clone.mysql_libs.create_instance")
-    def test_with_replication(self, mock_inst, mock_chg, mock_err, mock_thr,
-                              mock_log, mock_disc):
+    def test_with_replication(self, mock_inst, mock_master, mock_load):
 
         """Function:  test_with_replication
 
@@ -194,12 +235,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_inst.side_effect = [self.master, self.slave]
-        mock_chg.return_value = True
-        mock_err.return_value = True
-        mock_thr.return_value = True
-        mock_log.return_value = True
-        mock_disc.return_value = True
+        mock_inst.return_value = self.slave
+        mock_master.return_value = self.master
+        mock_load.return_value = self.cfg
 
         self.assertFalse(mysql_clone.chk_rep(self.clone, self.args_array))
 
