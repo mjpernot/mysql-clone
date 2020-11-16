@@ -5,7 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.0.3] - 2020-11-13
-- Updated to use the mysql_libs v5.0.0 library.
+- Updated to use the mysql_libs v5.0.2 library.
+- Updated to work with (much older) mysql.connector v1.1.6 library module.
 
 ### Changed
 - chk_rep:  Replaced mysql_libs.create_instance with manual creation of MasterRep class instance.
