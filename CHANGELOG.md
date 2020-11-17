@@ -8,6 +8,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use the mysql_libs v5.0.2 library.
 - Updated to work with (much older) mysql.connector v1.1.6 library module.
 
+### Fixed
+- config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
 ### Changed
 - chk_rep:  Replaced mysql_libs.create_instance with manual creation of MasterRep class instance.
 - config/mysql_cfg.py.TEMPLATE:  Added replication user information and changed entry name.
