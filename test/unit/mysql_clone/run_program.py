@@ -109,6 +109,7 @@ class Master(object):
         """
 
         self.gtid_mode = True
+        self.host = "Server_IP"
 
     def connect(self):
 
@@ -143,6 +144,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_master_loop_no_rep -> Test Master Loopback IP with no replication.
+        test_master_loop_rep -> Test with Master Loopback IP with replication.
+        test_master_ip_rep -> Test with Master IP with replication.
         test_gtid_no_match -> Test with GTID Modes not matching.
         test_status_false -> Test with status set to False.
         test_status_true -> Test with status set to True.
@@ -161,9 +165,10 @@ class UnitTest(unittest.TestCase):
 
         self.master = Master()
         self.slave = Slave()
-
         self.args_array = {"-c": "mysql_cfg", "-d": "config",
                            "-t": "mysql_cfg2"}
+        self.args_array2 = {"-c": "mysql_cfg", "-d": "config",
+                            "-t": "mysql_cfg2", "-n": True}
         self.opt_arg_list = ["--single-transaction", "--all-databases",
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
@@ -178,6 +183,83 @@ class UnitTest(unittest.TestCase):
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
 
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_master_loop_no_rep(self, mock_lib, mock_cfg):
+
+        """Function:  test_master_loop_no_rep
+
+        Description:  Test Master Loopback IP with no replication.
+
+        Arguments:
+
+        """
+
+        self.master.host = "localhost"
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_cfg.return_value = self.opt_arg_list
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array2, self.req_rep_cfg, self.opt_arg_list))
+
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_master_loop_rep(self, mock_lib, mock_cfg):
+
+        """Function:  test_master_loop_rep
+
+        Description:  Test with Master Loopback IP with replication.
+
+        Arguments:
+
+        """
+
+        self.master.host = "localhost"
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_cfg.return_value = self.opt_arg_list
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+
+    @mock.patch("mysql_clone.cmds_gen.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_master_ip_rep(self, mock_lib, mock_cfg):
+
+        """Function:  test_master_ip_rep
+
+        Description:  Test with Master IP with replication.
+
+        Arguments:
+
+        """
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_cfg.return_value = self.opt_arg_list
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+
     @mock.patch("mysql_clone.chk_rep_cfg")
     @mock.patch("mysql_clone.mysql_libs")
     def test_status_true(self, mock_lib, mock_cfg):
@@ -191,7 +273,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, None)
+        mock_lib.is_cfg_valid.return_value = (True, list())
         mock_cfg.return_value = self.opt_arg_list2
 
         self.assertFalse(mysql_clone.run_program(
@@ -216,7 +298,7 @@ class UnitTest(unittest.TestCase):
 
         self.slave.gtid_mode = False
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, None)
+        mock_lib.is_cfg_valid.return_value = (True, list())
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
@@ -241,7 +323,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (False, "Error Message")
+        mock_lib.is_cfg_valid.return_value = (False, ["Error Message"])
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
@@ -266,7 +348,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, None)
+        mock_lib.is_cfg_valid.return_value = (True, list())
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
