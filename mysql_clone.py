@@ -516,7 +516,6 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
     source.set_srv_gtid()
     clone.connect()
     clone.set_srv_gtid()
-
     status, status_msg = mysql_libs.is_cfg_valid([source, clone])
 
     if status:
