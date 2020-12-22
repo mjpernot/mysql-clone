@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
 ### Changed
+- main:  Set "-r" option to require "-n" option if used.
 - run_program:  Added check on opt_arg_list to ensure requirements check was successful.
 - chk_rep_cfg:  Refactored function to remove the sys.exit() command.
 - run_program:  Refactored function to remove the sys.exit() commands.

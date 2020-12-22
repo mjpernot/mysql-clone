@@ -18,7 +18,7 @@
         -t file => Clone/Slave configuration file.  Required arg.
         -d dir path => Directory path to config files.  Required arg.
         -n => No replication, create a clone of the master database.
-        -r => Remove GTID entries from dump file.
+        -r => Remove GTID entries from dump file.  Requires the -n option.
         -p dir path => Directory path to mysql programs.  Only required if the
             mysql binary programs do not run properly.  (i.e. not in the $PATH
             variable.)
@@ -34,7 +34,7 @@
             japd = 'PSWORD'
             rep_user = 'REP_USER'
             rep_japd = 'REP_PSWORD'
-            # DO NOT USE 127.0.0.1 for the master, use actual IP.
+            # DO NOT USE 127.0.0.1 or localhost for the master, use actual IP.
             host = 'IP_ADDRESS'
             name = 'HOSTNAME'
             sid = SERVER_ID
@@ -560,6 +560,7 @@ def main():
     Variables:
         dir_chk_list -> contains options which will be directories.
         opt_arg_list -> contains arguments to add to command line by default.
+        opt_con_req_list -> contains the options that require other options.
         opt_dump_list -> contains optional arguments for mysqldump command.
         opt_req_list -> contains the options that are required for the program.
         opt_val_list -> contains options which require values.
@@ -574,6 +575,7 @@ def main():
     dir_chk_list = ["-d", "-p"]
     opt_arg_list = ["--single-transaction", "--all-databases", "--triggers",
                     "--routines", "--events", "--ignore-table=mysql.event"]
+    opt_con_req_list = {"-r": ["-n"]}
     opt_dump_list = {"-r": "--set-gtid-purged=OFF"}
     opt_req_list = ["-c", "-t", "-d"]
     opt_val_list = ["-c", "-t", "-d", "-p", "-y"]
@@ -590,6 +592,7 @@ def main():
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
+       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
 
