@@ -12,6 +12,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
 ### Changed
+- chk_rep_cfg:  Refactored function to remove the sys.exit() command.
 - run_program:  Refactored function to remove the sys.exit() commands.
 - chk_rep:  Replaced mysql_libs.create_instance with manual creation of MasterRep class instance.
 - config/mysql_cfg.py.TEMPLATE:  Added replication user information and changed entry name.

@@ -266,20 +266,23 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
         source.upd_mst_rep_stat()
         clone.upd_slv_rep_stat()
 
-        # Both servers must meet rep requirements.
+        # Both servers must meet replication requirements.
         if not cfg_chk(source.fetch_mst_rep_cfg, req_rep_cfg["master"]) \
            or not cfg_chk(clone.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
 
+            # Create list to act as a failure of the requirements.
+            opt_arg_list = list()
             cmds_gen.disconnect(source, clone)
-            sys.exit("Error: Master and/or Slave rep config did not pass.")
-
-        if clone.gtid_mode:
-            # Exclude "change master to" option from dump file.
-            opt_arg_list.append("--master-data=2")
+            print("Error: Master and/or Slave rep config did not pass.")
 
         else:
-            # Include "change master to" option in dump file.
-            opt_arg_list.append("--master-data=1")
+            if clone.gtid_mode:
+                # Exclude "change master to" option from dump file.
+                opt_arg_list.append("--master-data=2")
+
+            else:
+                # Include "change master to" option in dump file.
+                opt_arg_list.append("--master-data=1")
 
     else:
         # Exclude "change master to" option from dump file.
