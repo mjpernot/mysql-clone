@@ -541,12 +541,14 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
             opt_arg_list = chk_rep_cfg(source, clone, args_array, req_rep_cfg,
                                        opt_arg_list)
 
-            print("Starting dump-load process...")
-            dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
-                          **kwargs)
-            print("Finished dump-load process...")
-            chk_rep(clone, args_array)
-            cmds_gen.disconnect(source, clone)
+            # If empty list, then failure in requirements check.
+            if opt_arg_list:
+                print("Starting dump-load process...")
+                dump_load_dbs(source, clone, args_array, req_rep_cfg,
+                              opt_arg_list, **kwargs)
+                print("Finished dump-load process...")
+                chk_rep(clone, args_array)
+                cmds_gen.disconnect(source, clone)
 
 
 def main():
