@@ -167,6 +167,7 @@ class UnitTest(unittest.TestCase):
         self.opt_arg_list = ["--single-transaction", "--all-databases",
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
+        self.opt_arg_list2 = list()
         self.req_rep_cfg = {"master": {"log_bin": "ON", "sync_binlog": "1",
                                        "innodb_flush_log_at_trx_commit": "1",
                                        "innodb_support_xa": "ON",
@@ -176,6 +177,25 @@ class UnitTest(unittest.TestCase):
                                       "sync_master_info": "1",
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
+
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_status_true(self, mock_lib, mock_cfg):
+
+        """Function:  test_status_true
+
+        Description:  Test with status set to True.
+
+        Arguments:
+
+        """
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, None)
+        mock_cfg.return_value = self.opt_arg_list2
+
+        self.assertFalse(mysql_clone.run_program(
+            self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.cmds_gen.disconnect",
                 mock.Mock(return_value=True))
