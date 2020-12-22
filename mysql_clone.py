@@ -519,14 +519,7 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
 
     status, status_msg = mysql_libs.is_cfg_valid([source, clone])
 
-    if not status:
-        cmds_gen.disconnect(source, clone)
-        print("Error:  Detected problem in the configuration file.")
-
-        for msg in status_msg:
-            print(msg)
-
-    else:
+    if status:
 
         # Do not proceed if GTID modes don't match and rep is being configured.
         if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
@@ -549,6 +542,13 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
                 print("Finished dump-load process...")
                 chk_rep(clone, args_array)
                 cmds_gen.disconnect(source, clone)
+
+    else:
+        cmds_gen.disconnect(source, clone)
+        print("Error:  Detected problem in the configuration file.")
+
+        for msg in status_msg:
+            print(msg)
 
 
 def main():
