@@ -10,8 +10,7 @@
 
     Usage:
         mysql_clone.py -c master_file -t slave_file -d path
-            [-n [-r]] [-p path]
-            [-y flavor_id]
+            [-n [-r]] [-p path] [-y flavor_id]
             [-v | -h]
 
     Arguments:
@@ -127,7 +126,6 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
     cls_cfg_dict = func_call()
 
     for item in cfg_dict:
-
         if item in cls_cfg_dict:
 
             # Does server config not match class config.
@@ -204,6 +202,7 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and "-n" in args_array and "-r" not in args_array:
+
         dump_cmd = cmds_gen.is_add_cmd({"-r": "True"}, dump_cmd,
                                        kwargs.get("opt_dump_list", []))
 
@@ -255,6 +254,7 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
         (input) args_array -> Array of command line options and values.
         (input) req_rep_cfg -> Required replication config settings.
         (input) opt_arg_list -> List of options to add to dump cmd line.
+        (output) opt_arg_list -> List of options to add to dump cmd line.
 
     """
 
@@ -274,7 +274,7 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
             sys.exit("Error: Master and/or Slave rep config did not pass.")
 
         if clone.gtid_mode:
-            # Exclude "change master to"option from dump file.
+            # Exclude "change master to" option from dump file.
             opt_arg_list.append("--master-data=2")
 
         else:
