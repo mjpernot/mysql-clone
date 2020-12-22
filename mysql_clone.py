@@ -518,32 +518,32 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
 
     if not status:
         cmds_gen.disconnect(source, clone)
+        print("Error:  Detected problem in the configuration file.")
 
         for msg in status_msg:
             print(msg)
 
-        sys.exit("Error:  Detected problem in the configuration file.")
+    else:
 
-    # Do not proceed if GTID modes don't match and rep is being configured.
-    if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
-        cmds_gen.disconnect(source, clone)
-        sys.exit("Error:  Source (%s) and Clone (%s) GTID modes do not match."
-                 % (source.gtid_mode, clone.gtid_mode))
+        # Do not proceed if GTID modes don't match and rep is being configured.
+        if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
+            cmds_gen.disconnect(source, clone)
+            print("Error:  Source (%s) and Clone (%s) GTID modes do not match."
+                  % (source.gtid_mode, clone.gtid_mode))
 
-    stop_clr_rep(clone, args_array)
+        else:
+            stop_clr_rep(clone, args_array)
 
-    # Add to argument list array based on rep config.
-    opt_arg_list = chk_rep_cfg(source, clone, args_array, req_rep_cfg,
-                               opt_arg_list)
+            # Add to argument list array based on rep config.
+            opt_arg_list = chk_rep_cfg(source, clone, args_array, req_rep_cfg,
+                                       opt_arg_list)
 
-    print("Starting dump-load process...")
-    dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
-                  **kwargs)
-    print("Finished dump-load process...")
-
-    chk_rep(clone, args_array)
-
-    cmds_gen.disconnect(source, clone)
+            print("Starting dump-load process...")
+            dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
+                          **kwargs)
+            print("Finished dump-load process...")
+            chk_rep(clone, args_array)
+            cmds_gen.disconnect(source, clone)
 
 
 def main():
