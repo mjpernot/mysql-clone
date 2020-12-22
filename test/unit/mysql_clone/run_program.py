@@ -144,6 +144,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Initialize testing environment.
+        test_rep_config_failure -> Test with rep config returning empty list.
         test_master_loop_no_rep -> Test Master Loopback IP with no replication.
         test_master_loop_rep -> Test with Master Loopback IP with replication.
         test_master_ip_rep -> Test with Master IP with replication.
@@ -182,6 +183,26 @@ class UnitTest(unittest.TestCase):
                                       "sync_master_info": "1",
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
+
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_rep_config_failure(self, mock_lib, mock_cfg):
+
+        """Function:  test_rep_config_failure
+
+        Description:  Test with rep config returning empty list.
+
+        Arguments:
+
+        """
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_cfg.return_value = self.opt_arg_list2
+
+        self.assertFalse(mysql_clone.run_program(
+            self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.cmds_gen.disconnect",
                 mock.Mock(return_value=True))
@@ -259,25 +280,6 @@ class UnitTest(unittest.TestCase):
         with gen_libs.no_std_out():
             self.assertFalse(mysql_clone.run_program(
                 self.args_array, self.req_rep_cfg, self.opt_arg_list))
-
-    @mock.patch("mysql_clone.chk_rep_cfg")
-    @mock.patch("mysql_clone.mysql_libs")
-    def test_status_true(self, mock_lib, mock_cfg):
-
-        """Function:  test_status_true
-
-        Description:  Test with status set to True.
-
-        Arguments:
-
-        """
-
-        mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
-        mock_cfg.return_value = self.opt_arg_list2
-
-        self.assertFalse(mysql_clone.run_program(
-            self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.cmds_gen.disconnect",
                 mock.Mock(return_value=True))
