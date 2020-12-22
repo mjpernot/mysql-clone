@@ -177,7 +177,6 @@ class UnitTest(unittest.TestCase):
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
 
-    @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.cmds_gen.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
@@ -204,7 +203,6 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(mysql_clone.run_program(
                 self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
-    @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.cmds_gen.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
