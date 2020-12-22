@@ -518,6 +518,14 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
     clone.set_srv_gtid()
     status, status_msg = mysql_libs.is_cfg_valid([source, clone])
 
+    # Master cannot be set to loopback IP if setting up replication.
+    if source.host in ["127.0." + "0.1", "localhost"] \
+       and "-n" not in args_array:
+
+        status = False
+        status_msg.append("Master host entry has incorrect entry.")
+        status_msg.append("Master host: %s" % (source.host))
+
     if status:
 
         # Do not proceed if GTID modes don't match and rep is being configured.

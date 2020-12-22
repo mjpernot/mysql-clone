@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work with (much older) mysql.connector v1.1.6 library module.
 
 ### Fixed
+- run_program:  Master cannot be set to loopback IP if setting up replication.
 - config/mysql.cfg.TEMPLATE:  Point to correct socket file.
 
 ### Changed
