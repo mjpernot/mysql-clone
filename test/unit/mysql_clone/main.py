@@ -72,6 +72,8 @@ class UnitTest(unittest.TestCase):
         setUp -> Initialize testing environment.
         test_help_true -> Test help if returns true.
         test_help_false -> Test help if returns false.
+        test_cond_req_false -> Test arg_cond_req if returns false.
+        test_cond_req_true -> Test arg_cond_req if returns true.
         test_arg_req_true -> Test arg_require if returns true.
         test_arg_req_false -> Test arg_require if returns false.
         test_arg_dir_chk_crt_true -> Test arg_dir_chk_crt if returns True.
@@ -128,6 +130,43 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = False
+
+        self.assertFalse(mysql_clone.main())
+
+    @mock.patch("mysql_clone.gen_libs.help_func")
+    @mock.patch("mysql_clone.arg_parser")
+    def test_cond_req_false(self, mock_arg, mock_help):
+
+        """Function:  test_cond_req_false
+
+        Description:  Test arg_cond_req if returns false.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = False
+
+        self.assertFalse(mysql_clone.main())
+
+    @mock.patch("mysql_clone.gen_libs.help_func")
+    @mock.patch("mysql_clone.arg_parser")
+    def test_cond_req_true(self, mock_arg, mock_help):
+
+        """Function:  test_cond_req_true
+
+        Description:  Test arg_cond_req if returns true.
+
+        Arguments:
+
+        """
+
+        mock_arg.arg_parse2.return_value = self.args_array
+        mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = True
 
         self.assertFalse(mysql_clone.main())
@@ -146,6 +185,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = True
 
         self.assertFalse(mysql_clone.main())
@@ -164,6 +204,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = True
 
@@ -183,6 +224,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = True
 
@@ -203,6 +245,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_run.return_value = True
@@ -225,6 +268,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_lock.return_value = self.proglock
@@ -247,6 +291,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_lock.return_value = self.proglock
@@ -268,6 +313,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_lock.side_effect = \
@@ -292,6 +338,7 @@ class UnitTest(unittest.TestCase):
 
         mock_arg.arg_parse2.return_value = self.args_array2
         mock_help.return_value = False
+        mock_arg.arg_cond_req.return_value = True
         mock_arg.arg_require.return_value = False
         mock_arg.arg_dir_chk_crt.return_value = False
         mock_lock.return_value = self.proglock

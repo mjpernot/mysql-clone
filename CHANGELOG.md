@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.0.3] - 2020-11-13
+- Updated to use the mysql_libs v5.0.2 library.
+- Updated to work with (much older) mysql.connector v1.1.6 library module.
+
+### Fixed
+- run_program:  Master cannot be set to loopback IP if setting up replication.
+- config/mysql.cfg.TEMPLATE:  Point to correct socket file.
+
+### Changed
+- main:  Set "-r" option to require "-n" option if used.
+- run_program:  Added check on opt_arg_list to ensure requirements check was successful.
+- chk_rep_cfg:  Refactored function to remove the sys.exit() command.
+- run_program:  Refactored function to remove the sys.exit() commands.
+- chk_rep:  Replaced mysql_libs.create_instance with manual creation of MasterRep class instance.
+- config/mysql_cfg.py.TEMPLATE:  Added replication user information and changed entry name.
+- Documentation updates.
+
+
 ## [2.0.2] - 2020-04-20
 ### Added
 - Added ProgramLock class to prevent multiple runs at the same time.
