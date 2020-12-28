@@ -9,16 +9,16 @@
         original database creating a master-slave replication setup.
 
     Usage:
-        mysql_clone.py -c source_file -t clone_file -d path [-n | -p path | -r]
-            [-y flavor_id]
+        mysql_clone.py -c master_file -t slave_file -d path
+            [-n [-r]] [-p path] [-y flavor_id]
             [-v | -h]
 
     Arguments:
         -c file => Source/Master configuration file.  Required arg.
         -t file => Clone/Slave configuration file.  Required arg.
         -d dir path => Directory path to config files.  Required arg.
-        -n => No replication, create a clone of the source database.
-        -r => Remove GTID entries from dump file.
+        -n => No replication, create a clone of the master database.
+        -r => Remove GTID entries from dump file.  Requires the -n option.
         -p dir path => Directory path to mysql programs.  Only required if the
             mysql binary programs do not run properly.  (i.e. not in the $PATH
             variable.)
@@ -30,17 +30,18 @@
     Notes:
         Master and Slave config file format (config/mysql_cfg.py.TEMPLATE):
             # Configuration file for database server:
-            user = "USER"
-            passwd = "PASSWORD"
-            # DO NOT USE 127.0.0.1 for the master, use actual IP.
-            host = "IP_ADDRESS"
-            name = "HOSTNAME"
-            sid = "SERVER_ID"
-            extra_def_file = "DIRECTORY_PATH/mysql.cfg"
-            serv_os = "Linux"
-            # Default port for Mysql is 3306.
+            user = 'USER'
+            japd = 'PSWORD'
+            rep_user = 'REP_USER'
+            rep_japd = 'REP_PSWORD'
+            # DO NOT USE 127.0.0.1 or localhost for the master, use actual IP.
+            host = 'IP_ADDRESS'
+            name = 'HOSTNAME'
+            sid = SERVER_ID
+            extra_def_file = 'PYTHON_PROJECT/config/mysql.cfg'
+            serv_os = 'Linux'
             port = 3306
-            cfg_file = "DIRECTORY_PATH/my.cnf"
+            cfg_file = 'MYSQL_DIRECTORY/mysqld.cnf'
 
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
@@ -55,8 +56,8 @@
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password="PASSWORD"
-            socket="DIRECTORY_PATH/mysql.sock"
+            password='PASSWORD'
+            socket=DIRECTORY_PATH/mysql.sock
 
         NOTE 1:  The socket information can be obtained from the my.cnf
             file under ~/mysql directory.
@@ -69,7 +70,7 @@
             be ignored.
 
     Example:
-        mysql_clone.py -c source -t target -d config -n
+        mysql_clone.py -c master_cfg -t slave_cfg -d config
 
 """
 
@@ -85,6 +86,7 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.cmds_gen as cmds_gen
 import lib.gen_class as gen_class
+import lib.machine as machine
 import mysql_lib.mysql_libs as mysql_libs
 import mysql_lib.mysql_class as mysql_class
 import version
@@ -124,7 +126,6 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
     cls_cfg_dict = func_call()
 
     for item in cfg_dict:
-
         if item in cls_cfg_dict:
 
             # Does server config not match class config.
@@ -201,6 +202,7 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and "-n" in args_array and "-r" not in args_array:
+
         dump_cmd = cmds_gen.is_add_cmd({"-r": "True"}, dump_cmd,
                                        kwargs.get("opt_dump_list", []))
 
@@ -252,6 +254,7 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
         (input) args_array -> Array of command line options and values.
         (input) req_rep_cfg -> Required replication config settings.
         (input) opt_arg_list -> List of options to add to dump cmd line.
+        (output) opt_arg_list -> List of options to add to dump cmd line.
 
     """
 
@@ -263,20 +266,23 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
         source.upd_mst_rep_stat()
         clone.upd_slv_rep_stat()
 
-        # Both servers must meet rep requirements.
+        # Both servers must meet replication requirements.
         if not cfg_chk(source.fetch_mst_rep_cfg, req_rep_cfg["master"]) \
            or not cfg_chk(clone.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
 
+            # Create list to act as a failure of the requirements.
+            opt_arg_list = list()
             cmds_gen.disconnect(source, clone)
-            sys.exit("Error: Master and/or Slave rep config did not pass.")
-
-        if clone.gtid_mode:
-            # Exclude "change master to"option from dump file.
-            opt_arg_list.append("--master-data=2")
+            print("Error: Master and/or Slave rep config did not pass.")
 
         else:
-            # Include "change master to" option in dump file.
-            opt_arg_list.append("--master-data=1")
+            if clone.gtid_mode:
+                # Exclude "change master to" option from dump file.
+                opt_arg_list.append("--master-data=2")
+
+            else:
+                # Include "change master to" option in dump file.
+                opt_arg_list.append("--master-data=1")
 
     else:
         # Exclude "change master to" option from dump file.
@@ -457,12 +463,16 @@ def chk_rep(clone, args_array, **kwargs):
     args_array = dict(args_array)
 
     if "-n" not in args_array:
-        master = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
-                                            mysql_class.MasterRep)
+        cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+        master = mysql_class.MasterRep(
+            cfg.name, cfg.sid, cfg.user, cfg.japd,
+            os_type=getattr(machine, cfg.serv_os)(), host=cfg.host,
+            port=cfg.port,
+            defaults_file=cfg.cfg_file,
+            extra_def_file=cfg.__dict__.get("extra_def_file", None),
+            rep_user=cfg.rep_user, rep_japd=cfg.rep_japd)
         master.connect()
-
         mysql_libs.change_master_to(master, clone)
-
         slave = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
                                            mysql_class.SlaveRep)
         slave.connect()
@@ -472,11 +482,9 @@ def chk_rep(clone, args_array, **kwargs):
         time.sleep(5)
         master.upd_mst_status()
         slave.upd_slv_status()
-
         chk_slv_err([slave])
         chk_slv_thr([slave])
         chk_mst_log(master, [slave])
-
         cmds_gen.disconnect(master, slave)
 
 
@@ -508,37 +516,46 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
     source.set_srv_gtid()
     clone.connect()
     clone.set_srv_gtid()
-
     status, status_msg = mysql_libs.is_cfg_valid([source, clone])
 
-    if not status:
+    # Master cannot be set to loopback IP if setting up replication.
+    if source.host in ["127.0." + "0.1", "localhost"] \
+       and "-n" not in args_array:
+
+        status = False
+        status_msg.append("Master host entry has incorrect entry.")
+        status_msg.append("Master host: %s" % (source.host))
+
+    if status:
+
+        # Do not proceed if GTID modes don't match and rep is being configured.
+        if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
+            cmds_gen.disconnect(source, clone)
+            print("Error:  Source (%s) and Clone (%s) GTID modes do not match."
+                  % (source.gtid_mode, clone.gtid_mode))
+
+        else:
+            stop_clr_rep(clone, args_array)
+
+            # Add to argument list array based on rep config.
+            opt_arg_list = chk_rep_cfg(source, clone, args_array, req_rep_cfg,
+                                       opt_arg_list)
+
+            # If empty list, then failure in requirements check.
+            if opt_arg_list:
+                print("Starting dump-load process...")
+                dump_load_dbs(source, clone, args_array, req_rep_cfg,
+                              opt_arg_list, **kwargs)
+                print("Finished dump-load process...")
+                chk_rep(clone, args_array)
+                cmds_gen.disconnect(source, clone)
+
+    else:
         cmds_gen.disconnect(source, clone)
+        print("Error:  Detected problem in the configuration file.")
 
         for msg in status_msg:
             print(msg)
-
-        sys.exit("Error:  Detected problem in the configuration file.")
-
-    # Do not proceed if GTID modes don't match and rep is being configured.
-    if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
-        cmds_gen.disconnect(source, clone)
-        sys.exit("Error:  Source (%s) and Clone (%s) GTID modes do not match."
-                 % (source.gtid_mode, clone.gtid_mode))
-
-    stop_clr_rep(clone, args_array)
-
-    # Add to argument list array based on rep config.
-    opt_arg_list = chk_rep_cfg(source, clone, args_array, req_rep_cfg,
-                               opt_arg_list)
-
-    print("Starting dump-load process...")
-    dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
-                  **kwargs)
-    print("Finished dump-load process...")
-
-    chk_rep(clone, args_array)
-
-    cmds_gen.disconnect(source, clone)
 
 
 def main():
@@ -551,6 +568,7 @@ def main():
     Variables:
         dir_chk_list -> contains options which will be directories.
         opt_arg_list -> contains arguments to add to command line by default.
+        opt_con_req_list -> contains the options that require other options.
         opt_dump_list -> contains optional arguments for mysqldump command.
         opt_req_list -> contains the options that are required for the program.
         opt_val_list -> contains options which require values.
@@ -565,6 +583,7 @@ def main():
     dir_chk_list = ["-d", "-p"]
     opt_arg_list = ["--single-transaction", "--all-databases", "--triggers",
                     "--routines", "--events", "--ignore-table=mysql.event"]
+    opt_con_req_list = {"-r": ["-n"]}
     opt_dump_list = {"-r": "--set-gtid-purged=OFF"}
     opt_req_list = ["-c", "-t", "-d"]
     opt_val_list = ["-c", "-t", "-d", "-p", "-y"]
@@ -581,6 +600,7 @@ def main():
     args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
+       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
        and not arg_parser.arg_require(args_array, opt_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
 

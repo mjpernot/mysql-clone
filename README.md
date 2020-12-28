@@ -2,7 +2,7 @@
 # Classification (U)
 
 # Description:
-  Used to clone a MySQL database to a standalone database server or make part of a replica set.
+  Used to clone a MySQL database to a standalone database server or make a slave in a replica set.
 
 
 ###  This README file is broken down into the following sections:
@@ -17,7 +17,7 @@
 
 # Features:
   * Clone a MySQL database from another MySQL database.
-  * Integrate the clone database into a replica set.
+  * Integrate the clone database as a slave into a replica set.
   * Include or remove GTID from the transfer.
 
 
@@ -66,19 +66,13 @@ pip install -r requirements-python-lib.txt --target mysql_lib/lib --trusted-host
 
 # Configuration:
 
-Create MySQL configuration file for the Source/Master and Clone/Slave databases.
+Create MySQL configuration file for the Master and Clone/Slave database.  Make the appropriate change to the MySQL environment.
   * Replace **{Python_Project}** with the baseline path of the python program.
-
-```
-cd config
-cp mysql_cfg.py.TEMPLATE mysql_cfg_master.py
-cp mysql_cfg.py.TEMPLATE mysql_cfg_slave.py
-```
-
-Make the appropriate change to the MySQL environment.
   * Change these entries in the MySQL setup:
     - user = 'USER'
-    - passwd = 'PASSWORD'
+    - japd = 'PSWORD'
+    - rep_user = 'REP_USER'
+    - rep_japd = 'REP_PSWORD'
     - host = 'SERVER_IP'
     - name = 'HOST_NAME'
     - sid = SERVER_ID
@@ -92,24 +86,22 @@ Make the appropriate change to the MySQL environment.
     - port = 3306
 
 ```
+cd config
+cp mysql_cfg.py.TEMPLATE mysql_cfg_master.py
+cp mysql_cfg.py.TEMPLATE mysql_cfg_slave.py
 vim mysql_cfg_master.py
 vim mysql_cfg_slave.py
 chmod 600 mysql_cfg_master.py mysql_cfg_slave.py
 ```
 
-Create MySQL definition file for the Source/Master and Clone/Slave databases.
-
-```
-cp mysql.cfg.TEMPLATE mysql_master.cfg
-cp mysql.cfg.TEMPLATE mysql_slave.cfg
-```
-
-Make the appropriate change to the MySQL definition setup.
+Create MySQL definition file for the Master and Clone/Slave databases.  Make the appropriate change to the MySQL definition setup.
   * Change these entries in the MySQL configuration file:
     - password='PASSWORD'
     - socket=DIRECTORY_PATH/mysql.sock
 
 ```
+cp mysql.cfg.TEMPLATE mysql_master.cfg
+cp mysql.cfg.TEMPLATE mysql_slave.cfg
 vim mysql_master.cfg
 vim mysql_slave.cfg
 chmod 600 mysql_master.cfg mysql_slave.cfg
@@ -129,8 +121,6 @@ chmod 600 mysql_master.cfg mysql_slave.cfg
 # Testing:
 
 # Unit Testing:
-
-### Description: Testing consists of unit testing for the functions in the mysql_clone.py program.
 
 ### Installation:
 

@@ -29,6 +29,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mysql_clone
+import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -133,8 +134,8 @@ class UnitTest(unittest.TestCase):
         self.results.append("--master-data=2")
         self.results2 = list(self.opt_arg_list)
         self.results2.append("--master-data=1")
+        self.results3 = list()
 
-    @mock.patch("mysql_clone.sys.exit", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.cmds_gen.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.cfg_chk")
@@ -150,9 +151,10 @@ class UnitTest(unittest.TestCase):
 
         mock_cfg.return_value = False
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results)
+        with gen_libs.no_std_out():
+            self.assertEqual(mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args_array, self.req_rep_cfg,
+                self.opt_arg_list), self.results3)
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_clone_gtid_off(self, mock_cfg):
