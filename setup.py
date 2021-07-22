@@ -50,4 +50,5 @@ setuptools.setup(
         "Programming Language :: Python :: 2.7",
         "Topic :: Database",
         "Topic :: Database :: MySQL",
-        "Topic :: Database :: MySQL :: 5.6"])
+        "Topic :: Database :: MySQL :: 5.6",
+        "Topic :: Database :: MySQL :: 8.0"])
