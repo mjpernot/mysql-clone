@@ -42,9 +42,9 @@ class Slave(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_log_info -> get_log_info function.
-        get_name -> get_name function.
+        __init__
+        get_log_info
+        get_name
 
     """
 
@@ -96,8 +96,8 @@ class Master(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_log_info -> get_log_info function.
+        __init__
+        get_log_info
 
     """
 
@@ -135,11 +135,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_matching -> Test with Master and Slave matching.
-        test_not_matching -> Test with Master and Slave not matching.
-        test_slave_only -> Test with slave only.
-        test_no_master_slave -> Test with no master or slave present.
+        setUp
+        test_matching
+        test_not_matching
+        test_slave_only
+        test_no_master_slave
 
     """
 
