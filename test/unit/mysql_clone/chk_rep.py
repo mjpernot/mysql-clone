@@ -212,7 +212,7 @@ class UnitTest(unittest.TestCase):
                            "-t": "mysql_cfg2"}
         self.args_array2 = {"-n": True}
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_mst_log",
                 mock.Mock(return_value=True))
