@@ -41,10 +41,10 @@ class Slave(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        start_slave -> start_slave function.
-        upd_slv_status -> upd_slv_status function.
-        connect -> connection function.
+        __init__
+        start_slave
+        upd_slv_status
+        connect
 
     """
 
@@ -104,9 +104,9 @@ class Master(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        upd_mst_status -> upd_mst_status function.
-        connect -> connection function.
+        __init__
+        upd_mst_status
+        connect
 
     """
 
@@ -154,7 +154,7 @@ class Cfg(object):
     Description:  Stub holder for configuration file.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -188,9 +188,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_with_replication -> Test with replication.
-        test_no_replication -> Test with no replication.
+        setUp
+        test_with_replication
+        test_no_replication
 
     """
 
