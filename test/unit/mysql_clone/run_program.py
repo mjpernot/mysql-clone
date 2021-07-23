@@ -243,8 +243,9 @@ class UnitTest(unittest.TestCase):
         mock_lib.is_cfg_valid.return_value = (True, list())
         mock_cfg.return_value = self.opt_arg_list2
 
-        self.assertFalse(mysql_clone.run_program(
-            self.args_array, self.req_rep_cfg, self.opt_arg_list))
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
