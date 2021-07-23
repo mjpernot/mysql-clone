@@ -278,7 +278,7 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
 
             # Create list to act as a failure of the requirements.
             opt_arg_list = list()
-            cmds_gen.disconnect(source, clone)
+            mysql_libs.disconnect(source, clone)
             print("Error: Master and/or Slave rep config did not pass.")
 
         else:

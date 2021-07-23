@@ -11,7 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - chk_rep_cfg:  Remove innodb_support_xa from replication config for MySQL 8.0 and above.
-- run_program, chk_rep:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
+- run_program, chk_rep, chk_rep_cfg:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 
 
 ## [2.0.3] - 2020-11-13
