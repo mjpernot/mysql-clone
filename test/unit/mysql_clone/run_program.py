@@ -204,7 +204,7 @@ class UnitTest(unittest.TestCase):
         self.assertFalse(mysql_clone.run_program(
             self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
@@ -230,7 +230,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(mysql_clone.run_program(
                 self.args_array2, self.req_rep_cfg, self.opt_arg_list))
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
@@ -256,7 +256,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(mysql_clone.run_program(
                 self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
@@ -281,7 +281,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(mysql_clone.run_program(
                 self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
@@ -307,7 +307,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(mysql_clone.run_program(
                 self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
@@ -332,7 +332,7 @@ class UnitTest(unittest.TestCase):
             self.assertFalse(mysql_clone.run_program(
                 self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
