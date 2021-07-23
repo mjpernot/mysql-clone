@@ -569,6 +569,10 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
                 chk_rep(clone, args_array)
                 mysql_libs.disconnect(source, clone)
 
+            else:
+                print("Error:  Master/Slave do not meet rep requirements.")
+                mysql_libs.disconnect(source, clone)
+
     else:
         mysql_libs.disconnect(source, clone)
         print("Error:  Detected problem in the configuration file.")

@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to use SSL connections.
 
 ### Fixed
+- run_program:  Added disconnect and error message if master and/or slave fails replication requirements check.
 - run_program:  Added reconnect due to long term dump/restores cause connection timeouts.
 - dump_load_dbs:  Fixed problem with mutable default arguments issue.
 
