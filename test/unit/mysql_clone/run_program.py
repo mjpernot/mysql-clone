@@ -42,9 +42,9 @@ class Slave(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        connect -> connect function.
-        set_srv_gtid -> set_srv_gtid function.
+        __init__
+        connect
+        set_srv_gtid
 
     """
 
@@ -92,9 +92,9 @@ class Master(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        connect -> connect function.
-        set_srv_gtid -> set_srv_gtid function.
+        __init__
+        connect
+        set_srv_gtid
 
     """
 
@@ -143,14 +143,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_rep_config_failure -> Test with rep config returning empty list.
-        test_master_loop_no_rep -> Test Master Loopback IP with no replication.
-        test_master_loop_rep -> Test with Master Loopback IP with replication.
-        test_master_ip_rep -> Test with Master IP with replication.
-        test_gtid_no_match -> Test with GTID Modes not matching.
-        test_status_false -> Test with status set to False.
-        test_status_true -> Test with status set to True.
+        setUp
+        test_rep_config_failure
+        test_master_loop_no_rep
+        test_master_loop_rep
+        test_master_ip_rep
+        test_gtid_no_match
+        test_status_false
+        test_status_true
 
     """
 
