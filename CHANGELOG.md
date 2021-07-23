@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - chk_rep_cfg:  Remove innodb_support_xa from replication config for MySQL 8.0 and above.
+- run_program:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 
 
 ## [2.0.3] - 2020-11-13
@@ -37,9 +38,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Fixed
 - crt_dump_cmd, dump_load_dbs, stop_clr_rep, chk_rep_cfg, chk_slv_err, chk_slv_thr, chk_mst_log, chk_rep, run_program, cfg_chk:  Fixed problem with mutable default arguments issue.
-- chk_slv_thr:  Fixed multiple strings from SonarQube scan finding.
-- dump_load_dbs:  Fixed handling subprocess line from SonarQube scan finding.
-- main:  Fixed handling command line arguments from SonarQube scan finding.
+- chk_slv_thr:  Fixed multiple strings.
+- dump_load_dbs:  Fixed handling subprocess line.
+- main:  Fixed handling command line arguments.
 - main:  Added arg_parser.arg_dir_chk_crt call to check directory arguments.
 - chk_rep:  Added connect calls for master and slave instances.
 
@@ -70,11 +71,7 @@ Breaking Change
 
 ### Changed
 - stop_clr_rep:  Changed mysql_libs.Show_Slave_Stat and mysql_libs.Stop_Slave to mysql_class references.
-- Changed "mysql_class" calls to new naming schema.
-- Changed "mysql_libs" calls to new naming schema.
-- Changed "cmds_gen" calls to new naming schema.
-- Changed "gen_libs" calls to new naming schema.
-- Changed "arg_parser" calls to new naming schema.
+- Changed calls to mysql_class, mysql_libs, cmds_gen, gen_libs, and arg_parser to new naming schema.
 - Changed function names from uppercase to lowercase.
 - Setup single-source version control.
 
@@ -90,10 +87,10 @@ Breaking Change
 - Chk_Rep:  Replaced "mysql_rep_admin.Chk_Mst_Log" with "Chk_Mst_Log" call.
 
 ### Added
-- Chk_Mst_Log function.
-- Chk_Slv_Thr function.
-- Chk_Slv_Err function.
-- Crt_Dump_Cmd function.
+- Chk_Mst_Log
+- Chk_Slv_Thr
+- Chk_Slv_Err
+- Crt_Dump_Cmd
 - Added single-source version control.
 
 

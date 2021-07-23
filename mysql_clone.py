@@ -536,7 +536,7 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
 
         # Do not proceed if GTID modes don't match and rep is being configured.
         if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
-            cmds_gen.disconnect(source, clone)
+            mysql_libs.disconnect(source, clone)
             print("Error:  Source (%s) and Clone (%s) GTID modes do not match."
                   % (source.gtid_mode, clone.gtid_mode))
 
@@ -554,10 +554,10 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
                               opt_arg_list, **kwargs)
                 print("Finished dump-load process...")
                 chk_rep(clone, args_array)
-                cmds_gen.disconnect(source, clone)
+                mysql_libs.disconnect(source, clone)
 
     else:
-        cmds_gen.disconnect(source, clone)
+        mysql_libs.disconnect(source, clone)
         print("Error:  Detected problem in the configuration file.")
 
         for msg in status_msg:
