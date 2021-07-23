@@ -9,6 +9,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in MySQL 5.7 environment.
 - Updated to use SSL connections.
 
+### Changed
+- chk_rep_cfg:  Remove innodb_support_xa from replication config for MySQL 8.0 and above.
+
 
 ## [2.0.3] - 2020-11-13
 - Updated to use the mysql_libs v5.0.2 library.
