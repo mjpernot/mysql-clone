@@ -43,6 +43,19 @@
             port = 3306
             cfg_file = 'MYSQL_DIRECTORY/mysqld.cnf'
 
+            # If SSL connections are being used, configure one or more of these
+                entries:
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+
+            # Only changes these if necessary and have knowledge in MySQL
+                SSL configuration setup:
+            ssl_client_flag = None
+            ssl_disabled = False
+            ssl_verify_id = False
+            ssl_verify_cert = False
+
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
@@ -88,7 +101,6 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.cmds_gen as cmds_gen
 import lib.gen_class as gen_class
-import lib.machine as machine
 import mysql_lib.mysql_libs as mysql_libs
 import mysql_lib.mysql_class as mysql_class
 import version
@@ -110,7 +122,7 @@ def help_message():
     print(__doc__)
 
 
-def cfg_chk(func_call, cfg_dict, **kwargs):
+def cfg_chk(func_call, cfg_dict):
 
     """Function:  cfg_chk
 
@@ -148,7 +160,7 @@ def cfg_chk(func_call, cfg_dict, **kwargs):
     return cfg_flag
 
 
-def crt_dump_cmd(server, args_array, opt_arg_list, opt_dump_list, **kwargs):
+def crt_dump_cmd(server, args_array, opt_arg_list, opt_dump_list):
 
     """Function:  crt_dump_cmd
 
@@ -220,7 +232,7 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
     proc2.wait()
 
 
-def stop_clr_rep(clone, args_array, **kwargs):
+def stop_clr_rep(clone, args_array):
 
     """Function:  stop_clr_rep
 
@@ -242,8 +254,7 @@ def stop_clr_rep(clone, args_array, **kwargs):
             mysql_libs.reset_slave(clone)
 
 
-def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
-                **kwargs):
+def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list):
 
     """Function:  chk_rep_cfg
 
@@ -299,7 +310,7 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list,
     return opt_arg_list
 
 
-def chk_slv_err(slave, **kwargs):
+def chk_slv_err(slave):
 
     """Function:  chk_slv_err
 
@@ -337,7 +348,7 @@ def chk_slv_err(slave, **kwargs):
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
 
 
-def chk_slv_thr(slave, **kwargs):
+def chk_slv_thr(slave):
 
     """Function:  chk_slv_thr
 
@@ -376,7 +387,7 @@ def chk_slv_thr(slave, **kwargs):
         print("\nchk_slv_thr:  Warning:  No Slave instance detected.")
 
 
-def chk_slv(slave, **kwargs):
+def chk_slv(slave):
 
     """Function:  chk_slv
 
@@ -455,7 +466,7 @@ def chk_mst_log(master, slave, **kwargs):
         print("\nchk_mst_log:  Warning:  Missing Master and Slave instances.")
 
 
-def chk_rep(clone, args_array, **kwargs):
+def chk_rep(clone, args_array):
 
     """Function:  chk_rep
 
