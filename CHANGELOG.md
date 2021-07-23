@@ -11,6 +11,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - chk_rep_cfg:  Remove innodb_support_xa from replication config for MySQL 8.0 and above.
+- chk_rep:  Replaced manual creation of MasterRep class instance with mysql_libs.create_instance.
 - run_program, chk_rep, chk_rep_cfg:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
 
 

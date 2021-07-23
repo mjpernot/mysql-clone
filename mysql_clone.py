@@ -469,14 +469,8 @@ def chk_rep(clone, args_array, **kwargs):
     args_array = dict(args_array)
 
     if "-n" not in args_array:
-        cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
-        master = mysql_class.MasterRep(
-            cfg.name, cfg.sid, cfg.user, cfg.japd,
-            os_type=getattr(machine, cfg.serv_os)(), host=cfg.host,
-            port=cfg.port,
-            defaults_file=cfg.cfg_file,
-            extra_def_file=cfg.__dict__.get("extra_def_file", None),
-            rep_user=cfg.rep_user, rep_japd=cfg.rep_japd)
+        master = mysql_libs.create_instance(args_array["-c"], args_array["-d"],
+                                            mysql_class.MasterRep)
         master.connect()
         mysql_libs.change_master_to(master, clone)
         slave = mysql_libs.create_instance(args_array["-t"], args_array["-d"],
