@@ -42,9 +42,9 @@ class Server(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        upd_mst_rep_stat -> upd_mst_rep_stat function.
-        upd_slv_rep_stat -> upd_slv_rep_stat function.
+        __init__
+        upd_mst_rep_stat
+        upd_slv_rep_stat
 
     """
 
@@ -94,11 +94,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_config_fail -> Test with configuration checks fails.
-        test_clone_gtid_off -> Test with Clone GTID Mode off.
-        test_config_pass -> Test with configuration checks pass.
-        test_no_rep -> Test with no replication configured.
+        setUp
+        test_config_fail
+        test_clone_gtid_off
+        test_config_pass
+        test_no_rep
 
     """
 
