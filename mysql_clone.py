@@ -68,6 +68,8 @@
             is a ~/.my.cnf or ~/.mylogin.cnf file located in the home directory
             of the user running this program.  The extras file will in effect
             be ignored.
+        NOTE 4:  Socket use is only required to be set in certain conditions
+            when connecting using the local host.
 
     Example:
         mysql_clone.py -c master_cfg -t slave_cfg -d config
