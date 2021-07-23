@@ -29,6 +29,7 @@ pipeline {
                 ./test/unit/mysql_clone/chk_slv.py
                 ./test/unit/mysql_clone/chk_slv_err.py
                 ./test/unit/mysql_clone/chk_slv_thr.py
+                ./test/unit/mysql_clone/connect_chk.py
                 ./test/unit/mysql_clone/crt_dump_cmd.py
                 ./test/unit/mysql_clone/dump_load_dbs.py
                 ./test/unit/mysql_clone/help_message.py
