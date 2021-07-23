@@ -45,6 +45,7 @@ class Slave(object):
         __init__
         connect
         set_srv_gtid
+        is_connected
 
     """
 
@@ -59,12 +60,13 @@ class Slave(object):
         """
 
         self.gtid_mode = True
+        self.connected = True
 
     def connect(self):
 
         """Method:  connect
 
-        Description:  connect function.
+        Description:  connect method.
 
         Arguments:
 
@@ -76,13 +78,25 @@ class Slave(object):
 
         """Method:  set_srv_gtid
 
-        Description:  set_srv_gtid function.
+        Description:  set_srv_gtid method.
 
         Arguments:
 
         """
 
         return True
+
+    def is_connected(self):
+
+        """Method:  is_connected
+
+        Description:  is_connected method.
+
+        Arguments:
+
+        """
+
+        return self.connected
 
 
 class Master(object):
@@ -144,6 +158,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_clone_disconnect
         test_rep_config_failure
         test_master_loop_no_rep
         test_master_loop_rep
@@ -183,6 +198,33 @@ class UnitTest(unittest.TestCase):
                                       "sync_master_info": "1",
                                       "sync_relay_log": "1",
                                       "sync_relay_log_info": "1"}}
+
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.chk_rep_cfg")
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_clone_disconnect(self, mock_lib, mock_cfg):
+
+        """Function:  test_clone_disconnect
+
+        Description:  Test with clone disconnecting during dump.
+
+        Arguments:
+
+        """
+
+        self.slave.connected = False
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_cfg.return_value = self.opt_arg_list
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.run_program(
+                self.args_array, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep_cfg")
