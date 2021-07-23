@@ -223,9 +223,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.change_master_to",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.gen_libs.load_module")
-    @mock.patch("mysql_clone.mysql_class.MasterRep")
     @mock.patch("mysql_clone.mysql_libs.create_instance")
-    def test_with_replication(self, mock_inst, mock_master, mock_load):
+    def test_with_replication(self, mock_inst, mock_load):
 
         """Function:  test_with_replication
 
@@ -235,8 +234,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_inst.return_value = self.slave
-        mock_master.return_value = self.master
+        mock_inst.side_effect = [self.master, self.slave]
         mock_load.return_value = self.cfg
 
         self.assertFalse(mysql_clone.chk_rep(self.clone, self.args_array))
