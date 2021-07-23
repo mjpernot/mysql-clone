@@ -491,7 +491,7 @@ def chk_rep(clone, args_array, **kwargs):
         chk_slv_err([slave])
         chk_slv_thr([slave])
         chk_mst_log(master, [slave])
-        cmds_gen.disconnect(master, slave)
+        mysql_libs.disconnect(master, slave)
 
 
 def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
