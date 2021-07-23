@@ -9,6 +9,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in MySQL 5.7 environment.
 - Updated to use SSL connections.
 
+### Fixed
+- dump_load_dbs:  Fixed problem with mutable default arguments issue.
+
 ### Changed
 - chk_rep_cfg:  Remove innodb_support_xa from replication config for MySQL 8.0 and above.
 - config/mysql_cfg.py.TEMPLATE:  Add SSL configuration entries.

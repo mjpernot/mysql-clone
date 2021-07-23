@@ -212,13 +212,13 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
     opt_arg_list = list(opt_arg_list)
     subp = gen_libs.get_inst(subprocess)
     dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
-                            kwargs.get("opt_dump_list", []))
+                            list(kwargs.get("opt_dump_list", [])))
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and "-n" in args_array and "-r" not in args_array:
 
         dump_cmd = cmds_gen.is_add_cmd({"-r": "True"}, dump_cmd,
-                                       kwargs.get("opt_dump_list", []))
+                                       list(kwargs.get("opt_dump_list", [])))
 
     load_cmd = mysql_libs.crt_cmd(
         clone, arg_parser.arg_set_path(args_array, "-p") + "mysql")
