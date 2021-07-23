@@ -560,7 +560,6 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
 
         # Do not proceed if GTID modes don't match
         if source.gtid_mode != clone.gtid_mode and "-n" not in args_array:
-            mysql_libs.disconnect(source, clone)
             print("Error:  Source (%s) and Clone (%s) GTID modes do not match."
                   % (source.gtid_mode, clone.gtid_mode))
 
@@ -581,18 +580,17 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
                 # Long term processes cause connection timeouts
                 connect_chk(clone)
                 chk_rep(clone, args_array)
-                mysql_libs.disconnect(source, clone)
 
             else:
                 print("Error:  Master/Slave do not meet rep requirements.")
-                mysql_libs.disconnect(source, clone)
 
     else:
-        mysql_libs.disconnect(source, clone)
         print("Error:  Detected problem in the configuration file.")
 
         for msg in status_msg:
             print(msg)
+
+    mysql_libs.disconnect(source, clone)
 
 
 def main():
