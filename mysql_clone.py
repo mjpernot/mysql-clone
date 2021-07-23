@@ -501,6 +501,22 @@ def chk_rep(clone, args_array):
         mysql_libs.disconnect(master, slave)
 
 
+def connect_chk(server):
+
+    """Function:  connect_chk
+
+    Description:  Checks to see if the connection is still active and if not
+        then reconnects the database instance.
+
+    Arguments:
+        (input) server -> Database instance.
+
+    """
+
+    if not server.is_connected():
+        server.connect()
+
+
 def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
 
     """Function:  run_program
@@ -562,10 +578,8 @@ def run_program(args_array, req_rep_cfg, opt_arg_list, **kwargs):
                               opt_arg_list, **kwargs)
                 print("Finished dump-load process...")
 
-                # Long term dump/restores cause connection timeouts
-                if not clone.is_connected():
-                    clone.connect()
-
+                # Long term processes cause connection timeouts
+                connect_chk(clone)
                 chk_rep(clone, args_array)
                 mysql_libs.disconnect(source, clone)
 
