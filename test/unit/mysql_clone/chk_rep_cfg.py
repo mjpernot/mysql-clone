@@ -142,7 +142,7 @@ class UnitTest(unittest.TestCase):
         self.version = {"version": "5.7"}
         self.version2 = {"version": "8.0.24"}
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -164,7 +164,7 @@ class UnitTest(unittest.TestCase):
                 self.source, self.clone, self.args_array, self.req_rep_cfg,
                 self.opt_arg_list), self.results3)
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
