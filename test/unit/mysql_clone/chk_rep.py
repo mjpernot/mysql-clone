@@ -41,10 +41,10 @@ class Slave(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        start_slave -> start_slave function.
-        upd_slv_status -> upd_slv_status function.
-        connect -> connection function.
+        __init__
+        start_slave
+        upd_slv_status
+        connect
 
     """
 
@@ -104,9 +104,9 @@ class Master(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        upd_mst_status -> upd_mst_status function.
-        connect -> connection function.
+        __init__
+        upd_mst_status
+        connect
 
     """
 
@@ -154,7 +154,7 @@ class Cfg(object):
     Description:  Stub holder for configuration file.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -188,9 +188,9 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_with_replication -> Test with replication.
-        test_no_replication -> Test with no replication.
+        setUp
+        test_with_replication
+        test_no_replication
 
     """
 
@@ -212,7 +212,7 @@ class UnitTest(unittest.TestCase):
                            "-t": "mysql_cfg2"}
         self.args_array2 = {"-n": True}
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_mst_log",
                 mock.Mock(return_value=True))
@@ -223,9 +223,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.change_master_to",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.gen_libs.load_module")
-    @mock.patch("mysql_clone.mysql_class.MasterRep")
     @mock.patch("mysql_clone.mysql_libs.create_instance")
-    def test_with_replication(self, mock_inst, mock_master, mock_load):
+    def test_with_replication(self, mock_inst, mock_load):
 
         """Function:  test_with_replication
 
@@ -235,8 +234,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_inst.return_value = self.slave
-        mock_master.return_value = self.master
+        mock_inst.side_effect = [self.master, self.slave]
         mock_load.return_value = self.cfg
 
         self.assertFalse(mysql_clone.chk_rep(self.clone, self.args_array))

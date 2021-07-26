@@ -126,11 +126,11 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_readonly -> Test with no read_only configuration setting.
-        test_slave -> Test with slave configuration.
-        test_missing_config -> Test with missing configuration options.
-        test_master -> Test with master configuration.
+        setUp
+        test_no_readonly
+        test_slave
+        test_missing_config
+        test_master
 
     """
 

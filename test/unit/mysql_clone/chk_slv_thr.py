@@ -42,9 +42,9 @@ class Server(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_thr_stat -> get_thr_stat function.
-        get_name -> get_name function.
+        __init__
+        get_thr_stat
+        get_name
 
     """
 
@@ -96,13 +96,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_all_good -> Test with all tests successful.
-        test_sql_false -> Test with SQL False.
-        test_io_false -> Test with IO False.
-        test_run_false -> Test with run False.
-        test_thr_down -> Test with thr down.
-        test_no_slave -> Test with no slave present.
+        setUp
+        test_all_good
+        test_sql_false
+        test_io_false
+        test_run_false
+        test_thr_down
+        test_no_slave
 
     """
 

@@ -41,8 +41,8 @@ class Popen(object):
     Description:  Class stub holder for subprocess.Popen class.
 
     Methods:
-        __init__ -> Class initialization.
-        wait -> Wait function.
+        __init__
+        wait
 
     """
 
@@ -78,7 +78,7 @@ class Server(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
+        __init__
 
     """
 
@@ -102,10 +102,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_gtid -> Test with -r option in args_array.
-        test_add_opt_dump -> Test with adding optional dump list commands.
-        test_create_cmd -> Test with creating command.
+        setUp
+        test_no_gtid
+        test_add_opt_dump
+        test_create_cmd
 
     """
 
