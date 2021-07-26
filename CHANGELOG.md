@@ -8,6 +8,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated to work in MySQL 8.0 environment.
 - Updated to work in MySQL 5.7 environment.
 - Updated to use SSL connections.
+- Updated to use the mysql_libs v5.2.2 library.
 
 ### Fixed
 - run_program:  Added disconnect and error message if master and/or slave fails replication requirements check.
