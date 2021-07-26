@@ -41,9 +41,9 @@ class Server(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        get_err_stat -> get_err_stat function.
-        get_name -> get_name function.
+        __init__
+        get_err_stat
+        get_name
 
     """
 
@@ -98,12 +98,12 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_no_error -> Test with no errors.
-        test_sql_error -> Test with SQL error.
-        test_io_error -> Test with IO error.
-        test_io_sql_errors -> Test with IO and SQL errors.
-        test_no_slave -> Test with no slave present.
+        setUp
+        test_no_error
+        test_sql_error
+        test_io_error
+        test_io_sql_errors
+        test_no_slave
 
     """
 

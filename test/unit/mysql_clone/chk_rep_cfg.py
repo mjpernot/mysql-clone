@@ -42,9 +42,9 @@ class Server(object):
     Description:  Class stub holder for mysql_class.Server class.
 
     Methods:
-        __init__ -> Class initialization.
-        upd_mst_rep_stat -> upd_mst_rep_stat function.
-        upd_slv_rep_stat -> upd_slv_rep_stat function.
+        __init__
+        upd_mst_rep_stat
+        upd_slv_rep_stat
 
     """
 
@@ -94,11 +94,15 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Initialize testing environment.
-        test_config_fail -> Test with configuration checks fails.
-        test_clone_gtid_off -> Test with Clone GTID Mode off.
-        test_config_pass -> Test with configuration checks pass.
-        test_no_rep -> Test with no replication configured.
+        setUp
+        test_config_fail2
+        test_config_fail
+        test_clone_gtid_off2
+        test_clone_gtid_off
+        test_config_pass2
+        test_config_pass
+        test_mysql_80
+        test_no_rep
 
     """
 
@@ -135,11 +139,36 @@ class UnitTest(unittest.TestCase):
         self.results2 = list(self.opt_arg_list)
         self.results2.append("--master-data=1")
         self.results3 = list()
+        self.version = {"version": "5.7"}
+        self.version2 = {"version": "8.0.24"}
 
-    @mock.patch("mysql_clone.cmds_gen.disconnect",
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_fail(self, mock_cfg):
+    def test_config_fail2(self, mock_cfg, mock_fetch):
+
+        """Function:  test_config_fail2
+
+        Description:  Test with configuration checks fails.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = False
+        mock_fetch.return_value = self.version2
+
+        with gen_libs.no_std_out():
+            self.assertEqual(mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args_array, self.req_rep_cfg,
+                self.opt_arg_list), self.results3)
+
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
+    @mock.patch("mysql_clone.cfg_chk")
+    def test_config_fail(self, mock_cfg, mock_fetch):
 
         """Function:  test_config_fail
 
@@ -150,14 +179,37 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = False
+        mock_fetch.return_value = self.version
 
         with gen_libs.no_std_out():
             self.assertEqual(mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args_array, self.req_rep_cfg,
                 self.opt_arg_list), self.results3)
 
+    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_clone_gtid_off(self, mock_cfg):
+    def test_clone_gtid_off2(self, mock_cfg, mock_fetch):
+
+        """Function:  test_clone_gtid_off2
+
+        Description:  Test with Clone GTID Mode off.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = True
+        mock_fetch.return_value = self.version2
+
+        self.clone.gtid_mode = False
+
+        self.assertEqual(mysql_clone.chk_rep_cfg(
+            self.source, self.clone, self.args_array, self.req_rep_cfg,
+            self.opt_arg_list), self.results2)
+
+    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
+    @mock.patch("mysql_clone.cfg_chk")
+    def test_clone_gtid_off(self, mock_cfg, mock_fetch):
 
         """Function:  test_clone_gtid_off
 
@@ -168,14 +220,36 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
+        mock_fetch.return_value = self.version
+
         self.clone.gtid_mode = False
 
         self.assertEqual(mysql_clone.chk_rep_cfg(
             self.source, self.clone, self.args_array, self.req_rep_cfg,
             self.opt_arg_list), self.results2)
 
+    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_pass(self, mock_cfg):
+    def test_config_pass2(self, mock_cfg, mock_fetch):
+
+        """Function:  test_config_pass2
+
+        Description:  Test with configuration checks pass.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = True
+        mock_fetch.return_value = self.version2
+
+        self.assertEqual(mysql_clone.chk_rep_cfg(
+            self.source, self.clone, self.args_array, self.req_rep_cfg,
+            self.opt_arg_list), self.results)
+
+    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
+    @mock.patch("mysql_clone.cfg_chk")
+    def test_config_pass(self, mock_cfg, mock_fetch):
 
         """Function:  test_config_pass
 
@@ -186,6 +260,26 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
+        mock_fetch.return_value = self.version
+
+        self.assertEqual(mysql_clone.chk_rep_cfg(
+            self.source, self.clone, self.args_array, self.req_rep_cfg,
+            self.opt_arg_list), self.results)
+
+    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
+    @mock.patch("mysql_clone.cfg_chk")
+    def test_mysql_80(self, mock_cfg, mock_fetch):
+
+        """Function:  test_mysql_80
+
+        Description:  Test with MySQL 8.0 version.
+
+        Arguments:
+
+        """
+
+        mock_cfg.return_value = True
+        mock_fetch.return_value = self.version2
 
         self.assertEqual(mysql_clone.chk_rep_cfg(
             self.source, self.clone, self.args_array, self.req_rep_cfg,

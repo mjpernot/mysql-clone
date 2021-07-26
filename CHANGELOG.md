@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.0] - 2020-07-23
+- Updated to work in MySQL 8.0 environment.
+- Updated to work in MySQL 5.7 environment.
+- Updated to use SSL connections.
+- Updated to use the mysql_libs v5.2.2 library.
+
+### Fixed
+- run_program:  Added disconnect and error message if master and/or slave fails replication requirements check.
+- run_program:  Added connect_chk call due to long term dump/restores cause connection timeouts.
+- dump_load_dbs:  Fixed problem with mutable default arguments issue.
+
+### Added
+- connect_chk:  Checks to see if the connection is still active and reconnect if not.
+
+### Changed
+- chk_rep_cfg:  Remove innodb_support_xa from replication config for MySQL 8.0 and above.
+- config/mysql_cfg.py.TEMPLATE:  Add SSL configuration entries.
+- run_program:  Moved all mysql_libs.disconnect calls to end of function.
+- Removed unnecessary \*\*kwargs in function argument list.
+- chk_rep:  Replaced manual creation of MasterRep class instance with mysql_libs.create_instance.
+- run_program, chk_rep, chk_rep_cfg:  Replaced cmds_gen.disconnect with mysql_libs.disconnect.
+- Documentation updates.
+
+
 ## [2.0.3] - 2020-11-13
 - Updated to use the mysql_libs v5.0.2 library.
 - Updated to work with (much older) mysql.connector v1.1.6 library module.
@@ -15,8 +39,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Changed
 - main:  Set "-r" option to require "-n" option if used.
 - run_program:  Added check on opt_arg_list to ensure requirements check was successful.
-- chk_rep_cfg:  Refactored function to remove the sys.exit() command.
-- run_program:  Refactored function to remove the sys.exit() commands.
+- run_program, chk_rep_cfg:  Refactored function to remove the sys.exit() command.
 - chk_rep:  Replaced mysql_libs.create_instance with manual creation of MasterRep class instance.
 - config/mysql_cfg.py.TEMPLATE:  Added replication user information and changed entry name.
 - Documentation updates.
@@ -28,19 +51,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - chk_slv:  Compares the slave's read file and postition with the executed file and position.
 
 ### Fixed
-- cfg_chk:  Fixed problem with mutable default arguments issue.
-- crt_dump_cmd:  Fixed problem with mutable default arguments issue.
-- dump_load_dbs:  Fixed problem with mutable default arguments issue.
-- stop_clr_rep:  Fixed problem with mutable default arguments issue.
-- chk_rep_cfg:  Fixed problem with mutable default arguments issue.
-- chk_slv_err:  Fixed problem with mutable default arguments issue.
-- chk_slv_thr:  Fixed problem with mutable default arguments issue.
-- chk_mst_log:  Fixed problem with mutable default arguments issue.
-- chk_rep:  Fixed problem with mutable default arguments issue.
-- run_program:  Fixed problem with mutable default arguments issue.
-- chk_slv_thr:  Fixed multiple strings from SonarQube scan finding.
-- dump_load_dbs:  Fixed handling subprocess line from SonarQube scan finding.
-- main:  Fixed handling command line arguments from SonarQube scan finding.
+- crt_dump_cmd, dump_load_dbs, stop_clr_rep, chk_rep_cfg, chk_slv_err, chk_slv_thr, chk_mst_log, chk_rep, run_program, cfg_chk:  Fixed problem with mutable default arguments issue.
+- chk_slv_thr:  Fixed multiple strings.
+- dump_load_dbs:  Fixed handling subprocess line.
+- main:  Fixed handling command line arguments.
 - main:  Added arg_parser.arg_dir_chk_crt call to check directory arguments.
 - chk_rep:  Added connect calls for master and slave instances.
 
@@ -50,21 +64,11 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - main: Added ProgramLock class to implement program locking.
 - config/mysql.cfg.TEMPLATE:  Changed format of template.
 - config/mysql_cfg.py.TEMPLATE:  Changed format of template.
-- chk_slv_thr: Removed master argument - no longer required.
 - chk_rep:  Removed master argument in chk_slv_err and chk_slv_thr calls - no longer required.
-- chk_slv_err: Removed master argument - no longer required.
-- cfg_chk:  Changed variables to standard naming convention.
+- chk_slv_thr, chk_slv_err: Removed master argument - no longer required.
 - chk_mst_log: Removed get_log_info and get_name calls - no longer required.
 - main:  Refactor "if" statements to streamline the checking process.
-- chk_slv_err:  Changed variables to standard naming convention.
-- chk_slv_thr:  Changed variables to standard naming convention.
-- chk_mst_log:  Changed variables to standard naming convention.
-- chk_rep:  Changed variables to standard naming convention.
-- stop_clr_rep:  Changed variables to standard naming convention.
-- run_program:  Changed variables to standard naming convention.
-- chk_rep_cfg:  Changed variables to standard naming convention.
-- dump_load_dbs:  Changed variables to standard naming convention.
-- crt_dump_cmd:  Changed variables to standard naming convention.
+- cfg_chk, chk_slv_thr, chk_mst_log, chk_rep, stop_clr_rep, run_program, chk_rep_cfg, dump_load_dbs, crt_dump_cmd, chk_slv_err:  Changed variables to standard naming convention.
 - chk_mst_log:  Added call to chk_slv function.
 - Documentation updates.
 
@@ -81,11 +85,7 @@ Breaking Change
 
 ### Changed
 - stop_clr_rep:  Changed mysql_libs.Show_Slave_Stat and mysql_libs.Stop_Slave to mysql_class references.
-- Changed "mysql_class" calls to new naming schema.
-- Changed "mysql_libs" calls to new naming schema.
-- Changed "cmds_gen" calls to new naming schema.
-- Changed "gen_libs" calls to new naming schema.
-- Changed "arg_parser" calls to new naming schema.
+- Changed calls to mysql_class, mysql_libs, cmds_gen, gen_libs, and arg_parser to new naming schema.
 - Changed function names from uppercase to lowercase.
 - Setup single-source version control.
 
@@ -101,10 +101,10 @@ Breaking Change
 - Chk_Rep:  Replaced "mysql_rep_admin.Chk_Mst_Log" with "Chk_Mst_Log" call.
 
 ### Added
-- Chk_Mst_Log function.
-- Chk_Slv_Thr function.
-- Chk_Slv_Err function.
-- Crt_Dump_Cmd function.
+- Chk_Mst_Log
+- Chk_Slv_Thr
+- Chk_Slv_Err
+- Crt_Dump_Cmd
 - Added single-source version control.
 
 
@@ -148,8 +148,7 @@ Breaking Change
 ## [1.2.0] - 2016-09-09
 ### Changed
 - Changed the option -c and -C so they are aligned with the other programs.  -c is now for master/source and -t for slave/clone database.
-- Chk_Rep:  Changed -C to -c and -c to -t.  Changed commands.Disconnect() to cmds_gen.Disconnect().
-- Run_Program:  Changed -C to -c and -c to -t.  Changed commands.Disconnect() to cmds_gen.Disconnect().
+- Run_Program, Chk_Rep:  Changed -C to -c and -c to -t.  Changed commands.Disconnect() to cmds_gen.Disconnect().
 - main:  Changed -C to -t.  Replaced Arg_Parse with Arg_Parse2, reorganized the main 'if' statements, and streamlined the check process.
 - Chk_Rep_Cfg:  Changed commands.Disconnect() to cmds_gen.Disconnect().
 - Dump_Load_Dbs:  Changed my_prog.Crt_Cmd to commands.Crt_Cmd.
