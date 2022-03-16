@@ -217,7 +217,7 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and "-n" in args_array and "-r" not in args_array:
 
-        dump_cmd = cmds_gen.is_add_cmd({"-r": "True"}, dump_cmd,
+        dump_cmd = gen_libs.is_add_cmd({"-r": "True"}, dump_cmd,
                                        list(kwargs.get("opt_dump_list", [])))
 
     load_cmd = mysql_libs.crt_cmd(
