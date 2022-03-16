@@ -88,7 +88,7 @@ class UnitTest(unittest.TestCase):
                              "--ignore-table=mysql.event"]
         self.opt_dump_list = {"-r": "--set-gtid-purged=OFF"}
 
-    @mock.patch("mysql_clone.cmds_gen.is_add_cmd")
+    @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     def test_no_opt_arg_list(self, mock_cmd, mock_path, mock_is_add):
@@ -109,8 +109,8 @@ class UnitTest(unittest.TestCase):
                                                   [], self.opt_dump_list),
                          ["command", "arg2"])
 
-    @mock.patch("mysql_clone.cmds_gen.is_add_cmd")
-    @mock.patch("mysql_clone.cmds_gen.add_cmd")
+    @mock.patch("mysql_clone.gen_libs.is_add_cmd")
+    @mock.patch("mysql_clone.gen_libs.add_cmd")
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     def test_create_cmd(self, mock_cmd, mock_path, mock_add, mock_is_add):
