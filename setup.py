@@ -52,4 +52,5 @@ setuptools.setup(
         "Topic :: Database :: MySQL",
         "Topic :: Database :: MySQL :: 5.6",
         "Topic :: Database :: MySQL :: 5.7",
-        "Topic :: Database :: MySQL :: 8.0"])
+        "Topic :: Database :: MySQL :: 8.0.24",
+        "Topic :: Database :: MySQL :: 8.0.28"])
