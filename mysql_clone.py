@@ -183,10 +183,10 @@ def crt_dump_cmd(server, args_array, opt_arg_list, opt_dump_list):
 
     # Add arguments to dump command
     for arg in opt_arg_list:
-        dump_args = cmds_gen.add_cmd(dump_args, arg=arg)
+        dump_args = gen_libs.add_cmd(dump_args, arg=arg)
 
     # Append additional options to command
-    return cmds_gen.is_add_cmd(args_array, dump_args, opt_dump_list)
+    return gen_libs.is_add_cmd(args_array, dump_args, opt_dump_list)
 
 
 def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,

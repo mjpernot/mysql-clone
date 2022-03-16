@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.1.1] - 2022-03-16
+### Changed
+- crt_dump_cmd: Changed cmds_gen.add_cmd to gen_libs.add_cmd and cmds_gen.is_add_cmd to gen_libs.is_add_cmd.
 
 
 ## [2.1.0] - 2020-07-23
