@@ -150,8 +150,8 @@ class UnitTest(unittest.TestCase):
         self.version2 = {"version": "8.0.24"}
         self.version3 = {"version": "8.0.28"}
 
-    @mock.patch("mysql_clone.mysql_libs.disconnect",
-                mock.Mock(return_value=True))
+    @mock.patch(
+        "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
     def test_config_fail3(self, mock_cfg, mock_fetch):
@@ -172,8 +172,8 @@ class UnitTest(unittest.TestCase):
                 self.source, self.clone, self.args_array, self.req_rep_cfg,
                 self.opt_arg_list), self.results3)
 
-    @mock.patch("mysql_clone.mysql_libs.disconnect",
-                mock.Mock(return_value=True))
+    @mock.patch(
+        "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
     def test_config_fail2(self, mock_cfg, mock_fetch):
@@ -194,8 +194,8 @@ class UnitTest(unittest.TestCase):
                 self.source, self.clone, self.args_array, self.req_rep_cfg,
                 self.opt_arg_list), self.results3)
 
-    @mock.patch("mysql_clone.mysql_libs.disconnect",
-                mock.Mock(return_value=True))
+    @mock.patch(
+        "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
     def test_config_fail(self, mock_cfg, mock_fetch):
