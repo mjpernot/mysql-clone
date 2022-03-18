@@ -235,7 +235,7 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
 
     err_file.close()
 
-    if gen_libs.is_empty_file(efile):
+    if not gen_libs.is_empty_file(efile):
         print("Review the contents of error file: %s" % (efile))
 
 
