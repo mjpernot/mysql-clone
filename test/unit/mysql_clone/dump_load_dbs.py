@@ -34,6 +34,30 @@ import version
 __version__ = version.__version__
 
 
+class FileOpen(object):
+
+    """Class:  FileOpen
+
+    Description:  Class stub holder for file open class.
+
+    Methods:
+        close
+
+    """
+
+    def close(self):
+
+        """Function:  close
+
+        Description:  Stub holder for close function.
+
+        Arguments:
+
+        """
+
+        return True
+
+
 class Popen(object):
 
     """Class:  Popen
@@ -119,34 +143,38 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.open = FileOpen()
         self.source = Server()
         self.clone = Server()
         self.args_array = {}
         self.args_array2 = {"-n": True}
         self.args_array3 = {"-n": True, "-r": True}
-        self.req_rep_cfg = {"master": {"log_bin": "ON",
-                                       "sync_binlog": "1",
-                                       "innodb_flush_log_at_trx_commit": "1",
-                                       "innodb_support_xa": "ON",
-                                       "binlog_format": "ROW"},
-                            "slave": {"log_bin": "ON",
-                                      "read_only": "ON",
-                                      "log_slave_updates": "ON",
-                                      "sync_master_info": "1",
-                                      "sync_relay_log": "1",
-                                      "sync_relay_log_info": "1"}}
-        self.opt_arg_list = ["--single-transaction", "--all-databases",
-                             "--triggers", "--routines", "--events",
-                             "--ignore-table=mysql.event"]
+        self.req_rep_cfg = {
+            "master": {
+                "log_bin": "ON", "sync_binlog": "1",
+                "innodb_flush_log_at_trx_commit": "1",
+                "innodb_support_xa": "ON", "binlog_format": "ROW"},
+            "slave": {
+                "log_bin": "ON", "read_only": "ON", "log_slave_updates": "ON",
+                "sync_master_info": "1", "sync_relay_log": "1",
+                "sync_relay_log_info": "1"}}
+        self.opt_arg_list = [
+            "--single-transaction", "--all-databases", "--triggers",
+            "--routines", "--events", "--ignore-table=mysql.event"]
 
+    @mock.patch(
+        "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=False))
+    @mock.patch(
+        "mysql_clone.gen_libs.crt_file_time", mock.Mock(return_value="Fname"))
     @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.open")
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
     def test_no_gtid(self, mock_cmd, mock_path, mock_crtcmd, mock_reset,
-                     mock_popen):
+                     mock_popen, mock_open):
 
         """Function:  test_no_gtid
 
@@ -162,6 +190,7 @@ class UnitTest(unittest.TestCase):
         mock_crtcmd.return_value = ["command", "arg1"]
         mock_reset.return_value = True
         mock_popen.side_effect = [Popen(), Popen()]
+        mock_open.return_value = self.open
 
         self.assertFalse(mysql_clone.dump_load_dbs(
             self.source, self.clone, self.args_array2, self.req_rep_cfg,
