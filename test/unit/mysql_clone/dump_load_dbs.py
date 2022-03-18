@@ -29,6 +29,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mysql_clone
+import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -127,6 +128,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_err_file
+        test_no_err_file
         test_no_gtid
         test_add_opt_dump
         test_create_cmd
@@ -170,6 +173,77 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.open")
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
+    @mock.patch("mysql_clone.gen_libs.is_add_cmd")
+    @mock.patch("mysql_clone.mysql_libs.crt_cmd")
+    @mock.patch("mysql_clone.arg_parser.arg_set_path")
+    @mock.patch("mysql_clone.crt_dump_cmd")
+    def test_err_file(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
+                         mock_reset, mock_popen, mock_open):
+
+        """Function:  test_err_file
+
+        Description:  Test with error file detected.
+
+        Arguments:
+
+        """
+
+        mock_cmd.return_value = ["command", "arg1", "arg2"]
+        mock_path.return_value = "./"
+        mock_crtcmd.return_value = ["command", "arg1"]
+        mock_isadd.return_value = ["command", "arg1", "arg2"]
+        mock_reset.return_value = True
+        mock_popen.side_effect = [Popen(), Popen()]
+        mock_open.return_value = self.open
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.dump_load_dbs(
+                self.source, self.clone, self.args_array, self.req_rep_cfg,
+                self.opt_arg_list))
+
+    @mock.patch(
+        "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
+    @mock.patch(
+        "mysql_clone.gen_libs.crt_file_time", mock.Mock(return_value="Fname"))
+    @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.open")
+    @mock.patch("mysql_clone.subprocess.Popen")
+    @mock.patch("mysql_clone.mysql_libs.reset_master")
+    @mock.patch("mysql_clone.gen_libs.is_add_cmd")
+    @mock.patch("mysql_clone.mysql_libs.crt_cmd")
+    @mock.patch("mysql_clone.arg_parser.arg_set_path")
+    @mock.patch("mysql_clone.crt_dump_cmd")
+    def test_no_err_file(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
+                         mock_reset, mock_popen, mock_open):
+
+        """Function:  test_no_err_file
+
+        Description:  Test with no error file detected.
+
+        Arguments:
+
+        """
+
+        mock_cmd.return_value = ["command", "arg1", "arg2"]
+        mock_path.return_value = "./"
+        mock_crtcmd.return_value = ["command", "arg1"]
+        mock_isadd.return_value = ["command", "arg1", "arg2"]
+        mock_reset.return_value = True
+        mock_popen.side_effect = [Popen(), Popen()]
+        mock_open.return_value = self.open
+
+        self.assertFalse(mysql_clone.dump_load_dbs(
+            self.source, self.clone, self.args_array, self.req_rep_cfg,
+            self.opt_arg_list))
+
+    @mock.patch(
+        "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
+    @mock.patch(
+        "mysql_clone.gen_libs.crt_file_time", mock.Mock(return_value="Fname"))
+    @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.open")
+    @mock.patch("mysql_clone.subprocess.Popen")
+    @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
@@ -196,7 +270,12 @@ class UnitTest(unittest.TestCase):
             self.source, self.clone, self.args_array2, self.req_rep_cfg,
             self.opt_arg_list))
 
+    @mock.patch(
+        "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
+    @mock.patch(
+        "mysql_clone.gen_libs.crt_file_time", mock.Mock(return_value="Fname"))
     @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.open")
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
@@ -204,7 +283,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
     def test_add_opt_dump(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                          mock_reset, mock_popen):
+                          mock_reset, mock_popen, mock_open):
 
         """Function:  test_add_opt_dump
 
@@ -221,12 +300,18 @@ class UnitTest(unittest.TestCase):
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True
         mock_popen.side_effect = [Popen(), Popen()]
+        mock_open.return_value = self.open
 
         self.assertFalse(mysql_clone.dump_load_dbs(
             self.source, self.clone, self.args_array2, self.req_rep_cfg,
             self.opt_arg_list))
 
+    @mock.patch(
+        "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
+    @mock.patch(
+        "mysql_clone.gen_libs.crt_file_time", mock.Mock(return_value="Fname"))
     @mock.patch("mysql_clone.subprocess.PIPE", mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.open")
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
@@ -234,7 +319,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
     def test_create_cmd(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                        mock_reset, mock_popen):
+                        mock_reset, mock_popen, mock_open):
 
         """Function:  test_create_cmd
 
@@ -250,6 +335,7 @@ class UnitTest(unittest.TestCase):
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True
         mock_popen.side_effect = [Popen(), Popen()]
+        mock_open.return_value = self.open
 
         self.assertFalse(mysql_clone.dump_load_dbs(
             self.source, self.clone, self.args_array, self.req_rep_cfg,
