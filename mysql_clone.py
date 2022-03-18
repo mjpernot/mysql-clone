@@ -106,9 +106,6 @@ import version
 
 __version__ = version.__version__
 
-# Global
-MASTER_D1 = "--source-data="
-MASTER_D2 = "--master-data="
 
 
 def help_message():
@@ -281,19 +278,16 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list):
 
     """
 
-    global MASTER_D1
-    global MASTER_D2
-
     args_array = dict(args_array)
     req_rep_cfg = dict(req_rep_cfg)
     opt_arg_list = list(opt_arg_list)
 
     if mysql_class.fetch_sys_var(
             source, "version", level="session")["version"] >= "8.0.26":
-        master_d = MASTER_D1
+        master_d = "--source-data="
 
     else:
-        master_d = MASTER_D2
+        master_d = "--master-data="
 
     if "-n" not in args_array:
         source.upd_mst_rep_stat()
