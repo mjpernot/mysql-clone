@@ -216,6 +216,8 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
     subp = gen_libs.get_inst(subprocess)
     dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
                             list(kwargs.get("opt_dump_list", [])))
+    efile = gen_libs.crt_file_time("mysql_clone_err_log", "/tmp")
+    err_file = open(efile, "w")
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and "-n" in args_array and "-r" not in args_array:
@@ -230,9 +232,14 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
         mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed
-    proc1 = subp.Popen(dump_cmd, stdout=subp.PIPE)
+    proc1 = subp.Popen(dump_cmd, stdout=subp.PIPE, stderr=err_file)
     proc2 = subp.Popen(load_cmd, stdin=proc1.stdout)
     proc2.wait()
+
+    err_file.close()
+
+    if gen_libs.is_empty_file(efile):
+        print("Review the contents of error file: %s" % (efile))
 
 
 def stop_clr_rep(clone, args_array):
