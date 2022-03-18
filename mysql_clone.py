@@ -106,6 +106,10 @@ import version
 
 __version__ = version.__version__
 
+# Global
+MASTER_D1 = "--source-data="
+MASTER_D2 = "--master-data="
+
 
 def help_message():
 
@@ -270,9 +274,19 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list):
 
     """
 
+    global MASTER_D1
+    global MASTER_D2
+
     args_array = dict(args_array)
     req_rep_cfg = dict(req_rep_cfg)
     opt_arg_list = list(opt_arg_list)
+
+    if mysql_class.fetch_sys_var(
+            source, "version", level="session")["version"] >= "8.0.26":
+        master_d = MASTER_D1
+
+    else:
+        master_d = MASTER_D2
 
     if "-n" not in args_array:
         source.upd_mst_rep_stat()
@@ -295,15 +309,15 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list):
         else:
             if clone.gtid_mode:
                 # Exclude "change master to" option from dump file
-                opt_arg_list.append("--master-data=2")
+                opt_arg_list.append(master_d + "2")
 
             else:
                 # Include "change master to" option in dump file
-                opt_arg_list.append("--master-data=1")
+                opt_arg_list.append(master_d + "1")
 
     else:
         # Exclude "change master to" option from dump file
-        opt_arg_list.append("--master-data=2")
+        opt_arg_list.append(master_d + "2")
 
     return opt_arg_list
 

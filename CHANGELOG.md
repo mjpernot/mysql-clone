@@ -5,7 +5,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.1.1] - 2022-03-16
+- Update to work with MySQL 8.0.28
+
 ### Changed
+- chk_rep_cfg: Set up version check to determine whether to use --master-data or --source-data.
 - dump_load_dbs: Changed cmds_gen.is_add_cmd to gen_libs.is_add_cmd.
 - crt_dump_cmd: Changed cmds_gen.add_cmd to gen_libs.add_cmd and cmds_gen.is_add_cmd to gen_libs.is_add_cmd.
 
