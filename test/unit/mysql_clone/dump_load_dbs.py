@@ -178,7 +178,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
     def test_err_file(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                         mock_reset, mock_popen, mock_open):
+                      mock_reset, mock_popen, mock_open):
 
         """Function:  test_err_file
 
