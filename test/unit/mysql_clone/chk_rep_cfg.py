@@ -347,7 +347,7 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-    
+
         mock_cfg.return_value = True
         mock_fetch.return_value = self.version3
 
@@ -366,7 +366,7 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-    
+
         mock_cfg.return_value = True
         mock_fetch.return_value = self.version2
 
