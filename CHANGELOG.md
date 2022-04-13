@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.1] - 2022-03-16
+- Updated to work with MySQL 8.0.28
+- Upgraded python-lib to v2.8.6
+
+### Changed
+- dump_load_dbs: Added standard error option to subp.Popen call running the database dump.
+- chk_rep_cfg: Set up version check to determine whether to use --master-data or --source-data.
+- dump_load_dbs: Changed cmds_gen.is_add_cmd to gen_libs.is_add_cmd.
+- crt_dump_cmd: Changed cmds_gen.add_cmd to gen_libs.add_cmd and cmds_gen.is_add_cmd to gen_libs.is_add_cmd.
+
+### Removed
+- cmds_gen module
+
 ## [2.1.0] - 2020-07-23
 - Updated to work in MySQL 8.0 environment.
 - Updated to work in MySQL 5.7 environment.
