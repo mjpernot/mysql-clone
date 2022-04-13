@@ -212,7 +212,7 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
     subp = gen_libs.get_inst(subprocess)
     dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
                             list(kwargs.get("opt_dump_list", [])))
-    efile = gen_libs.crt_file_time("mysql_clone_err_log", "/tmp")
+    efile = gen_libs.crt_file_time("mysql_clone_err_log", "/" + "tmp")
     err_file = open(efile, "w")
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
