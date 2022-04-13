@@ -99,7 +99,6 @@ import time
 # Local
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
-import lib.cmds_gen as cmds_gen
 import lib.gen_class as gen_class
 import mysql_lib.mysql_libs as mysql_libs
 import mysql_lib.mysql_class as mysql_class
@@ -183,10 +182,10 @@ def crt_dump_cmd(server, args_array, opt_arg_list, opt_dump_list):
 
     # Add arguments to dump command
     for arg in opt_arg_list:
-        dump_args = cmds_gen.add_cmd(dump_args, arg=arg)
+        dump_args = gen_libs.add_cmd(dump_args, arg=arg)
 
     # Append additional options to command
-    return cmds_gen.is_add_cmd(args_array, dump_args, opt_dump_list)
+    return gen_libs.is_add_cmd(args_array, dump_args, opt_dump_list)
 
 
 def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
@@ -213,11 +212,13 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
     subp = gen_libs.get_inst(subprocess)
     dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
                             list(kwargs.get("opt_dump_list", [])))
+    efile = gen_libs.crt_file_time("mysql_clone_err_log", "/" + "tmp")
+    err_file = open(efile, "w")
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and "-n" in args_array and "-r" not in args_array:
 
-        dump_cmd = cmds_gen.is_add_cmd({"-r": "True"}, dump_cmd,
+        dump_cmd = gen_libs.is_add_cmd({"-r": "True"}, dump_cmd,
                                        list(kwargs.get("opt_dump_list", [])))
 
     load_cmd = mysql_libs.crt_cmd(
@@ -227,9 +228,14 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
         mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed
-    proc1 = subp.Popen(dump_cmd, stdout=subp.PIPE)
+    proc1 = subp.Popen(dump_cmd, stdout=subp.PIPE, stderr=err_file)
     proc2 = subp.Popen(load_cmd, stdin=proc1.stdout)
     proc2.wait()
+
+    err_file.close()
+
+    if not gen_libs.is_empty_file(efile):
+        print("Review the contents of error file: %s" % (efile))
 
 
 def stop_clr_rep(clone, args_array):
@@ -275,6 +281,13 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list):
     req_rep_cfg = dict(req_rep_cfg)
     opt_arg_list = list(opt_arg_list)
 
+    if mysql_class.fetch_sys_var(
+            source, "version", level="session")["version"] >= "8.0.26":
+        master_d = "--source-data="
+
+    else:
+        master_d = "--master-data="
+
     if "-n" not in args_array:
         source.upd_mst_rep_stat()
         clone.upd_slv_rep_stat()
@@ -296,15 +309,15 @@ def chk_rep_cfg(source, clone, args_array, req_rep_cfg, opt_arg_list):
         else:
             if clone.gtid_mode:
                 # Exclude "change master to" option from dump file
-                opt_arg_list.append("--master-data=2")
+                opt_arg_list.append(master_d + "2")
 
             else:
                 # Include "change master to" option in dump file
-                opt_arg_list.append("--master-data=1")
+                opt_arg_list.append(master_d + "1")
 
     else:
         # Exclude "change master to" option from dump file
-        opt_arg_list.append("--master-data=2")
+        opt_arg_list.append(master_d + "2")
 
     return opt_arg_list
 
