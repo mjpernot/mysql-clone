@@ -5,7 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.1.1] - 2022-03-16
-- Update to work with MySQL 8.0.28
+- Updated to work with MySQL 8.0.28
+- Upgraded python-lib to v2.8.6
 
 ### Changed
 - dump_load_dbs: Added standard error option to subp.Popen call running the database dump.
