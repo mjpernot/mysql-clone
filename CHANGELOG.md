@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.2] - 2022-06-27
+
+
 ## [2.1.1] - 2022-03-16
 - Updated to work with MySQL 8.0.28
 - Upgraded python-lib to v2.8.6
