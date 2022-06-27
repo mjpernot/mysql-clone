@@ -1,2 +1,2 @@
-mysql-connector-python==8.0.16
+mysql-connector-python==8.0.22
 simplejson==2.0.9

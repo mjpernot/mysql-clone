@@ -9,17 +9,17 @@
         original database creating a master-slave replication setup.
 
     Usage:
-        mysql_clone.py -c master_file -t slave_file -d path
+        mysql_clone.py -c mysql_cfg_master -t mysql_cfg_slave -d path
             [-n [-r]] [-p path] [-y flavor_id]
             [-v | -h]
 
     Arguments:
-        -c file => Source/Master configuration file.  Required arg.
-        -t file => Clone/Slave configuration file.  Required arg.
-        -d dir path => Directory path to config files.  Required arg.
+        -c filename => Source/Master configuration file.  Required arg.
+        -t filename => Clone/Slave configuration file.  Required arg.
+        -d dir_path => Directory path to config files.  Required arg.
         -n => No replication, create a clone of the master database.
         -r => Remove GTID entries from dump file.  Requires the -n option.
-        -p dir path => Directory path to mysql programs.  Only required if the
+        -p dir_path => Directory path to mysql programs.  Only required if the
             mysql binary programs do not run properly.  (i.e. not in the $PATH
             variable.)
         -y value => A flavor id for the program lock.  To create unique lock.
@@ -56,6 +56,9 @@
             ssl_verify_id = False
             ssl_verify_cert = False
 
+            # Set what TLS versions are allowed in the connection set up:
+            tls_versions = []
+
         NOTE 1:  Include the cfg_file even if running remotely as the
             file will be used in future releases.
         NOTE 2:  In MySQL 5.6 - it now gives warning if password is passed on
@@ -69,7 +72,7 @@
 
         Defaults Extra File format (config/mysql.cfg.TEMPLATE):
             [client]
-            password='PASSWORD'
+            password='PSWORD'
             socket=DIRECTORY_PATH/mysql.sock
 
         NOTE 1:  The socket information can be obtained from the my.cnf

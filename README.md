@@ -91,6 +91,9 @@ Create MySQL configuration file for the Master and Slave database.  Make the app
     - ssl_verify_id = False
     - ssl_verify_cert = False
 
+  * TLS version: Set what TLS versions are allowed in the connection set up.
+    - tls_versions = []
+
 ```
 cd config
 cp mysql_cfg.py.TEMPLATE mysql_cfg_master.py
@@ -103,7 +106,7 @@ chmod 600 mysql_cfg_master.py mysql_cfg_slave.py
 Create MySQL definition file for the Master and Slave databases.  Make the appropriate change to the MySQL definition setup.
   * Change these entries in the MySQL configuration file:
   * Note:  socket use is only required to be set in certain conditions when connecting using localhost.
-    - password='PASSWORD'
+    - password='PSWORD'
     - socket=DIRECTORY_PATH/mysql.sock
 
 ```
