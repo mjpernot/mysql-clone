@@ -46,11 +46,10 @@ setuptools.setup(
         "Operating System :: Linux :: Centos",
         "Operating System :: Linux :: Ubuntu",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
         "Topic :: Database",
         "Topic :: Database :: MySQL",
         "Topic :: Database :: MySQL :: 5.6",
         "Topic :: Database :: MySQL :: 5.7",
-        "Topic :: Database :: MySQL :: 8.0.24",
-        "Topic :: Database :: MySQL :: 8.0.28"])
+        "Topic :: Database :: MySQL :: 8.0"])
