@@ -9,6 +9,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgraded python-lib to v2.9.4
 - Upgraded mysql-lib to v5.3.2
 
+### Changed
+- Converted imports to use Python 2.7 or Python 3.
+
 
 ## [2.1.2] - 2022-06-27
 - Upgraded python-lib to v2.9.2
