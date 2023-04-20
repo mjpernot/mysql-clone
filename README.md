@@ -7,7 +7,6 @@
 
 ###  This README file is broken down into the following sections:
   * Features
-  * Prerequisites
   * Installation
   * Configuration
   * Program Help Function
@@ -19,16 +18,6 @@
   * Clone a MySQL database from another MySQL database.
   * Integrate the clone database as a slave into a replica set.
   * Include or remove GTID from the transfer.
-
-
-# Prerequisites:
-  * List of Linux packages that need to be installed on the server.
-    - git
-    - python-pip
-
-  * Local class/library dependencies within the program structure.
-    - python-lib
-    - mysql-lib
 
 
 # Installation:
