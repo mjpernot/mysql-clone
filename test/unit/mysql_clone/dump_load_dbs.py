@@ -224,10 +224,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
-    @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_err_file(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                      mock_reset, mock_popen, mock_open):
+    def test_err_file(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
+                      mock_popen, mock_open):
 
         """Function:  test_err_file
 
@@ -238,7 +237,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cmd.return_value = ["command", "arg1", "arg2"]
-        mock_path.return_value = "./"
         mock_crtcmd.return_value = ["command", "arg1"]
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True
@@ -261,10 +259,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
-    @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_no_err_file(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                         mock_reset, mock_popen, mock_open):
+    def test_no_err_file(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
+                         mock_popen, mock_open):
 
         """Function:  test_no_err_file
 
@@ -275,7 +272,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cmd.return_value = ["command", "arg1", "arg2"]
-        mock_path.return_value = "./"
         mock_crtcmd.return_value = ["command", "arg1"]
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True
@@ -296,10 +292,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.subprocess.Popen")
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
-    @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_no_gtid(self, mock_cmd, mock_path, mock_crtcmd, mock_reset,
-                     mock_popen, mock_open):
+    def test_no_gtid(self, mock_cmd, mock_crtcmd, mock_reset, mock_popen,
+                     mock_open):
 
         """Function:  test_no_gtid
 
@@ -311,7 +306,6 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
         mock_cmd.return_value = ["command", "arg1", "arg2"]
-        mock_path.return_value = "./"
         mock_crtcmd.return_value = ["command", "arg1"]
         mock_reset.return_value = True
         mock_popen.side_effect = [Popen(), Popen()]
@@ -332,10 +326,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
-    @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_add_opt_dump(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                          mock_reset, mock_popen, mock_open):
+    def test_add_opt_dump(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
+                          mock_popen, mock_open):
 
         """Function:  test_add_opt_dump
 
@@ -347,7 +340,6 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
         mock_cmd.return_value = ["command", "arg1", "arg2"]
-        mock_path.return_value = "./"
         mock_crtcmd.return_value = ["command", "arg1"]
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True
@@ -369,10 +361,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
-    @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_create_cmd(self, mock_cmd, mock_path, mock_crtcmd, mock_isadd,
-                        mock_reset, mock_popen, mock_open):
+    def test_create_cmd(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
+                        mock_popen, mock_open):
 
         """Function:  test_create_cmd
 
@@ -383,7 +374,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cmd.return_value = ["command", "arg1", "arg2"]
-        mock_path.return_value = "./"
         mock_crtcmd.return_value = ["command", "arg1"]
         mock_isadd.return_value = ["command", "arg1", "arg2"]
         mock_reset.return_value = True

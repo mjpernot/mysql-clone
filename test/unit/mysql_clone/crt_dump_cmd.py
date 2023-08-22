@@ -122,9 +122,8 @@ class UnitTest(unittest.TestCase):
         self.opt_dump_list = {"-r": "--set-gtid-purged=OFF"}
 
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
-    @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
-    def test_no_opt_arg_list(self, mock_cmd, mock_path, mock_is_add):
+    def test_no_opt_arg_list(self, mock_cmd, mock_is_add):
 
         """Function:  test_no_opt_arg_list
 
@@ -135,7 +134,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cmd.return_value = ["command"]
-        mock_path.return_value = "./"
         mock_is_add.return_value = ["command", "arg2"]
 
         self.assertEqual(
@@ -145,9 +143,8 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.gen_libs.add_cmd")
-    @mock.patch("mysql_clone.arg_parser.arg_set_path")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
-    def test_create_cmd(self, mock_cmd, mock_path, mock_add, mock_is_add):
+    def test_create_cmd(self, mock_cmd, mock_add, mock_is_add):
 
         """Function:  test_create_cmd
 
@@ -158,7 +155,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cmd.return_value = ["command"]
-        mock_path.return_value = "./"
         mock_add.return_value = ["command", "arg1"]
         mock_is_add.return_value = ["command", "arg1", "arg2"]
 
