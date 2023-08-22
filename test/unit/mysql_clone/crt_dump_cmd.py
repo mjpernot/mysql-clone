@@ -27,6 +27,46 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_set_path
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def arg_set_path(self, arg_opt, **kwargs):
+
+        """Method:  arg_set_path
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_set_path.
+
+        Arguments:
+
+        """
+
+        return os.path.join(
+            self.args_array[arg_opt] if arg_opt in self.args_array else "",
+            kwargs.get("cmd", ""))
+
+
 class Server(object):
 
     """Class:  Server
@@ -75,7 +115,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.server = Server()
-        self.args_array = {}
+        self.args = ArgParser()
         self.opt_arg_list = ["--single-transaction", "--all-databases",
                              "--triggers", "--routines", "--events",
                              "--ignore-table=mysql.event"]
@@ -98,9 +138,10 @@ class UnitTest(unittest.TestCase):
         mock_path.return_value = "./"
         mock_is_add.return_value = ["command", "arg2"]
 
-        self.assertEqual(mysql_clone.crt_dump_cmd(self.server, self.args_array,
-                                                  [], self.opt_dump_list),
-                         ["command", "arg2"])
+        self.assertEqual(
+            mysql_clone.crt_dump_cmd(
+                self.server, self.args, [], self.opt_dump_list),
+            ["command", "arg2"])
 
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.gen_libs.add_cmd")
@@ -121,10 +162,10 @@ class UnitTest(unittest.TestCase):
         mock_add.return_value = ["command", "arg1"]
         mock_is_add.return_value = ["command", "arg1", "arg2"]
 
-        self.assertEqual(mysql_clone.crt_dump_cmd(self.server, self.args_array,
-                                                  self.opt_arg_list,
-                                                  self.opt_dump_list),
-                         ["command", "arg1", "arg2"])
+        self.assertEqual(
+            mysql_clone.crt_dump_cmd(
+                self.server, self.args, self.opt_arg_list, self.opt_dump_list),
+            ["command", "arg1", "arg2"])
 
 
 if __name__ == "__main__":

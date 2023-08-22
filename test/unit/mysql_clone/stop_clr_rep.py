@@ -27,6 +27,44 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_exist
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+
 class Server(object):
 
     """Class:  Server
@@ -75,8 +113,10 @@ class UnitTest(unittest.TestCase):
         """
 
         self.clone = Server()
-        self.args_array = {}
-        self.args_array2 = {"-n": True}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args.args_array = {}
+        self.args2.args_array = {"-n": True}
 
     @mock.patch("mysql_clone.mysql_libs.reset_slave",
                 mock.Mock(return_value=True))
@@ -95,8 +135,8 @@ class UnitTest(unittest.TestCase):
         mock_stat.return_value = True
         mock_stop.return_value = True
 
-        self.assertFalse(mysql_clone.stop_clr_rep(self.clone,
-                                                  self.args_array2))
+        self.assertFalse(
+            mysql_clone.stop_clr_rep(self.clone, self.args2))
 
     @mock.patch("mysql_clone.mysql_class.show_slave_stat")
     def test_stat_fail(self, mock_stat):
@@ -111,7 +151,7 @@ class UnitTest(unittest.TestCase):
 
         mock_stat.return_value = False
 
-        self.assertFalse(mysql_clone.stop_clr_rep(self.clone, self.args_array))
+        self.assertFalse(mysql_clone.stop_clr_rep(self.clone, self.args))
 
     @mock.patch("mysql_clone.mysql_class.slave_stop")
     @mock.patch("mysql_clone.mysql_class.show_slave_stat")
@@ -128,7 +168,7 @@ class UnitTest(unittest.TestCase):
         mock_stat.return_value = True
         mock_stop.return_value = True
 
-        self.assertFalse(mysql_clone.stop_clr_rep(self.clone, self.args_array))
+        self.assertFalse(mysql_clone.stop_clr_rep(self.clone, self.args2))
 
 
 if __name__ == "__main__":

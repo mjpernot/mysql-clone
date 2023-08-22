@@ -28,6 +28,57 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        arg_exist
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+
 class Slave(object):
 
     """Class:  Slave
@@ -174,23 +225,25 @@ class UnitTest(unittest.TestCase):
 
         self.master = Master()
         self.slave = Slave()
-        self.args_array = {"-c": "mysql_cfg", "-d": "config",
-                           "-t": "mysql_cfg2"}
-        self.args_array2 = {"-c": "mysql_cfg", "-d": "config",
-                            "-t": "mysql_cfg2", "-n": True}
-        self.opt_arg_list = ["--single-transaction", "--all-databases",
-                             "--triggers", "--routines", "--events",
-                             "--ignore-table=mysql.event"]
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args.args_array = {
+            "-c": "mysql_cfg", "-d": "config", "-t": "mysql_cfg2"}
+        self.args2.args_array = {
+            "-c": "mysql_cfg", "-d": "config", "-t": "mysql_cfg2", "-n": True}
+        self.opt_arg_list = [
+            "--single-transaction", "--all-databases", "--triggers",
+            "--routines", "--events", "--ignore-table=mysql.event"]
         self.opt_arg_list2 = list()
-        self.req_rep_cfg = {"master": {"log_bin": "ON", "sync_binlog": "1",
-                                       "innodb_flush_log_at_trx_commit": "1",
-                                       "innodb_support_xa": "ON",
-                                       "binlog_format": "ROW"},
-                            "slave": {"log_bin": "ON", "read_only": "ON",
-                                      "log_slave_updates": "ON",
-                                      "sync_master_info": "1",
-                                      "sync_relay_log": "1",
-                                      "sync_relay_log_info": "1"}}
+        self.req_rep_cfg = {
+            "master": {
+                "log_bin": "ON", "sync_binlog": "1",
+                "innodb_flush_log_at_trx_commit": "1",
+                "innodb_support_xa": "ON", "binlog_format": "ROW"},
+            "slave": {
+                "log_bin": "ON", "read_only": "ON", "log_slave_updates": "ON",
+                "sync_master_info": "1", "sync_relay_log": "1",
+                "sync_relay_log_info": "1"}}
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -216,8 +269,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -239,8 +293,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list2
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -265,8 +320,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array2, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args2, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -291,8 +347,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -316,8 +373,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -342,8 +400,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -367,8 +426,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -392,8 +452,9 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.run_program(
-                self.args_array, self.req_rep_cfg, self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
 
 
 if __name__ == "__main__":

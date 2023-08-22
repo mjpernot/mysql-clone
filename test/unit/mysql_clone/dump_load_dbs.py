@@ -28,6 +28,59 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_exist
+        arg_set_path
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+    def arg_set_path(self, arg_opt, **kwargs):
+
+        """Method:  arg_set_path
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_set_path.
+
+        Arguments:
+
+        """
+
+        return os.path.join(
+            self.args_array[arg_opt] if arg_opt in self.args_array else "",
+            kwargs.get("cmd", ""))
+
+
 class FileOpen(object):
 
     """Class:  FileOpen
@@ -142,9 +195,12 @@ class UnitTest(unittest.TestCase):
         self.open = FileOpen()
         self.source = Server()
         self.clone = Server()
-        self.args_array = {}
-        self.args_array2 = {"-n": True}
-        self.args_array3 = {"-n": True, "-r": True}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args3 = ArgParser()
+        self.args.args_array = {}
+        self.args2.args_array = {"-n": True}
+        self.args3.args_array = {"-n": True, "-r": True}
         self.req_rep_cfg = {
             "master": {
                 "log_bin": "ON", "sync_binlog": "1",
@@ -190,9 +246,10 @@ class UnitTest(unittest.TestCase):
         mock_open.return_value = self.open
 
         with gen_libs.no_std_out():
-            self.assertFalse(mysql_clone.dump_load_dbs(
-                self.source, self.clone, self.args_array, self.req_rep_cfg,
-                self.opt_arg_list))
+            self.assertFalse(
+                mysql_clone.dump_load_dbs(
+                    self.source, self.clone, self.args, self.req_rep_cfg,
+                    self.opt_arg_list))
 
     @mock.patch(
         "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
@@ -225,9 +282,10 @@ class UnitTest(unittest.TestCase):
         mock_popen.side_effect = [Popen(), Popen()]
         mock_open.return_value = self.open
 
-        self.assertFalse(mysql_clone.dump_load_dbs(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list))
+        self.assertFalse(
+            mysql_clone.dump_load_dbs(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list))
 
     @mock.patch(
         "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
@@ -259,9 +317,10 @@ class UnitTest(unittest.TestCase):
         mock_popen.side_effect = [Popen(), Popen()]
         mock_open.return_value = self.open
 
-        self.assertFalse(mysql_clone.dump_load_dbs(
-            self.source, self.clone, self.args_array2, self.req_rep_cfg,
-            self.opt_arg_list))
+        self.assertFalse(
+            mysql_clone.dump_load_dbs(
+                self.source, self.clone, self.args2, self.req_rep_cfg,
+                self.opt_arg_list))
 
     @mock.patch(
         "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
@@ -295,9 +354,10 @@ class UnitTest(unittest.TestCase):
         mock_popen.side_effect = [Popen(), Popen()]
         mock_open.return_value = self.open
 
-        self.assertFalse(mysql_clone.dump_load_dbs(
-            self.source, self.clone, self.args_array2, self.req_rep_cfg,
-            self.opt_arg_list))
+        self.assertFalse(
+            mysql_clone.dump_load_dbs(
+                self.source, self.clone, self.args2, self.req_rep_cfg,
+                self.opt_arg_list))
 
     @mock.patch(
         "mysql_clone.gen_libs.is_empty_file", mock.Mock(return_value=True))
@@ -330,9 +390,10 @@ class UnitTest(unittest.TestCase):
         mock_popen.side_effect = [Popen(), Popen()]
         mock_open.return_value = self.open
 
-        self.assertFalse(mysql_clone.dump_load_dbs(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list))
+        self.assertFalse(
+            mysql_clone.dump_load_dbs(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list))
 
 
 if __name__ == "__main__":
