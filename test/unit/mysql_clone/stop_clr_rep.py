@@ -153,6 +153,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(mysql_clone.stop_clr_rep(self.clone, self.args))
 
+    @mock.patch("mysql_clone.mysql_libs.reset_slave",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_class.slave_stop")
     @mock.patch("mysql_clone.mysql_class.show_slave_stat")
     def test_stop_slave(self, mock_stat, mock_stop):
@@ -168,7 +170,7 @@ class UnitTest(unittest.TestCase):
         mock_stat.return_value = True
         mock_stop.return_value = True
 
-        self.assertFalse(mysql_clone.stop_clr_rep(self.clone, self.args2))
+        self.assertFalse(mysql_clone.stop_clr_rep(self.clone, self.args))
 
 
 if __name__ == "__main__":
