@@ -223,7 +223,6 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
     args_array = dict(args_array)
     req_rep_cfg = dict(req_rep_cfg)
     opt_arg_list = list(opt_arg_list)
-    subp = gen_libs.get_inst(subprocess)
     dump_cmd = crt_dump_cmd(source, args_array, opt_arg_list,
                             list(kwargs.get("opt_dump_list", [])))
     efile = gen_libs.crt_file_time("mysql_clone_err_log", "/" + "tmp")
@@ -242,8 +241,8 @@ def dump_load_dbs(source, clone, args_array, req_rep_cfg, opt_arg_list,
         mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed
-    proc1 = subp.Popen(dump_cmd, stdout=subp.PIPE, stderr=err_file)
-    proc2 = subp.Popen(load_cmd, stdin=proc1.stdout)
+    proc1 = subprocess.Popen(dump_cmd, stdout=subprocess.PIPE, stderr=err_file)
+    proc2 = subprocess.Popen(load_cmd, stdin=proc1.stdout)
     proc2.wait()
 
     err_file.close()
@@ -640,7 +639,6 @@ def main():
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d", "-p"]
     opt_arg_list = ["--single-transaction", "--all-databases", "--triggers",
                     "--routines", "--events", "--ignore-table=mysql.event"]
@@ -658,7 +656,7 @@ def main():
                              "sync_relay_log_info": "1"}}
 
     # Process argument list from command line
-    args_array = arg_parser.arg_parse2(cmdline.argv, opt_val_list)
+    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
@@ -666,8 +664,7 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list):
 
         try:
-            proglock = gen_class.ProgramLock(cmdline.argv,
-                                             args_array.get("-y", ""))
+            proglock = gen_class.ProgramLock(sys.argv, args_array.get("-y", ""))
             run_program(args_array, req_rep_cfg, opt_arg_list,
                         opt_dump_list=opt_dump_list)
             del proglock
