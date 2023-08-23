@@ -27,6 +27,57 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        arg_exist
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+
 class Slave(object):
 
     """Class:  Slave
@@ -201,9 +252,11 @@ class UnitTest(unittest.TestCase):
         self.slave = Slave()
         self.clone = Slave()
         self.cfg = Cfg()
-        self.args_array = {"-c": "mysql_cfg", "-d": "config",
-                           "-t": "mysql_cfg2"}
-        self.args_array2 = {"-n": True}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args.args_array = {
+            "-c": "mysql_cfg", "-d": "config", "-t": "mysql_cfg2"}
+        self.args2.args_array = {"-n": True}
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
@@ -230,7 +283,7 @@ class UnitTest(unittest.TestCase):
         mock_inst.side_effect = [self.master, self.slave]
         mock_load.return_value = self.cfg
 
-        self.assertFalse(mysql_clone.chk_rep(self.clone, self.args_array))
+        self.assertFalse(mysql_clone.chk_rep(self.clone, self.args))
 
     def test_no_replication(self):
 
@@ -242,7 +295,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.assertFalse(mysql_clone.chk_rep(self.clone, self.args_array2))
+        self.assertFalse(mysql_clone.chk_rep(self.clone, self.args2))
 
 
 if __name__ == "__main__":
