@@ -28,6 +28,44 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_exist
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def arg_exist(self, arg):
+
+        """Method:  arg_exist
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_exist.
+
+        Arguments:
+
+        """
+
+        return True if arg in self.args_array else False
+
+
 class Server(object):
 
     """Class:  Server
@@ -116,8 +154,10 @@ class UnitTest(unittest.TestCase):
 
         self.source = Server()
         self.clone = Server()
-        self.args_array = {}
-        self.args_array2 = {"-n": True}
+        self.args = ArgParser()
+        self.args2 = ArgParser()
+        self.args.args_array = {}
+        self.args2.args_array = {"-n": True}
         self.req_rep_cfg = {
             "master": {
                 "log_bin": "ON", "sync_binlog": "1",
@@ -161,9 +201,10 @@ class UnitTest(unittest.TestCase):
         mock_fetch.return_value = self.version3
 
         with gen_libs.no_std_out():
-            self.assertEqual(mysql_clone.chk_rep_cfg(
-                self.source, self.clone, self.args_array, self.req_rep_cfg,
-                self.opt_arg_list), self.results3)
+            self.assertEqual(
+                mysql_clone.chk_rep_cfg(
+                    self.source, self.clone, self.args, self.req_rep_cfg,
+                    self.opt_arg_list), self.results3)
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
@@ -183,9 +224,10 @@ class UnitTest(unittest.TestCase):
         mock_fetch.return_value = self.version2
 
         with gen_libs.no_std_out():
-            self.assertEqual(mysql_clone.chk_rep_cfg(
-                self.source, self.clone, self.args_array, self.req_rep_cfg,
-                self.opt_arg_list), self.results3)
+            self.assertEqual(
+                mysql_clone.chk_rep_cfg(
+                    self.source, self.clone, self.args, self.req_rep_cfg,
+                    self.opt_arg_list), self.results3)
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
@@ -205,9 +247,10 @@ class UnitTest(unittest.TestCase):
         mock_fetch.return_value = self.version
 
         with gen_libs.no_std_out():
-            self.assertEqual(mysql_clone.chk_rep_cfg(
-                self.source, self.clone, self.args_array, self.req_rep_cfg,
-                self.opt_arg_list), self.results3)
+            self.assertEqual(
+                mysql_clone.chk_rep_cfg(
+                    self.source, self.clone, self.args, self.req_rep_cfg,
+                    self.opt_arg_list), self.results3)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -226,9 +269,10 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results5)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results5)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -247,9 +291,10 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results2)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results2)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -268,9 +313,10 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results2)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results2)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -287,9 +333,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         mock_fetch.return_value = self.version3
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results4)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results4)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -306,9 +353,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         mock_fetch.return_value = self.version2
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -325,9 +373,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         mock_fetch.return_value = self.version
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -344,9 +393,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         mock_fetch.return_value = self.version3
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results4)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results4)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
@@ -363,9 +413,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         mock_fetch.return_value = self.version2
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array, self.req_rep_cfg,
-            self.opt_arg_list), self.results)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args, self.req_rep_cfg,
+                self.opt_arg_list), self.results)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     def test_no_rep2(self, mock_fetch):
@@ -380,9 +431,10 @@ class UnitTest(unittest.TestCase):
 
         mock_fetch.return_value = self.version3
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array2, self.req_rep_cfg,
-            self.opt_arg_list), self.results4)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args2, self.req_rep_cfg,
+                self.opt_arg_list), self.results4)
 
     @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     def test_no_rep(self, mock_fetch):
@@ -397,9 +449,10 @@ class UnitTest(unittest.TestCase):
 
         mock_fetch.return_value = self.version2
 
-        self.assertEqual(mysql_clone.chk_rep_cfg(
-            self.source, self.clone, self.args_array2, self.req_rep_cfg,
-            self.opt_arg_list), self.results)
+        self.assertEqual(
+            mysql_clone.chk_rep_cfg(
+                self.source, self.clone, self.args2, self.req_rep_cfg,
+                self.opt_arg_list), self.results)
 
 
 if __name__ == "__main__":
