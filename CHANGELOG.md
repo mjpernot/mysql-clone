@@ -6,7 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.2.1] - 2023-11-02
 - Downgraded mysql-lib to v5.3.1
--    Note: The mysql-lib v5.3.1 has not been checked out to work in Python 3.
+-    Note: The mysql-lib v5.3.1 has not been modified to work in Python 3.
 
 ### Fixed
 - Changed mysql-lib from v5.3.2 to 5.3.1 due to errors in the mysql-lib package.
