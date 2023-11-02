@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.2.1] - 2023-11-02
+- Downgraded mysql-lib to v5.3.1
+-    Note: The mysql-lib v5.3.1 has not been checked out to work in Python 3.
+
+### Fixed
+- Changed mysql-lib from v5.3.2 to 5.3.1 due to errors in the mysql-lib package.
+
+
 ## [2.2.0] - 2023-08-21
 - Upgraded python-lib to v2.10.1
 - Replaced the arg_parser code with gen_class.ArgParser code.
