@@ -180,7 +180,7 @@ class UnitTest(unittest.TestCase):
         self.results4.append("--source-data=2")
         self.results5 = list(self.opt_arg_list)
         self.results5.append("--source-data=1")
-        self.version = ( 5, 7)
+        self.version = (5, 7)
         self.version2 = (8, 0, 24)
         self.version3 = (8, 0, 28)
 
