@@ -92,6 +92,7 @@ class Server(object):
         self.gtid_mode = True
         self.fetch_mst_rep_cfg = True
         self.fetch_slv_rep_cfg = True
+        self.version = None
 
     def upd_mst_rep_stat(self):
 
@@ -179,15 +180,14 @@ class UnitTest(unittest.TestCase):
         self.results4.append("--source-data=2")
         self.results5 = list(self.opt_arg_list)
         self.results5.append("--source-data=1")
-        self.version = {"version": "5.7"}
-        self.version2 = {"version": "8.0.24"}
-        self.version3 = {"version": "8.0.28"}
+        self.version = (5, 7)
+        self.version2 = (8, 0, 24)
+        self.version3 = (8, 0, 28)
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_fail3(self, mock_cfg, mock_fetch):
+    def test_config_fail3(self, mock_cfg):
 
         """Function:  test_config_fail3
 
@@ -198,7 +198,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = False
-        mock_fetch.return_value = self.version3
+        self.source.version = self.version3
 
         with gen_libs.no_std_out():
             self.assertEqual(
@@ -208,9 +208,8 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_fail2(self, mock_cfg, mock_fetch):
+    def test_config_fail2(self, mock_cfg):
 
         """Function:  test_config_fail2
 
@@ -221,7 +220,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = False
-        mock_fetch.return_value = self.version2
+        self.source.version = self.version2
 
         with gen_libs.no_std_out():
             self.assertEqual(
@@ -231,9 +230,8 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_fail(self, mock_cfg, mock_fetch):
+    def test_config_fail(self, mock_cfg):
 
         """Function:  test_config_fail
 
@@ -244,7 +242,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = False
-        mock_fetch.return_value = self.version
+        self.source.version = self.version
 
         with gen_libs.no_std_out():
             self.assertEqual(
@@ -252,9 +250,8 @@ class UnitTest(unittest.TestCase):
                     self.source, self.clone, self.args, self.req_rep_cfg,
                     self.opt_arg_list), self.results3)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_clone_gtid_off3(self, mock_cfg, mock_fetch):
+    def test_clone_gtid_off3(self, mock_cfg):
 
         """Function:  test_clone_gtid_off3
 
@@ -265,7 +262,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version3
+        self.source.version = self.version3
 
         self.clone.gtid_mode = False
 
@@ -274,9 +271,8 @@ class UnitTest(unittest.TestCase):
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results5)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_clone_gtid_off2(self, mock_cfg, mock_fetch):
+    def test_clone_gtid_off2(self, mock_cfg):
 
         """Function:  test_clone_gtid_off2
 
@@ -287,7 +283,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version2
+        self.source.version = self.version2
 
         self.clone.gtid_mode = False
 
@@ -296,9 +292,8 @@ class UnitTest(unittest.TestCase):
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results2)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_clone_gtid_off(self, mock_cfg, mock_fetch):
+    def test_clone_gtid_off(self, mock_cfg):
 
         """Function:  test_clone_gtid_off
 
@@ -309,7 +304,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version
+        self.source.version = self.version
 
         self.clone.gtid_mode = False
 
@@ -318,9 +313,8 @@ class UnitTest(unittest.TestCase):
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results2)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_pass3(self, mock_cfg, mock_fetch):
+    def test_config_pass3(self, mock_cfg):
 
         """Function:  test_config_pass3
 
@@ -331,16 +325,15 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version3
+        self.source.version = self.version3
 
         self.assertEqual(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results4)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_pass2(self, mock_cfg, mock_fetch):
+    def test_config_pass2(self, mock_cfg):
 
         """Function:  test_config_pass2
 
@@ -351,16 +344,15 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version2
+        self.source.version = self.version2
 
         self.assertEqual(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_config_pass(self, mock_cfg, mock_fetch):
+    def test_config_pass(self, mock_cfg):
 
         """Function:  test_config_pass
 
@@ -371,16 +363,15 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version
+        self.source.version = self.version
 
         self.assertEqual(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_mysql_80a(self, mock_cfg, mock_fetch):
+    def test_mysql_80a(self, mock_cfg):
 
         """Function:  test_mysql_80a
 
@@ -391,16 +382,15 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version3
+        self.source.version = self.version3
 
         self.assertEqual(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results4)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
     @mock.patch("mysql_clone.cfg_chk")
-    def test_mysql_80(self, mock_cfg, mock_fetch):
+    def test_mysql_80(self, mock_cfg):
 
         """Function:  test_mysql_80
 
@@ -411,17 +401,16 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_cfg.return_value = True
-        mock_fetch.return_value = self.version2
+        self.source.version = self.version2
 
         self.assertEqual(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
                 self.opt_arg_list), self.results)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
-    def test_no_rep2(self, mock_fetch):
+    def test_no_rep2(self):
 
-        """Function:  test_no_rep
+        """Function:  test_no_rep2
 
         Description:  Test with no replication configured post MySQL 8.0.26.
 
@@ -429,15 +418,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_fetch.return_value = self.version3
+        self.source.version = self.version3
 
         self.assertEqual(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args2, self.req_rep_cfg,
                 self.opt_arg_list), self.results4)
 
-    @mock.patch("mysql_clone.mysql_class.fetch_sys_var")
-    def test_no_rep(self, mock_fetch):
+    def test_no_rep(self):
 
         """Function:  test_no_rep
 
@@ -447,7 +435,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_fetch.return_value = self.version2
+        self.source.version = self.version2
 
         self.assertEqual(
             mysql_clone.chk_rep_cfg(

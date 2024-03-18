@@ -286,20 +286,22 @@ def chk_rep_cfg(source, clone, args, req_rep_cfg, opt_arg_list):
     req_rep_cfg = dict(req_rep_cfg)
     opt_arg_list = list(opt_arg_list)
 
-    if mysql_class.fetch_sys_var(
-            source, "version", level="session")["version"] >= "8.0.26":
-        master_d = "--source-data="
+    master_d = "--source-data=" if source.version >= (8, 0, 26) \
+        else "--master-data="
 
-    else:
-        master_d = "--master-data="
+    # Replacement of entries for MySQL v8.0.26 and above
+    if source.version >= (8, 0, 26):
+        req_rep_cfg["slave"].pop("log_slave_updates", None)
+        req_rep_cfg["slave"].pop("sync_master_info", None)
+        req_rep_cfg["slave"]["log_replica_updates"] = "ON"
+        req_rep_cfg["slave"]["sync_source_info"] = "1"
 
     if not args.arg_exist("-n"):
         source.upd_mst_rep_stat()
         clone.upd_slv_rep_stat()
 
         # innodb_support_xa no longer supported in MySQL 8.0
-        if mysql_class.fetch_sys_var(source, "version",
-                                     level="session")["version"] >= "8.0":
+        if source.version >= (8, 0):
             req_rep_cfg["master"].pop("innodb_support_xa", None)
 
         # Both servers must meet replication requirements
