@@ -647,11 +647,12 @@ def main():
                              "sync_relay_log_info": "1"}}
 
     # Process argument list from command line
-    args = gen_class.ArgParser(sys.argv, opt_val=opt_val_list, do_parse=True)
+    args = gen_class.ArgParser(sys.argv, opt_val=opt_val_list)
 
-    if not gen_libs.help_func(args, __version__, help_message)  \
-       and args.arg_cond_req(opt_con_req=opt_con_req_list)      \
-       and args.arg_require(opt_req=opt_req_list)               \
+    if args.arg_parse2()                                            \
+       and not gen_libs.help_func(args, __version__, help_message)  \
+       and args.arg_cond_req(opt_con_req=opt_con_req_list)          \
+       and args.arg_require(opt_req=opt_req_list)                   \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk):
 
         try:
