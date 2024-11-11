@@ -150,7 +150,7 @@ Install the project using the procedures in the Installation section.
 
 ```
 cd {Python_Project}/mysql-clone
-test/unit/mysql_clone/unit_test_run.sh
+test/unit/mysql_clone/unit_test_run3.sh
 ```
 
 ### Code Coverage:
