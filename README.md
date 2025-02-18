@@ -23,30 +23,19 @@
 
 # Prerequisites:
   * List of Linux packages that need to be installed on the server.
-    - Centos 7 (Running Python 2.7):
-      -> python-pip
-    - Redhat 8 (Running Python 3.6):
-      -> python3-pip
+    - python3-pip
 
 
 # Installation:
 
 Install these programs using git.
-  * From here on out, any reference to **{Python_Project}** or **PYTHON_PROJECT** replace with the baseline path of the python program.
 
 ```
-cd {Python_Project}
 git clone git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/mysql-clone.git
 ```
 
 Install/upgrade system modules.
 
-Centos 7 (Running Python 2.7):
-```
-sudo pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-```
-
-Redhat 8 (Running Python 3.6):
 NOTE: Install as the user that will run the program.
 
 ```
@@ -56,14 +45,6 @@ python -m pip install --user -r requirements3.txt --upgrade --trusted-host pypi.
 
 Install supporting classes and libraries.
 
-Centos 7 (Running Python 2.7):
-```
-pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mysql-lib.txt --target mysql_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-mysql-python-lib.txt --target mysql_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
-```
-
-Redhat 8 (Running Python 3.6):
 ```
 python -m pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 python -m pip install -r requirements-mysql-lib.txt --target mysql_lib --trusted-host pypi.appdev.proj.coe.ic.gov
@@ -106,12 +87,11 @@ Create MySQL configuration file for the Master and Slave database.  Make the app
     - tls_versions = []
 
 ```
-cd config
-cp mysql_cfg.py.TEMPLATE mysql_cfg_master.py
-cp mysql_cfg.py.TEMPLATE mysql_cfg_slave.py
-vim mysql_cfg_master.py
-vim mysql_cfg_slave.py
-chmod 600 mysql_cfg_master.py mysql_cfg_slave.py
+cp config/mysql_cfg.py.TEMPLATE config/mysql_cfg_master.py
+cp config/mysql_cfg.py.TEMPLATE config/mysql_cfg_slave.py
+vim config/mysql_cfg_master.py
+vim config/mysql_cfg_slave.py
+chmod 600 config/mysql_cfg_master.py config/mysql_cfg_slave.py
 ```
 
 Create MySQL definition file for the Master and Slave databases.  Make the appropriate change to the MySQL definition setup.
@@ -121,11 +101,11 @@ Create MySQL definition file for the Master and Slave databases.  Make the appro
     - socket=DIRECTORY_PATH/mysql.sock
 
 ```
-cp mysql.cfg.TEMPLATE mysql_master.cfg
-cp mysql.cfg.TEMPLATE mysql_slave.cfg
-vim mysql_master.cfg
-vim mysql_slave.cfg
-chmod 600 mysql_master.cfg mysql_slave.cfg
+cp config/mysql.cfg.TEMPLATE config/mysql_master.cfg
+cp config/mysql.cfg.TEMPLATE config/mysql_slave.cfg
+vim config/mysql_master.cfg
+vim config/mysql_slave.cfg
+chmod 600 config/mysql_master.cfg config/mysql_slave.cfg
 ```
 
 
@@ -134,7 +114,7 @@ chmod 600 mysql_master.cfg mysql_slave.cfg
  The program has a -h (Help option) that will show display an usage message.  The help message will usually consist of a description, usage, arugments to the program, example, notes about the program, and any known bugs not yet fixed.  To run the help command: 
 
 ```
-{Python_Project}/mysql-clone/mysql_clone.py -h
+mysql_clone.py -h
 ```
 
 
@@ -149,14 +129,7 @@ Install the project using the procedures in the Installation section.
 ### Testing:
 
 ```
-cd {Python_Project}/mysql-clone
-test/unit/mysql_clone/unit_test_run3.sh
-```
-
-### Code Coverage:
-
-```
-cd {Python_Project}/mysql-clone
+test/unit/mysql_clone/unit_test_run.sh
 test/unit/mysql_clone/code_coverage.sh
 ```
 

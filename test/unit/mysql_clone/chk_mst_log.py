@@ -21,14 +21,14 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import lib.gen_libs as gen_libs
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Slave(object):
+class Slave():
 
     """Class:  Slave
 
@@ -82,7 +82,7 @@ class Slave(object):
         return self.name
 
 
-class Master(object):
+class Master():                                         # pylint:disable=R0903
 
     """Class:  Master
 

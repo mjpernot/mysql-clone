@@ -20,13 +20,13 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Server(object):
+class Server():
 
     """Class:  Server
 

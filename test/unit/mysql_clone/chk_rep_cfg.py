@@ -21,14 +21,14 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import lib.gen_libs as gen_libs
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -51,7 +51,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def arg_exist(self, arg):
 
@@ -63,10 +63,10 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
 
-class Server(object):
+class Server():
 
     """Class:  Server
 
@@ -175,7 +175,7 @@ class UnitTest(unittest.TestCase):
         self.results.append("--master-data=2")
         self.results2 = list(self.opt_arg_list)
         self.results2.append("--master-data=1")
-        self.results3 = list()
+        self.results3 = []
         self.results4 = list(self.opt_arg_list)
         self.results4.append("--source-data=2")
         self.results5 = list(self.opt_arg_list)

@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.0.0] - 2025-02-18
+Breaking Changes
+
+- Removed support for Python 2.7.
+- Updated mysql-lib v5.4.0
+- Updated python-lib v4.0.0
+
+### Changed
+- chk_rep_cfg:  Changed list() to [].
+- dump_load_dbs: Added 'encoding' to open() call and changed list() to [].
+- Converted strings to f-strings.
+- Documentation changes.
+
+### Deprecated
+- Support for MySQL 5.6/5.7
+
+
 ## [2.2.6] - 2024-11-19
 - Updated python-lib to v3.0.8
 - Updated mysql-lib to v5.3.9
