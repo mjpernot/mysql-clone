@@ -62,7 +62,7 @@ class ArgParser():                                      # pylint:disable=R0903
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
 
 class Server():                                         # pylint:disable=R0903

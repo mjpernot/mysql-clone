@@ -12,6 +12,8 @@ Breaking Changes
 - Updated python-lib v4.0.0
 
 ### Changed
+- chk_rep_cfg:  Changed list() to [].
+- dump_load_dbs: Added 'encoding' to open() call and changed list() to [].
 - Converted strings to f-strings.
 - Documentation changes.
 

@@ -108,10 +108,10 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import mysql_lib.mysql_libs as mysql_libs
-    import mysql_lib.mysql_class as mysql_class
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import mysql_lib.mysql_libs as mysql_libs           # pylint:disable=R0402
+    import mysql_lib.mysql_class as mysql_class         # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -219,7 +219,7 @@ def dump_load_dbs(source, clone, args, req_rep_cfg, opt_arg_list, **kwargs):
     dump_cmd = crt_dump_cmd(
         source, args, opt_arg_list, list(kwargs.get("opt_dump_list", [])))
     efile = gen_libs.crt_file_time("mysql_clone_err_log", "/" + "tmp")
-    err_file = open(efile, mode="w", encoding="UTF-8")
+    err_file = open(efile, mode="w", encoding="UTF-8")  # pylint:disable=R1732
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and args.arg_exist("-n") and not args.arg_exist("-r"):
@@ -234,8 +234,10 @@ def dump_load_dbs(source, clone, args, req_rep_cfg, opt_arg_list, **kwargs):
         mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed
-    proc1 = subprocess.Popen(dump_cmd, stdout=subprocess.PIPE, stderr=err_file)
-    proc2 = subprocess.Popen(load_cmd, stdin=proc1.stdout)
+    proc1 = subprocess.Popen(                           # pylint:disable=R1732
+        dump_cmd, stdout=subprocess.PIPE, stderr=err_file)
+    proc2 = subprocess.Popen(                           # pylint:disable=R1732
+        load_cmd, stdin=proc1.stdout)
     proc2.wait()
 
     err_file.close()
@@ -307,7 +309,7 @@ def chk_rep_cfg(source, clone, args, req_rep_cfg, opt_arg_list):
            or not cfg_chk(clone.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
 
             # Create list to act as a failure of the requirements
-            opt_arg_list = list()
+            opt_arg_list = []
             mysql_libs.disconnect(source, clone)
             print("Error: Master and/or Slave rep config did not pass.")
 

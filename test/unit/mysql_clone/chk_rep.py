@@ -78,7 +78,7 @@ class ArgParser():
         return arg in self.args_array
 
 
-class Slave(object):
+class Slave():
 
     """Class:  Slave
 

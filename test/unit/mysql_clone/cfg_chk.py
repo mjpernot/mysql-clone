@@ -20,7 +20,7 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_db_dump                            # pylint:disable=E0401,C0413
+import mysql_clone                              # pylint:disable=E0401,C0413
 import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
