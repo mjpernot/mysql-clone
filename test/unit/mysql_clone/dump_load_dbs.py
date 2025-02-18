@@ -21,14 +21,14 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import lib.gen_libs as gen_libs
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -52,7 +52,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def arg_exist(self, arg):
 
@@ -64,7 +64,7 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
     def arg_set_path(self, arg_opt, **kwargs):
 
@@ -81,7 +81,7 @@ class ArgParser(object):
             kwargs.get("cmd", ""))
 
 
-class FileOpen(object):
+class FileOpen():                                       # pylint:disable=R0903
 
     """Class:  FileOpen
 
@@ -105,7 +105,7 @@ class FileOpen(object):
         return True
 
 
-class Popen(object):
+class Popen():                                          # pylint:disable=R0903
 
     """Class:  Popen
 
@@ -142,7 +142,7 @@ class Popen(object):
         return True
 
 
-class Server(object):
+class Server():                                         # pylint:disable=R0903
 
     """Class:  Server
 
@@ -225,8 +225,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_err_file(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
-                      mock_popen, mock_open):
+    def test_err_file(                                  # pylint:disable=R0913
+            self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
+            mock_open):
 
         """Function:  test_err_file
 
@@ -260,8 +261,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_no_err_file(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
-                         mock_popen, mock_open):
+    def test_no_err_file(                               # pylint:disable=R0913
+            self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
+            mock_open):
 
         """Function:  test_no_err_file
 
@@ -293,8 +295,8 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_no_gtid(self, mock_cmd, mock_crtcmd, mock_reset, mock_popen,
-                     mock_open):
+    def test_no_gtid(                                   # pylint:disable=R0913
+            self, mock_cmd, mock_crtcmd, mock_reset, mock_popen, mock_open):
 
         """Function:  test_no_gtid
 
@@ -327,8 +329,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_add_opt_dump(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
-                          mock_popen, mock_open):
+    def test_add_opt_dump(                              # pylint:disable=R0913
+            self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
+            mock_open):
 
         """Function:  test_add_opt_dump
 
@@ -362,8 +365,9 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_create_cmd(self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset,
-                        mock_popen, mock_open):
+    def test_create_cmd(                                # pylint:disable=R0913
+            self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
+            mock_open):
 
         """Function:  test_create_cmd
 

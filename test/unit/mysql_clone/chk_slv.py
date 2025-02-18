@@ -20,14 +20,14 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
-import mysql_clone
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class SlaveRep(object):
+class SlaveRep():
 
     """Class:  SlaveRep
 
@@ -40,8 +40,9 @@ class SlaveRep(object):
 
     """
 
-    def __init__(self, gtid_mode="ON", mst_file="Master_Log",
-                 relay_file="Slave_Relay", read_pos=3456, exec_pos=4567):
+    def __init__(                                       # pylint:disable=R0913
+            self, gtid_mode="ON", mst_file="Master_Log",
+            relay_file="Slave_Relay", read_pos=3456, exec_pos=4567):
 
         """Method:  __init__
 

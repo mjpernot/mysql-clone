@@ -21,14 +21,14 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import lib.gen_libs as gen_libs
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -52,7 +52,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -76,10 +76,10 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
 
-class Slave(object):
+class Slave():
 
     """Class:  Slave
 
@@ -143,7 +143,7 @@ class Slave(object):
         return self.connected
 
 
-class Master(object):
+class Master():
 
     """Class:  Master
 
@@ -234,7 +234,7 @@ class UnitTest(unittest.TestCase):
         self.opt_arg_list = [
             "--single-transaction", "--all-databases", "--triggers",
             "--routines", "--events", "--ignore-table=mysql.event"]
-        self.opt_arg_list2 = list()
+        self.opt_arg_list2 = []
         self.req_rep_cfg = {
             "master": {
                 "log_bin": "ON", "sync_binlog": "1",
@@ -265,7 +265,7 @@ class UnitTest(unittest.TestCase):
         self.slave.connected = False
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_lib.is_cfg_valid.return_value = (True, [])
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
@@ -289,7 +289,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_lib.is_cfg_valid.return_value = (True, [])
         mock_cfg.return_value = self.opt_arg_list2
 
         with gen_libs.no_std_out():
@@ -316,7 +316,7 @@ class UnitTest(unittest.TestCase):
 
         self.master.host = "localhost"
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_lib.is_cfg_valid.return_value = (True, [])
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
@@ -343,7 +343,7 @@ class UnitTest(unittest.TestCase):
 
         self.master.host = "localhost"
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_lib.is_cfg_valid.return_value = (True, [])
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
@@ -369,7 +369,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_lib.is_cfg_valid.return_value = (True, [])
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
@@ -396,7 +396,7 @@ class UnitTest(unittest.TestCase):
 
         self.slave.gtid_mode = False
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_lib.is_cfg_valid.return_value = (True, [])
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():
@@ -448,7 +448,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
-        mock_lib.is_cfg_valid.return_value = (True, list())
+        mock_lib.is_cfg_valid.return_value = (True, [])
         mock_cfg.return_value = self.opt_arg_list
 
         with gen_libs.no_std_out():

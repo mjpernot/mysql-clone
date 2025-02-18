@@ -93,8 +93,6 @@
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
-from __future__ import absolute_import
 
 # Standard
 import sys
@@ -110,10 +108,10 @@ try:
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import mysql_lib.mysql_libs as mysql_libs
-    import mysql_lib.mysql_class as mysql_class
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import mysql_lib.mysql_libs as mysql_libs           # pylint:disable=R0402
+    import mysql_lib.mysql_class as mysql_class         # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -158,11 +156,11 @@ def cfg_chk(func_call, cfg_dict):
 
                 # Read_only will produce a warning, everything else an error
                 if item == "read_only":
-                    print("Warning: {0} not set for slave.".format(item))
+                    print(f"Warning: {item} not set for slave.")
 
                 else:
                     cfg_flag = False
-                    print("Error:  {0} not set correctly.".format(item))
+                    print(f"Error:  {item} not set correctly.")
 
         else:
             cfg_flag = False
@@ -221,7 +219,7 @@ def dump_load_dbs(source, clone, args, req_rep_cfg, opt_arg_list, **kwargs):
     dump_cmd = crt_dump_cmd(
         source, args, opt_arg_list, list(kwargs.get("opt_dump_list", [])))
     efile = gen_libs.crt_file_time("mysql_clone_err_log", "/" + "tmp")
-    err_file = open(efile, "w")
+    err_file = open(efile, mode="w", encoding="UTF-8")  # pylint:disable=R1732
 
     if source.gtid_mode != clone.gtid_mode and not clone.gtid_mode \
        and args.arg_exist("-n") and not args.arg_exist("-r"):
@@ -236,14 +234,16 @@ def dump_load_dbs(source, clone, args, req_rep_cfg, opt_arg_list, **kwargs):
         mysql_libs.reset_master(clone)
 
     # Dump databases, pipe into load, and wait until completed
-    proc1 = subprocess.Popen(dump_cmd, stdout=subprocess.PIPE, stderr=err_file)
-    proc2 = subprocess.Popen(load_cmd, stdin=proc1.stdout)
+    proc1 = subprocess.Popen(                           # pylint:disable=R1732
+        dump_cmd, stdout=subprocess.PIPE, stderr=err_file)
+    proc2 = subprocess.Popen(                           # pylint:disable=R1732
+        load_cmd, stdin=proc1.stdout)
     proc2.wait()
 
     err_file.close()
 
     if not gen_libs.is_empty_file(efile):
-        print("Review the contents of error file: %s" % (efile))
+        print(f"Review the contents of error file: {efile}")
 
 
 def stop_clr_rep(clone, args):
@@ -309,7 +309,7 @@ def chk_rep_cfg(source, clone, args, req_rep_cfg, opt_arg_list):
            or not cfg_chk(clone.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
 
             # Create list to act as a failure of the requirements
-            opt_arg_list = list()
+            opt_arg_list = []
             mysql_libs.disconnect(source, clone)
             print("Error: Master and/or Slave rep config did not pass.")
 
@@ -351,17 +351,17 @@ def chk_slv_err(slave):
 
             # Is there a IO error
             if ioerr:
-                print("\nSlave:\t{0}".format(name))
-                print("IO Error Detected:\t{0}".format(ioerr))
-                print("\tIO Message:\t{0}".format(io_msg))
-                print("\tIO Timestamp:\t{0}".format(io_time))
+                print(f"\nSlave:\t{name}")
+                print(f"IO Error Detected:\t{ioerr}")
+                print(f"\tIO Message:\t{io_msg}")
+                print(f"\tIO Timestamp:\t{io_time}")
 
             # Is there a SQL error
             if sql:
-                print("\nSlave:\t{0}".format(name))
-                print("SQL Error Detected:\t{0}".format(sql))
-                print("\tSQL Message:\t{0}".format(sql_msg))
-                print("\tSQL Timestamp:\t{0}".format(sql_time))
+                print(f"\nSlave:\t{name}")
+                print(f"SQL Error Detected:\t{sql}")
+                print(f"\tSQL Message:\t{sql_msg}")
+                print(f"\tSQL Timestamp:\t{sql_time}")
 
     else:
         print("\nchk_slv_err:  Warning:  No Slave instance detected.")
@@ -379,7 +379,6 @@ def chk_slv_thr(slave):
     """
 
     slave = list(slave)
-    prt_template = "\nSlave:  {0}"
 
     if slave:
 
@@ -389,17 +388,17 @@ def chk_slv_thr(slave):
 
             # Check slave IO state and slave running attributes
             if not thr or not gen_libs.is_true(run):
-                print(prt_template.format(name))
+                print(f"\nSlave:  {name}")
                 print("Error:  Slave IO/SQL Threads are down.")
 
             # Check slave IO running attribute
             elif not gen_libs.is_true(io_thr):
-                print(prt_template.format(name))
+                print(f"\nSlave:  {name}")
                 print("Error:  Slave IO Thread is down.")
 
             # Check slave SQL running attribute
             elif not gen_libs.is_true(sql_thr):
-                print(prt_template.format(name))
+                print(f"\nSlave:  {name}")
                 print("Error:  Slave SQL Thread is down.")
 
     else:
@@ -424,19 +423,19 @@ def chk_slv(slave):
 
     # Slave's master info doesn't match slave's relay info
     if mst_file != relay_file or read_pos != exec_pos:
-        print("\nSlave: {0}".format(name))
+        print(f"\nSlave: {name}")
         print("Warning:  Slave might be lagging in execution of log.")
-        print("\tRead Log:\t{0}".format(mst_file))
-        print("\tRead Pos:\t{0}".format(read_pos))
+        print(f"\tRead Log:\t{mst_file}")
+        print(f"\tRead Pos:\t{read_pos}")
 
         if slave.gtid_mode:
-            print("\tRetrieved GTID:\t{0}".format(slave.retrieved_gtid))
+            print(f"\tRetrieved GTID:\t{slave.retrieved_gtid}")
 
-        print("\tExec Log:\t{0}".format(relay_file))
-        print("\tExec Pos:\t{0}".format(exec_pos))
+        print(f"\tExec Log:\t{relay_file}")
+        print(f"\tExec Pos:\t{exec_pos}")
 
         if slave.gtid_mode:
-            print("\tExecuted GTID:\t{0}".format(slave.exe_gtid))
+            print(f"\tExecuted GTID:\t{slave.exe_gtid}")
 
 
 def chk_mst_log(master, slave, **kwargs):
@@ -466,12 +465,12 @@ def chk_mst_log(master, slave, **kwargs):
             if fname != mst_file or log_pos != read_pos:
 
                 print("\nWarning:  Slave lagging in reading master log.")
-                print("Master: {0}".format(master.name))
-                print("\tMaster Log: {0}".format(fname))
-                print("\t\tMaster Pos: {0}".format(log_pos))
-                print("Slave: {0}".format(name))
-                print("\tSlave Log: {0}".format(mst_file))
-                print("\t\tSlave Pos: {0}".format(read_pos))
+                print(f"Master: {master.name}")
+                print(f"\tMaster Log: {fname}")
+                print(f"\t\tMaster Pos: {log_pos}")
+                print(f"Slave: {name}")
+                print(f"\tSlave Log: {mst_file}")
+                print(f"\t\tSlave Pos: {read_pos}")
 
             chk_slv(slv, **kwargs)
 
@@ -565,19 +564,19 @@ def run_program(args, req_rep_cfg, opt_arg_list, **kwargs):
     status, status_msg = mysql_libs.is_cfg_valid([source, clone])
 
     # Master cannot be set to loopback IP if setting up replication
-    if source.host in ["127.0." + "0.1", "localhost"] \
+    if source.host in ["127.0.0.1", "localhost"] \
        and not args.arg_exist("-n"):
 
         status = False
         status_msg.append("Master host entry has incorrect entry.")
-        status_msg.append("Master host: %s" % (source.host))
+        status_msg.append(f"Master host: {source.host}")
 
     if status:
 
         # Do not proceed if GTID modes don't match
         if source.gtid_mode != clone.gtid_mode and not args.arg_exist("-n"):
-            print("Error:  Source (%s) and Clone (%s) GTID modes do not match."
-                  % (source.gtid_mode, clone.gtid_mode))
+            print(f"Error:  Source {source.gtid_mode} and Clone"
+                  f" {clone.gtid_mode} GTID modes do not match.")
 
         else:
             stop_clr_rep(clone, args)
@@ -631,20 +630,22 @@ def main():
     """
 
     dir_perms_chk = {"-d": 5, "-p": 5}
-    opt_arg_list = ["--single-transaction", "--all-databases", "--triggers",
-                    "--routines", "--events", "--ignore-table=mysql.event"]
+    opt_arg_list = [
+        "--single-transaction", "--all-databases", "--triggers", "--routines",
+        "--events", "--ignore-table=mysql.event"]
     opt_con_req_list = {"-r": ["-n"]}
     opt_dump_list = {"-r": "--set-gtid-purged=OFF"}
     opt_req_list = ["-c", "-t", "-d"]
     opt_val_list = ["-c", "-t", "-d", "-p", "-y"]
-    req_rep_cfg = {"master": {"log_bin": "ON", "sync_binlog": "1",
-                              "innodb_flush_log_at_trx_commit": "1",
-                              "innodb_support_xa": "ON",
-                              "binlog_format": "ROW"},
-                   "slave": {"log_bin": "ON", "read_only": "ON",
-                             "log_slave_updates": "ON",
-                             "sync_master_info": "1", "sync_relay_log": "1",
-                             "sync_relay_log_info": "1"}}
+    req_rep_cfg = {
+        "master": {
+            "log_bin": "ON", "sync_binlog": "1",
+            "innodb_flush_log_at_trx_commit": "1", "innodb_support_xa": "ON",
+            "binlog_format": "ROW"},
+        "slave": {
+            "log_bin": "ON", "read_only": "ON", "log_slave_updates": "ON",
+            "sync_master_info": "1", "sync_relay_log": "1",
+            "sync_relay_log_info": "1"}}
 
     # Process argument list from command line
     args = gen_class.ArgParser(sys.argv, opt_val=opt_val_list)
@@ -663,8 +664,8 @@ def main():
             del proglock
 
         except gen_class.SingleInstanceException:
-            print("WARNING:  lock in place for mysql_clone with id of: %s"
-                  % (args.get_val("-y", def_val="")))
+            print(f'WARNING:  lock in place for mysql_clone with id of:'
+                  f' {args.get_val("-y", def_val="")}')
 
 
 if __name__ == "__main__":
