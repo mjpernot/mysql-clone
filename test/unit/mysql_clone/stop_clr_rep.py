@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -50,7 +50,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def arg_exist(self, arg):
 
@@ -65,7 +65,7 @@ class ArgParser(object):
         return True if arg in self.args_array else False
 
 
-class Server(object):
+class Server():                                         # pylint:disable=R0903
 
     """Class:  Server
 
@@ -85,8 +85,6 @@ class Server(object):
         Arguments:
 
         """
-
-        pass
 
 
 class UnitTest(unittest.TestCase):

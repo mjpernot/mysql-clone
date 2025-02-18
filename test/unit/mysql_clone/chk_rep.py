@@ -21,13 +21,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import version
+import mysql_clone                              # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -51,7 +51,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -75,7 +75,7 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
 
 class Slave(object):
@@ -101,8 +101,6 @@ class Slave(object):
         Arguments:
 
         """
-
-        pass
 
     def start_slave(self):
 
@@ -141,7 +139,7 @@ class Slave(object):
         return True
 
 
-class Master(object):
+class Master():
 
     """Class:  Master
 
@@ -163,8 +161,6 @@ class Master(object):
         Arguments:
 
         """
-
-        pass
 
     def upd_mst_status(self):
 
@@ -191,7 +187,7 @@ class Master(object):
         return True
 
 
-class Cfg(object):
+class Cfg():                                            # pylint:disable=R0903
 
     """Class:  Cfg
 

@@ -21,14 +21,14 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import mysql_clone
-import lib.gen_libs as gen_libs
-import version
+import mysql_db_dump                            # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -52,7 +52,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def arg_exist(self, arg):
 
@@ -64,7 +64,7 @@ class ArgParser(object):
 
         """
 
-        return True if arg in self.args_array else False
+        return arg in self.args_array
 
     def arg_set_path(self, arg_opt, **kwargs):
 
@@ -105,7 +105,7 @@ class FileOpen(object):
         return True
 
 
-class Popen(object):
+class Popen():                                          # pylint:disable=R0903
 
     """Class:  Popen
 
@@ -142,7 +142,7 @@ class Popen(object):
         return True
 
 
-class Server(object):
+class Server():                                         # pylint:disable=R0903
 
     """Class:  Server
 
