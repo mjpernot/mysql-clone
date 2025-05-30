@@ -280,9 +280,11 @@ def chk_rep_cfg(source, clone, args, req_rep_cfg, opt_arg_list):
         (input) req_rep_cfg -> Required replication config settings
         (input) opt_arg_list -> List of options to add to dump cmd line
         (output) opt_arg_list -> List of options to add to dump cmd line
+        (output) status -> True|False - Operation success or failure
 
     """
 
+    status = True
     req_rep_cfg = dict(req_rep_cfg)
     opt_arg_list = list(opt_arg_list)
 
@@ -300,18 +302,11 @@ def chk_rep_cfg(source, clone, args, req_rep_cfg, opt_arg_list):
         source.upd_mst_rep_stat()
         clone.upd_slv_rep_stat()
 
-        # innodb_support_xa no longer supported in MySQL 8.0
-        if source.version >= (8, 0):
-            req_rep_cfg["master"].pop("innodb_support_xa", None)
-
         # Both servers must meet replication requirements
         if not cfg_chk(source.fetch_mst_rep_cfg, req_rep_cfg["master"]) \
            or not cfg_chk(clone.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
 
-            # Create list to act as a failure of the requirements
-            opt_arg_list = []
-            mysql_libs.disconnect(source, clone)
-            print("Error: Master and/or Slave rep config did not pass.")
+            status = False
 
         else:
             if clone.gtid_mode:
@@ -326,7 +321,7 @@ def chk_rep_cfg(source, clone, args, req_rep_cfg, opt_arg_list):
         # Exclude "change master to" option from dump file
         opt_arg_list.append(master_d + "2")
 
-    return opt_arg_list
+    return opt_arg_list, status
 
 
 def chk_slv_err(slave):
@@ -500,21 +495,35 @@ def chk_rep(clone, args):
     if not args.arg_exist("-n"):
         master = mysql_libs.create_instance(
             args.get_val("-c"), args.get_val("-d"), mysql_class.MasterRep)
-        master.connect()
-        mysql_libs.change_master_to(master, clone)
-        slave = mysql_libs.create_instance(
-            args.get_val("-t"), args.get_val("-d"), mysql_class.SlaveRep)
-        slave.connect()
-        slave.start_slave()
+        master.connect(silent=True)
 
-        # Wait for slave to start
-        time.sleep(5)
-        master.upd_mst_status()
-        slave.upd_slv_status()
-        chk_slv_err([slave])
-        chk_slv_thr([slave])
-        chk_mst_log(master, [slave])
-        mysql_libs.disconnect(master, slave)
+        if master.conn_msg:
+            print("chk_rep: Error encountered with master connection")
+            print(f"\tMaster:  {master.conn_msg}")
+            print("Warning: No Change Master To was executed")
+
+        else:
+            mysql_libs.change_master_to(master, clone)
+            slave = mysql_libs.create_instance(
+                args.get_val("-t"), args.get_val("-d"), mysql_class.SlaveRep)
+            slave.connect(silent=True)
+
+            if slave.conn_msg:
+                print("chk_rep: Error encountered with slave connection")
+                print(f"\tMaster:  {slave.conn_msg}")
+                print("Warning: No Start Slave was executed")
+                mysql_libs.disconnect(master)
+
+            else:
+                slave.start_slave()
+                # Wait for slave to start
+                time.sleep(5)
+                master.upd_mst_status()
+                slave.upd_slv_status()
+                chk_slv_err([slave])
+                chk_slv_thr([slave])
+                chk_mst_log(master, [slave])
+                mysql_libs.disconnect(master, slave)
 
 
 def connect_chk(server):
@@ -556,9 +565,18 @@ def run_program(args, req_rep_cfg, opt_arg_list, **kwargs):
         args.get_val("-c"), args.get_val("-d"), mysql_class.Server)
     clone = mysql_libs.create_instance(
         args.get_val("-t"), args.get_val("-d"), mysql_class.Server)
-    source.connect()
+    source.connect(silent=True)
+    clone.connect(silent=True)
+
+    if source.conn_msg or clone.conn_msg:
+        print("run_program: Error encountered with connection of source/clone")
+        print(f"\tSource:  {source.conn_msg}")
+        print(f"\tClone:  {clone.conn_msg}")
+        mysql_libs.disconnect(source, clone)
+
+        return
+
     source.set_srv_gtid()
-    clone.connect()
     clone.set_srv_gtid()
 
     status, status_msg = mysql_libs.is_cfg_valid([source, clone])
@@ -567,45 +585,43 @@ def run_program(args, req_rep_cfg, opt_arg_list, **kwargs):
     if source.host in ["127.0.0.1", "localhost"] \
        and not args.arg_exist("-n"):
 
-        status = False
-        status_msg.append("Master host entry has incorrect entry.")
-        status_msg.append(f"Master host: {source.host}")
-
-    if status:
-
-        # Do not proceed if GTID modes don't match
-        if source.gtid_mode != clone.gtid_mode and not args.arg_exist("-n"):
-            print(f"Error:  Source {source.gtid_mode} and Clone"
-                  f" {clone.gtid_mode} GTID modes do not match.")
-
-        else:
-            stop_clr_rep(clone, args)
-
-            # Add to argument list array based on rep config
-            opt_arg_list = chk_rep_cfg(
-                source, clone, args, req_rep_cfg, opt_arg_list)
-
-            # If empty list, then failure in requirements check
-            if opt_arg_list:
-                print("Starting dump-load process...")
-                dump_load_dbs(
-                    source, clone, args, req_rep_cfg, opt_arg_list, **kwargs)
-                print("Finished dump-load process...")
-
-                # Long term processes cause connection timeouts
-                connect_chk(clone)
-                chk_rep(clone, args)
-
-            else:
-                print("Error:  Master/Slave do not meet rep requirements.")
-
-    else:
+        mysql_libs.disconnect(source, clone)
         print("Error:  Detected problem in the configuration file.")
+        print("Master host entry has incorrect entry.")
+        print(f"Master host: {source.host}")
 
         for msg in status_msg:
             print(msg)
 
-    mysql_libs.disconnect(source, clone)
+        return
+
+    # Do not proceed if GTID modes don't match
+    if source.gtid_mode != clone.gtid_mode and not args.arg_exist("-n"):
+        print(f"Error:  Source {source.gtid_mode} and Clone"
+              f" {clone.gtid_mode} GTID modes do not match.")
+        mysql_libs.disconnect(source, clone)
+
+        return
+
+    stop_clr_rep(clone, args)
+    # Add to argument list array based on rep config
+    opt_arg_list, status = chk_rep_cfg(
+        source, clone, args, req_rep_cfg, opt_arg_list)
+
+    if status:
+        print("Starting dump-load process...")
+        dump_load_dbs(
+            source, clone, args, req_rep_cfg, opt_arg_list, **kwargs)
+        print("Finished dump-load process...")
+
+        # Long term processes can cause connection timeouts
+        connect_chk(clone)
+        chk_rep(clone, args)
+        mysql_libs.disconnect(source, clone)
+
+    else:
+        print("Error: Master and/or Slave rep config did not pass.")
+        mysql_libs.disconnect(source, clone)
 
 
 def main():
@@ -640,8 +656,7 @@ def main():
     req_rep_cfg = {
         "master": {
             "log_bin": "ON", "sync_binlog": "1",
-            "innodb_flush_log_at_trx_commit": "1", "innodb_support_xa": "ON",
-            "binlog_format": "ROW"},
+            "innodb_flush_log_at_trx_commit": "1", "binlog_format": "ROW"},
         "slave": {
             "log_bin": "ON", "read_only": "ON", "log_slave_updates": "ON",
             "sync_master_info": "1", "sync_relay_log": "1",

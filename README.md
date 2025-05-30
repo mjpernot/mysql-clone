@@ -89,9 +89,9 @@ Create MySQL configuration file for the Master and Slave database.  Make the app
 ```
 cp config/mysql_cfg.py.TEMPLATE config/mysql_cfg_master.py
 cp config/mysql_cfg.py.TEMPLATE config/mysql_cfg_slave.py
+chmod 600 config/mysql_cfg_master.py config/mysql_cfg_slave.py
 vim config/mysql_cfg_master.py
 vim config/mysql_cfg_slave.py
-chmod 600 config/mysql_cfg_master.py config/mysql_cfg_slave.py
 ```
 
 Create MySQL definition file for the Master and Slave databases.  Make the appropriate change to the MySQL definition setup.
@@ -103,9 +103,9 @@ Create MySQL definition file for the Master and Slave databases.  Make the appro
 ```
 cp config/mysql.cfg.TEMPLATE config/mysql_master.cfg
 cp config/mysql.cfg.TEMPLATE config/mysql_slave.cfg
+chmod 600 config/mysql_master.cfg config/mysql_slave.cfg
 vim config/mysql_master.cfg
 vim config/mysql_slave.cfg
-chmod 600 config/mysql_master.cfg config/mysql_slave.cfg
 ```
 
 

@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.1.0] - 2025-05-30
+- Updated python-lib to v4.0.1
+- Updated mysql-lib to v5.5.1
+- Removed support for MySQL 5.6/5.7
+
+### Changed
+- chk_rep: Added in connection status checks for master and slave connections.
+- chk_rep_cfg: Added in status return on success of operation and removed print error message and disconnect.
+- run_program: Moved disconnect call to each place there is an exit from the function.
+- run_program: The chk_rep_cfg also returns a status of the operation and use this status to determine to continue or exit from process.
+- run_program: If GTID check fails, disconnect and return from function.
+- run_program: Replaced status variable with a disconnect and return from function.
+- run_program: Added checks on connection status for source and clone databases.
+- chk_rep_cfg: Removed check for innodb_support_xa.
+- main: Removed innodb_support_xa from req_rep_cfg dictionary.
+- Documentation changes.
+
+
 ## [3.0.0] - 2025-02-18
 Breaking Changes
 
