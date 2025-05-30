@@ -105,8 +105,9 @@ class Slave():
 
         self.gtid_mode = True
         self.connected = True
+        self.conn_msg = None
 
-    def connect(self):
+    def connect(self, silent=False):
 
         """Method:  connect
 
@@ -116,7 +117,12 @@ class Slave():
 
         """
 
-        return True
+        status = True
+
+        if silent:
+            status = True
+
+        return status
 
     def set_srv_gtid(self):
 
@@ -168,8 +174,9 @@ class Master():
 
         self.gtid_mode = True
         self.host = "Server_IP"
+        self.conn_msg = None
 
-    def connect(self):
+    def connect(self, silent=False):
 
         """Method:  connect
 
@@ -179,7 +186,12 @@ class Master():
 
         """
 
-        return True
+        status = True
+
+        if silent:
+            status = True
+
+        return status
 
     def set_srv_gtid(self):
 
@@ -202,6 +214,9 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_both_no_connect
+        test_clone_no_connect
+        test_source_no_connect
         test_clone_disconnect
         test_rep_config_failure
         test_master_loop_no_rep
@@ -247,6 +262,73 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_both_no_connect(self, mock_lib):
+
+        """Function:  test_both_no_connect
+
+        Description:  Test with not connecting to clone and source.
+
+        Arguments:
+
+        """
+
+        self.master.conn_msg = "Error connecting to database"
+        self.slave.conn_msg = "Error connecting to database"
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
+
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_clone_no_connect(self, mock_lib):
+
+        """Function:  test_clone_no_connect
+
+        Description:  Test with not connecting to clone.
+
+        Arguments:
+
+        """
+
+        self.slave.conn_msg = "Error connecting to database"
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
+
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_libs")
+    def test_source_no_connect(self, mock_lib):
+
+        """Function:  test_source_no_connect
+
+        Description:  Test with not connecting to source.
+
+        Arguments:
+
+        """
+
+        self.master.conn_msg = "Error connecting to database"
+
+        mock_lib.create_instance.side_effect = [self.master, self.slave]
+
+        with gen_libs.no_std_out():
+            self.assertFalse(
+                mysql_clone.run_program(
+                    self.args, self.req_rep_cfg, self.opt_arg_list))
+
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.stop_clr_rep", mock.Mock(return_value=True))
     @mock.patch("mysql_clone.dump_load_dbs", mock.Mock(return_value=True))
@@ -266,7 +348,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, [])
-        mock_cfg.return_value = self.opt_arg_list
+        mock_cfg.return_value = (self.opt_arg_list, True)
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -290,7 +372,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, [])
-        mock_cfg.return_value = self.opt_arg_list2
+        mock_cfg.return_value = (self.opt_arg_list2, False)
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -317,7 +399,7 @@ class UnitTest(unittest.TestCase):
         self.master.host = "localhost"
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, [])
-        mock_cfg.return_value = self.opt_arg_list
+        mock_cfg.return_value = (self.opt_arg_list, True)
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -344,7 +426,7 @@ class UnitTest(unittest.TestCase):
         self.master.host = "localhost"
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, [])
-        mock_cfg.return_value = self.opt_arg_list
+        mock_cfg.return_value = (self.opt_arg_list, True)
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -370,7 +452,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, [])
-        mock_cfg.return_value = self.opt_arg_list
+        mock_cfg.return_value = (self.opt_arg_list, True)
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -397,7 +479,7 @@ class UnitTest(unittest.TestCase):
         self.slave.gtid_mode = False
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, [])
-        mock_cfg.return_value = self.opt_arg_list
+        mock_cfg.return_value = (self.opt_arg_list, True)
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -423,7 +505,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (False, ["Error Message"])
-        mock_cfg.return_value = self.opt_arg_list
+        mock_cfg.return_value = (self.opt_arg_list, True)
 
         with gen_libs.no_std_out():
             self.assertFalse(
@@ -449,7 +531,7 @@ class UnitTest(unittest.TestCase):
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
         mock_lib.is_cfg_valid.return_value = (True, [])
-        mock_cfg.return_value = self.opt_arg_list
+        mock_cfg.return_value = (self.opt_arg_list, True)
 
         with gen_libs.no_std_out():
             self.assertFalse(
