@@ -22,6 +22,7 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import mysql_clone                              # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
 import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
@@ -102,6 +103,8 @@ class Slave():
 
         """
 
+        self.conn_msg = None
+
     def start_slave(self):
 
         """Method:  start_slave
@@ -126,7 +129,7 @@ class Slave():
 
         return True
 
-    def connect(self):
+    def connect(self, silent=False):
 
         """Method:  connect
 
@@ -136,7 +139,12 @@ class Slave():
 
         """
 
-        return True
+        status = True
+
+        if silent:
+            status = True
+
+        return status
 
 
 class Master():
@@ -162,6 +170,8 @@ class Master():
 
         """
 
+        self.conn_msg = None
+
     def upd_mst_status(self):
 
         """Method:  upd_mst_status
@@ -174,7 +184,7 @@ class Master():
 
         return True
 
-    def connect(self):
+    def connect(self, silent=False):
 
         """Method:  connect
 
@@ -184,7 +194,12 @@ class Master():
 
         """
 
-        return True
+        status = True
+
+        if silent:
+            status = True
+
+        return status
 
 
 class Cfg():                                            # pylint:disable=R0903
@@ -229,6 +244,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_with_no_slave_connect
+        test_with_no_master_connect
         test_with_replication
         test_no_replication
 
@@ -256,6 +273,46 @@ class UnitTest(unittest.TestCase):
 
     @mock.patch("mysql_clone.mysql_libs.disconnect",
                 mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_libs.change_master_to",
+                mock.Mock(return_value=True))
+    @mock.patch("mysql_clone.mysql_libs.create_instance")
+    def test_with_no_slave_connect(self, mock_inst):
+
+        """Function:  test_with_no_slave_connect
+
+        Description:  Test with failed connection to slave.
+
+        Arguments:
+
+        """
+
+        self.slave.conn_msg = "Error connecting to database"
+
+        mock_inst.side_effect = [self.master, self.slave]
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.chk_rep(self.clone, self.args))
+
+    @mock.patch("mysql_clone.mysql_libs.create_instance")
+    def test_with_no_master_connect(self, mock_inst):
+
+        """Function:  test_with_no_master_connect
+
+        Description:  Test with failed connection to master.
+
+        Arguments:
+
+        """
+
+        self.master.conn_msg = "Error connecting to database"
+
+        mock_inst.side_effect = [self.master, self.slave]
+
+        with gen_libs.no_std_out():
+            self.assertFalse(mysql_clone.chk_rep(self.clone, self.args))
+
+    @mock.patch("mysql_clone.mysql_libs.disconnect",
+                mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_mst_log",
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.chk_slv_thr",
@@ -264,9 +321,8 @@ class UnitTest(unittest.TestCase):
                 mock.Mock(return_value=True))
     @mock.patch("mysql_clone.mysql_libs.change_master_to",
                 mock.Mock(return_value=True))
-    @mock.patch("mysql_clone.gen_libs.load_module")
     @mock.patch("mysql_clone.mysql_libs.create_instance")
-    def test_with_replication(self, mock_inst, mock_load):
+    def test_with_replication(self, mock_inst):
 
         """Function:  test_with_replication
 
@@ -277,7 +333,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_inst.side_effect = [self.master, self.slave]
-        mock_load.return_value = self.cfg
 
         self.assertFalse(mysql_clone.chk_rep(self.clone, self.args))
 
