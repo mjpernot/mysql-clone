@@ -162,8 +162,7 @@ class UnitTest(unittest.TestCase):
         self.req_rep_cfg = {
             "master": {
                 "log_bin": "ON", "sync_binlog": "1",
-                "innodb_flush_log_at_trx_commit": "1",
-                "innodb_support_xa": "ON", "binlog_format": "ROW"},
+                "innodb_flush_log_at_trx_commit": "1", "binlog_format": "ROW"},
             "slave": {
                 "log_bin": "ON", "read_only": "ON", "log_slave_updates": "ON",
                 "sync_master_info": "1", "sync_relay_log": "1",

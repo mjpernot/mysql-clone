@@ -10,6 +10,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Removed support for MySQL 5.6/5.7
 
 ### Changed
+- chk_rep_cfg: Removed check for innodb_support_xa.
+- main: Removed innodb_support_xa from req_rep_cfg dictionary.
 - Documentation changes.
 
 

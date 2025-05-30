@@ -300,10 +300,6 @@ def chk_rep_cfg(source, clone, args, req_rep_cfg, opt_arg_list):
         source.upd_mst_rep_stat()
         clone.upd_slv_rep_stat()
 
-        # innodb_support_xa no longer supported in MySQL 8.0
-        if source.version >= (8, 0):
-            req_rep_cfg["master"].pop("innodb_support_xa", None)
-
         # Both servers must meet replication requirements
         if not cfg_chk(source.fetch_mst_rep_cfg, req_rep_cfg["master"]) \
            or not cfg_chk(clone.fetch_slv_rep_cfg, req_rep_cfg["slave"]):
@@ -640,8 +636,7 @@ def main():
     req_rep_cfg = {
         "master": {
             "log_bin": "ON", "sync_binlog": "1",
-            "innodb_flush_log_at_trx_commit": "1", "innodb_support_xa": "ON",
-            "binlog_format": "ROW"},
+            "innodb_flush_log_at_trx_commit": "1", "binlog_format": "ROW"},
         "slave": {
             "log_bin": "ON", "read_only": "ON", "log_slave_updates": "ON",
             "sync_master_info": "1", "sync_relay_log": "1",
