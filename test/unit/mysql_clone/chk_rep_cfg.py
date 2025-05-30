@@ -211,10 +211,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = False
         self.source.version = self.version3
 
-        self.assertEqual(
+        self.assertFalse(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], False)
+                self.opt_arg_list)[1])
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
@@ -253,10 +253,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = False
         self.source.version = self.version2
 
-        self.assertEqual(
+        self.assertFalse(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], False)
+                self.opt_arg_list)[1])
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
@@ -295,10 +295,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = False
         self.source.version = self.version
 
-        self.assertEqual(
+        self.assertFalse(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], False)
+                self.opt_arg_list)[1])
 
     @mock.patch(
         "mysql_clone.mysql_libs.disconnect", mock.Mock(return_value=True))
@@ -337,10 +337,10 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_clone_gtid_off_post_8026(self, mock_cfg):
@@ -379,10 +379,10 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_clone_gtid_off_pre_8026(self, mock_cfg):
@@ -421,10 +421,10 @@ class UnitTest(unittest.TestCase):
 
         self.clone.gtid_mode = False
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_clone_gtid_off(self, mock_cfg):
@@ -461,10 +461,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         self.source.version = self.version3
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_config_pass_post_8026(self, mock_cfg):
@@ -499,10 +499,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         self.source.version = self.version2
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_config_pass_pre_8026(self, mock_cfg):
@@ -537,10 +537,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         self.source.version = self.version
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_config_pass(self, mock_cfg):
@@ -575,10 +575,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         self.source.version = self.version3
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_mysql_post_8026(self, mock_cfg):
@@ -613,10 +613,10 @@ class UnitTest(unittest.TestCase):
         mock_cfg.return_value = True
         self.source.version = self.version2
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     @mock.patch("mysql_clone.cfg_chk")
     def test_mysql_pre_8026(self, mock_cfg):
@@ -649,10 +649,10 @@ class UnitTest(unittest.TestCase):
 
         self.source.version = self.version3
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args2, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     def test_no_rep_post_8026(self):
 
@@ -683,10 +683,10 @@ class UnitTest(unittest.TestCase):
 
         self.source.version = self.version2
 
-        self.assertEqual(
+        self.assertTrue(
             mysql_clone.chk_rep_cfg(
                 self.source, self.clone, self.args2, self.req_rep_cfg,
-                self.opt_arg_list)[1], True)
+                self.opt_arg_list)[1])
 
     def test_no_rep_pre_8026(self):
 

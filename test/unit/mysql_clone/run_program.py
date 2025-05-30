@@ -273,8 +273,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.master.conn_msg = "Error connecting to database"
-        self.slave.conn_msg = "Error connecting to database"
+        self.master.conn_msg = "Error connecting to master database"
+        self.slave.conn_msg = "Error connecting to slave database"
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
 
@@ -296,7 +296,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.slave.conn_msg = "Error connecting to database"
+        self.slave.conn_msg = "Error connecting to slave database"
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
 
@@ -318,7 +318,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.master.conn_msg = "Error connecting to database"
+        self.master.conn_msg = "Error connecting to master database"
 
         mock_lib.create_instance.side_effect = [self.master, self.slave]
 
