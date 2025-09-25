@@ -225,7 +225,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_err_file(                                  # pylint:disable=R0913
+    def test_err_file(                          # pylint:disable=R0913,R0917
             self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
             mock_open):
 
@@ -261,7 +261,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_no_err_file(                               # pylint:disable=R0913
+    def test_no_err_file(                       # pylint:disable=R0913,R0917
             self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
             mock_open):
 
@@ -295,7 +295,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.mysql_libs.reset_master")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_no_gtid(                                   # pylint:disable=R0913
+    def test_no_gtid(                           # pylint:disable=R0913,R0917
             self, mock_cmd, mock_crtcmd, mock_reset, mock_popen, mock_open):
 
         """Function:  test_no_gtid
@@ -329,7 +329,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_add_opt_dump(                              # pylint:disable=R0913
+    def test_add_opt_dump(                      # pylint:disable=R0913,R0917
             self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
             mock_open):
 
@@ -365,7 +365,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("mysql_clone.gen_libs.is_add_cmd")
     @mock.patch("mysql_clone.mysql_libs.crt_cmd")
     @mock.patch("mysql_clone.crt_dump_cmd")
-    def test_create_cmd(                                # pylint:disable=R0913
+    def test_create_cmd(                        # pylint:disable=R0913,R0917
             self, mock_cmd, mock_crtcmd, mock_isadd, mock_reset, mock_popen,
             mock_open):
 
