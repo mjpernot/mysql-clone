@@ -40,7 +40,7 @@ class SlaveRep():
 
     """
 
-    def __init__(                                       # pylint:disable=R0913
+    def __init__(                               # pylint:disable=R0913,R0917
             self, gtid_mode="ON", mst_file="Master_Log",
             relay_file="Slave_Relay", read_pos=3456, exec_pos=4567):
 
